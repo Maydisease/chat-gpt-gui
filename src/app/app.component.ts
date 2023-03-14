@@ -1,0 +1,99 @@
+import {AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
+import {invoke} from "@tauri-apps/api/tauri";
+import {take} from 'rxjs/operators';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {AppService, HISTORY_LIST_ITEM_STATE, HISTORY_LIST_ITEM_TYPE} from "./app.service";
+
+@Component({
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+})
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('autosize') autosizeRef: CdkTextareaAutosize | undefined;
+  @ViewChild('appKeyWidgetRef', {static: true}) appKeyWidgetRef: ElementRef<HTMLTextAreaElement> | undefined;
+  @ViewChild('searchWidgetRef', {static: true}) searchWidgetRef: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild('historyElementRef', {static: true}) historyElementRef: ElementRef<HTMLElement> | undefined;
+
+  public HISTORY_LIST_ITEM_STATE = HISTORY_LIST_ITEM_STATE;
+  public searchWidgetIsFocus = false;
+  public isUsedHistorySearchKeying = false;
+
+  constructor(
+    public appService: AppService,
+    private _ngZone: NgZone
+  ) {
+
+  }
+
+  // 是否展示问题输入框内的快捷键提示文案
+  get displaySearchWidgetTips() {
+    return !this.appService.searchKey;
+  }
+
+  async ngOnInit() {
+    this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
+    this.appService.searchWidgetRef = this.searchWidgetRef;
+    this.appService.historyElementRef = this.historyElementRef;
+    this.appService.autosizeRef = this.autosizeRef;
+  }
+
+  // 在页面渲染完成后，将与tauri通信，告知已经渲染完毕
+  public async ngAfterViewInit() {
+    await invoke("init_process", {});
+  }
+
+  // 搜索关键字变更
+  searchKeyChangeHandle(value: string) {
+    this.autosizeRef!.reset();
+    this.isUsedHistorySearchKeying = false;
+    if (this.appService.searchKey) {
+      this.appService.isOpenHistorySearchListPanel = false;
+    }
+  }
+
+  // 发送问题
+  public send() {
+    this.appService.send();
+  }
+
+  // 初次触发打开历史关键字面板，并移动选中关键字
+  public useHistorySearchHandle(code: string) {
+
+    if (this.appService.searchKey && !this.isUsedHistorySearchKeying) {
+      return;
+    }
+
+    this.appService.updateHistorySearchKeyListSelectedIndex(code);
+  }
+
+
+  // 输入回车事件时(使用选中的历史搜索关键字)
+  public keyEnterHandle() {
+    if ((this.appService.searchKey) && !this.isUsedHistorySearchKeying) {
+      return;
+    }
+
+    if (!this.appService.isOpenHistorySearchListPanel) {
+      return;
+    }
+
+    const findItem = this.appService.historySearchKeyList.find((item) => item.selected);
+    if (findItem) {
+      this.appService.searchKey = findItem.key;
+      this.appService.isOpenHistorySearchListPanel = false;
+      this.isUsedHistorySearchKeying = true;
+      this.autosizeRef?.reset();
+    }
+  }
+
+  // 历史搜索面板销毁事件处理
+  public historySearchListPanelDetachHandle() {
+    this.appService.isOpenHistorySearchListPanel = false;
+  }
+
+  // 配置面板展示/关闭事件处理
+  public settingPanelDisplayHandle() {
+    this.appService.isOpenSettingPanel = !this.appService.isOpenSettingPanel;
+  }
+}
