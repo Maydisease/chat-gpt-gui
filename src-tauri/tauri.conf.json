@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "GPT-GUI",
-    "version": "0.0.0"
+    "productName": "CHAT-GPT-GUI",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
