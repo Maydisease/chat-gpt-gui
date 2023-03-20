@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {invoke} from "@tauri-apps/api/tauri";
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { relaunch } from '@tauri-apps/api/process';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
 
@@ -32,6 +34,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+
+
+    // try {
+    //   const { shouldUpdate, manifest } = await checkUpdate()
+      // if (shouldUpdate) {
+      //   // display dialog
+      //   await installUpdate()
+      //   // install complete, restart the app
+      //   await relaunch()
+      // }
+    // } catch (error) {
+      // console.log(error)
+    // }
+
     this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
     this.appService.searchWidgetRef = this.searchWidgetRef;
     this.appService.historyElementRef = this.historyElementRef;
