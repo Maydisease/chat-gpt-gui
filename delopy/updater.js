@@ -52,6 +52,8 @@ const getSignature = async (url) => {
 
     fs.writeFileSync(UPDATER_FILE_PATH, JSON.stringify(uploaderBody));
 
+    console.log('UPDATER_FILE_PATH:', UPDATER_FILE_PATH)
+
     // console.log('uploaderBody:', uploaderBody);
 }())
 
