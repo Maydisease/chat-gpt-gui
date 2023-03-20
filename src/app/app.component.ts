@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {invoke} from "@tauri-apps/api/tauri";
-import {take} from 'rxjs/operators';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {AppService, HISTORY_LIST_ITEM_STATE, HISTORY_LIST_ITEM_TYPE} from "./app.service";
+import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
 
 @Component({
   selector: "app-root",
@@ -16,6 +15,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('historyElementRef', {static: true}) historyElementRef: ElementRef<HTMLElement> | undefined;
 
   public HISTORY_LIST_ITEM_STATE = HISTORY_LIST_ITEM_STATE;
+  public TAB_STATE = TAB_STATE;
   public searchWidgetIsFocus = false;
   public isUsedHistorySearchKeying = false;
 
@@ -92,8 +92,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.appService.isOpenHistorySearchListPanel = false;
   }
 
+  public searchKeyBlur() {
+    setTimeout(() => {
+      this.searchWidgetIsFocus = false;
+      this.appService.isOpenHistorySearchListPanel = false;
+    }, 100);
+  }
+
   // 配置面板展示/关闭事件处理
   public settingPanelDisplayHandle() {
     this.appService.isOpenSettingPanel = !this.appService.isOpenSettingPanel;
+  }
+
+  public async tabStateChange(state: TAB_STATE) {
+    this.appService.tabState = state;
+    if (state === TAB_STATE.FAVORITE_MODE) {
+      await this.appService.getFavorite();
+      await this.appService.getFavoriteCount();
+    }
   }
 }

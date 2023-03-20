@@ -8,10 +8,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {TextFieldModule} from '@angular/cdk/text-field';
 import {SendActionDirective} from "./sendAction.directive";
 import {SubstringPipe} from "../pipes/substring.pipe";
+import {IconsModule} from "../component/icons/icons.module";
 
 @NgModule({
     declarations: [AppComponent, SendActionDirective, SubstringPipe],
-    imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule],
+    imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
     providers: [],
     bootstrap: [AppComponent],
 })

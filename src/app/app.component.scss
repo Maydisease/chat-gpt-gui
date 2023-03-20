@@ -1,4 +1,5 @@
 :host {
+
   .window {
     width: 100%;
     height: 100%;
@@ -6,6 +7,71 @@
     flex-direction: column;
     box-sizing: border-box;
     -webkit-user-select: none;
+
+
+    .tab {
+      width: 100%;
+      height: 40px;
+      line-height: 40px;
+      display: flex;
+      border-bottom: 1px solid RGBA(255, 255, 255, .1);
+      background: RGBA(41, 42, 45, 1);
+      box-shadow: 0 -3px 5px inset RGBA(0, 0, 0, .3);
+
+      .item {
+        flex: 1;
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        justify-items: center;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        display: flex;
+        cursor: pointer;
+        transition: all, .2s;
+        text-shadow: 1px 1px 1px RGBA(0, 0, 0, 1);
+        color: RGBA(255, 255, 255, .5);
+        background: RGBA(0, 0, 0, 0);
+
+        &.active {
+          background: RGBA(0, 0, 0, .2);
+        }
+
+        .icon {
+          box-sizing: border-box;
+          font-size: 16px;
+          display: inline-flex;
+          justify-items: center;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
+        }
+
+        .text {
+          margin-left: 6px;
+          display: inline-block;
+          position: relative;
+          transition: all, .3s;
+        }
+
+        &.favorite {
+          .text {
+            i {
+              min-width: 16px;
+              height: 16px;
+              font-size: 12px;
+              border-radius: 8px;
+              padding: 0 4px;
+              color: RGBA(98, 148, 98, 1);
+              box-shadow: initial;
+              font-family: Arial, sans-serif;
+            }
+          }
+        }
+      }
+    }
 
     .chat-logs {
       width: 100%;
@@ -26,14 +92,14 @@
           margin-top: 15px;
           padding: 0 20px;
           box-sizing: border-box;
-          transform: translateY(-100%);
+          transform: translateY(-20px);
           -webkit-user-select: none;
           animation: ask-group-in-anime .2s ease-in forwards;
 
           @keyframes ask-group-in-anime {
             0% {
               opacity: 0;
-              transform: translateY(-100%);
+              transform: translateY(-20px);
             }
             100% {
               opacity: 1;
@@ -53,14 +119,39 @@
             .info {
               width: 100%;
               height: 25px;
+              cursor: pointer;
               line-height: 25px;
-              padding: 8px 15px 0 15px;
+              padding: 8px 5px 0 15px;
               box-sizing: border-box;
+              display: flex;
 
-              span {
+              span.text {
                 display: inline-block;
                 font-size: 14px;
                 color: RGBA(103, 157, 239, 1);
+              }
+
+              span.space {
+                flex: 1;
+              }
+
+              span.btn {
+                height: 26px;
+                line-height: 26px;
+                padding: 0 6px;
+                color: #999;
+                box-sizing: border-box;
+                border-radius: 3px;
+                display: inline-flex;
+                font-size: 14px;
+                justify-items: center;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+
+                &:hover {
+                  background: RGBA(0, 0, 0, .3);
+                }
               }
             }
 
@@ -149,6 +240,169 @@
       }
     }
 
+    .favorite-container {
+      width: 100%;
+      flex: 1;
+      height: 0;
+      display: flex;
+      flex-direction: column;
+
+      &[hidden] {
+        display: none;
+      }
+
+
+      .search-box {
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        box-sizing: border-box;
+
+        input {
+          width: 100%;
+          height: 100%;
+          outline: none;
+          padding: 0 12px;
+          color: #999;
+          border-radius: 5px;
+          box-sizing: border-box;
+          border: 1px solid RGBA(0, 0, 0, .1);
+          background: RGBA(255, 255, 255, .05);
+
+          &:focus {
+            border: 1px solid RGBA(59, 131, 240, 1);
+          }
+        }
+      }
+
+      .list {
+        width: 100%;
+        flex: 1;
+        height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-size: 0;
+
+        .wrap {
+          width: 100%;
+        }
+
+        .card {
+          width: 100%;
+          padding: 10px 20px;
+          margin-top: 15px;
+          box-sizing: border-box;
+
+          animation: card-in-anime .2s ease-in forwards;
+
+          @keyframes card-in-anime {
+            0% {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .html-wrap {
+            width: 100%;
+            padding-left: 22px;
+            box-sizing: border-box;
+            position: relative;
+            margin-bottom: 10px;
+
+            .content {
+              width: 100%;
+              display: inline-block;
+            }
+
+            &.question span.icon {
+              background: RGBA(101, 218, 121, .6);
+
+              &.delete {
+                right: 0;
+                opacity: 0.7;
+                left: initial;
+                cursor: pointer;
+                background: RGBA(59, 131, 240, 1);
+              }
+            }
+
+            &.question {
+              padding-right: 30px;
+              box-sizing: border-box;
+
+              .content {
+                width: 100%;
+                font-size: 14px;
+                box-sizing: border-box;
+                font-weight: bold;
+                -webkit-user-select: initial;
+
+                &::selection {
+                  background: RGBA(255, 255, 255, .15);
+                }
+              }
+            }
+
+            &.answer {
+              .content {
+                font-size: 14px;
+                color: #999;
+                -webkit-user-select: initial;
+                background: RGBA(0, 0, 0, .1);
+                padding: 10px;
+                border-radius: 5px;
+                box-sizing: border-box;
+
+                &::selection {
+                  background: RGBA(255, 255, 255, .15);
+                }
+
+                ::ng-deep pre {
+                  max-width: 100%;
+                  overflow-x: auto;
+                  overflow-y: hidden;
+                  margin: 15px 0 20px 0;
+                  line-height: 16px;
+                  border-radius: 5px;
+                  padding: 8px;
+                  background: RGBA(0, 0, 0, .12);
+                }
+              }
+            }
+
+            &.answer span.icon {
+              background: RGBA(248, 209, 82, .6);
+
+              &.smile {
+                top: 12px;
+              }
+            }
+
+            span {
+              position: absolute;
+              left: 0;
+              top: 3px;
+              color: RGBA(0, 0, 0, 1);
+              width: 14px;
+              height: 14px;
+              display: flex;
+              border-radius: 5px;
+              justify-content: center;
+              justify-items: center;
+              align-content: center;
+              align-items: center;
+              font-size: 10px;
+              background: RGBA(255, 255, 255, .025);
+            }
+          }
+        }
+      }
+    }
+
     .null {
       width: 100%;
       text-align: center;
@@ -166,6 +420,10 @@
       box-sizing: border-box;
       padding: 12px 12px 16px 0;
       background: RGBA(22, 22, 22, 1);
+
+      &[hidden] {
+        display: none;
+      }
 
       .wrap {
         width: 100%;
@@ -321,12 +579,24 @@
 
 .history-search-list-panel {
   width: 100%;
-  padding: 20px 20px;
+  padding: 0 20px 20px 20px;
   background: RGBA(22, 22, 22, 1);
   position: absolute;
   bottom: 60px;
   box-shadow: 0 -1px 5px RGBA(0, 0, 0, .3);
   box-sizing: border-box;
+
+  .action-bar {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    text-align: right;
+
+    span {
+      color: RGBA(59, 131, 240, 1);
+      font-size: 12px;
+    }
+  }
 
   .item {
     width: 100%;

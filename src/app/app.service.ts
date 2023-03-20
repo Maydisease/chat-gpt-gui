@@ -4,8 +4,14 @@ import {message} from "@tauri-apps/api/dialog";
 import {HttpClient} from "@angular/common/http";
 import Mousetrap from 'mousetrap';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
+import {FavoriteDatabase, FavoriteItem, FavoriteModel} from "./app.model";
 
 declare var Prism: any;
+
+export enum TAB_STATE {
+  FAVORITE_MODE,
+  ASK_MODE
+}
 
 export enum HISTORY_LIST_ITEM_STATE {
   PENDING,
@@ -51,6 +57,11 @@ export type HistorySearchKeyList = HistorySearchKeyListItem[];
 @Injectable({providedIn: 'root'})
 export class AppService {
 
+  public favoriteDb = new FavoriteDatabase();
+
+  public tabState: TAB_STATE = TAB_STATE.ASK_MODE;
+  public favoriteList: FavoriteItem[] = [];
+  public favoriteCount: number = 0;
   public appKey = localStorage.getItem('APP-KEY');
   public searchKey = '';
   public isOpenSettingPanel = false;
@@ -65,12 +76,15 @@ export class AppService {
   public askList: AskDataList = [];
 
   constructor(
-    public httpClient: HttpClient
+    public httpClient: HttpClient,
+    public favoriteModel: FavoriteModel,
   ) {
     this.appKey = localStorage.getItem('APP-KEY') || '';
     this.initShortcutKeyBind();
     this.initHistorySearchKeyList();
+    this.initFavorite();
   }
+
 
   // 每次有答案返回时，将容器的滚动条滚动至最底部
   public moveHistoryContainerScrollToBottom() {
@@ -99,8 +113,9 @@ export class AppService {
 
   // 更新密钥,将密钥写入本地存储
   updateAppKeyHandle(value: string) {
+    this.appKey = value.trim();
     this.updateAppKeyHandleTimer = setTimeout(() => {
-      localStorage.setItem('APP-KEY', value);
+      localStorage.setItem('APP-KEY', this.appKey!);
     }, 500);
   }
 
@@ -240,6 +255,63 @@ export class AppService {
 
   }
 
+  //清理历史搜索记录
+  cleanHistorySearchKeyList(event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.isOpenHistorySearchListPanel = false;
+    this.historySearchKeyList = [];
+    this.HistorySearchKeyListSelectedIndex = 0;
+    localStorage.removeItem('HISTORY-SEARCH-KEY-LIST');
+    // console.log('123123')
+  }
+
+  public async initFavorite() {
+    await this.getFavoriteCount();
+  }
+
+  public async getFavorite() {
+    const response = await this.favoriteModel.getList();
+    this.favoriteList = response;
+  }
+
+  public async getFavoriteCount() {
+    setTimeout( async() => {
+      this.favoriteCount = await this.favoriteModel.getListCount();
+      console.log('this.favoriteCount:', this.favoriteCount)
+    }, 200)
+  }
+
+  public async deleteFavorite(id: number | undefined) {
+
+    if (!id) {
+      await message('缺少必要的删除id', {title: '', type: 'info'});
+      return;
+    }
+
+    if ((await this.favoriteModel.favoriteDB.favorite.where({id}).count()) !== 0) {
+      await this.favoriteModel.delete(id);
+      await this.getFavorite();
+      await this.getFavoriteCount();
+    } else {
+      await message('无效的删除ID', {title: '', type: 'info'});
+    }
+
+  }
+
+  public async favoriteHandle(item: AskDataListItem) {
+    const data: FavoriteItem = {
+      questionContent: item.questionContent,
+      answerContent: item.answerContent,
+    };
+    if ((await this.favoriteModel.favoriteDB.favorite.where({questionContent: item.questionContent}).count()) !== 0) {
+      await message('该问题已收藏过', {title: '', type: 'info'});
+      return;
+    }
+    await this.favoriteModel.add(data);
+    await this.getFavoriteCount();
+    await message('收藏成功', {title: '', type: 'info'});
+  }
 
   // 发送
   public async send() {
@@ -259,9 +331,18 @@ export class AppService {
     const id = `ASK-${timestamp}`;
     const searchKeyClone = this.searchKey;
     this.updateAskList(id, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
+
+    // invoke('request', {content: this.searchKey, app_key: this.appKey}).then((res) => {
+    //   console.log('res')
+    // })
+
     this.httpClient.post(address, {
       "content": this.searchKey,
-      "appKey": this.appKey
+      "appKey": this.appKey,
+    }, {
+      headers: {
+        'content-type': 'application/json'
+      }
     }).subscribe(async (result: any) => {
         // 如果返回的code=1那则代表成功
         if (result && result.code === 1) {
