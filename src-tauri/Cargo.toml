@@ -1,6 +1,6 @@
 [package]
-name = "tauri-app"
-version = "0.0.0"
+name = "chat-gpt-gui"
+version = "0.0.1"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
