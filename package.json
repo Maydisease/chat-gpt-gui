@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "deploy": "node ./delopy/uploader.mjs",
+    "deploy": "node delopy/updater.js",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
@@ -23,8 +23,9 @@
     "@types/mousetrap": "^1.6.11",
     "@types/node": "^18.14.6",
     "dexie": "^3.2.3",
+    "fetch": "^1.1.0",
     "mousetrap": "^1.6.5",
-    "node-fetch": "^3.3.1",
+    "node-fetch": "2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

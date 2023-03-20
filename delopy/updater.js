@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import fetch from 'node-fetch';
+const fs = require('fs');
+const path = require('path');
+const fetch = require('node-fetch');
 
 const getSignature = async (url) => {
     return await fetch(url, {
@@ -42,7 +42,15 @@ const getSignature = async (url) => {
         }
     }
 
-    fs.writeFileSync(path.join('.','uploader', 'uploader.json'), JSON.stringify(uploaderBody));
+    const UPDATER_DIR_PATH = path.join(__dirname, '..', 'updater');
+
+    if (!fs.existsSync(UPDATER_DIR_PATH)) {
+        fs.mkdirSync(UPDATER_DIR_PATH, {recursive: true});
+    }
+
+    const UPDATER_FILE_PATH = path.join(UPDATER_DIR_PATH, 'updater.json');
+
+    fs.writeFileSync(UPDATER_FILE_PATH, JSON.stringify(uploaderBody));
 
     // console.log('uploaderBody:', uploaderBody);
 }())
