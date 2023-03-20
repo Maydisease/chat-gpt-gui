@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {invoke} from "@tauri-apps/api/tauri";
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
+import {checkUpdate, installUpdate, onUpdaterEvent} from '@tauri-apps/api/updater';
+import {relaunch} from '@tauri-apps/api/process';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
+import {getTauriVersion, getVersion} from "@tauri-apps/api/app";
 
 @Component({
   selector: "app-root",
@@ -34,19 +35,45 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    const unlisten = await onUpdaterEvent(({ error, status }) => {
+      console.log('Updater event', error, status);
+    });
+
+// you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+    unlisten();
+
+    // await installUpdate();
+    // console.log(10000)
+    //
+    // checkUpdate().then((res) => {
+    //   console.log('res')
+    // }).catch((err) => {
+    //   console.log('err:', err)
+    // }).finally(() => {
+    //   console.log('finally')
+    // })
 
 
-    // try {
-    //   const { shouldUpdate, manifest } = await checkUpdate()
-      // if (shouldUpdate) {
-      //   // display dialog
-      //   await installUpdate()
-      //   // install complete, restart the app
-      //   await relaunch()
-      // }
-    // } catch (error) {
-      // console.log(error)
-    // }
+
+    // fetch('https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/gh-pages/updater.json').then((res) => res.json()).then(async (re) => {
+    //   console.log('res', re, await getVersion())
+    // })
+
+
+    try {
+      console.log('checkUpdate:');
+      const {shouldUpdate, manifest} = await checkUpdate();
+      console.log('shouldUpdate:', shouldUpdate);
+      console.log('manifest:', manifest);
+      if (shouldUpdate) {
+        // display dialog
+        await installUpdate()
+        // install complete, restart the app
+        await relaunch()
+      }
+    } catch (error) {
+      console.log(error)
+    }
 
     this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
     this.appService.searchWidgetRef = this.searchWidgetRef;

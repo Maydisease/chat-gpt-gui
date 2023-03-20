@@ -41,7 +41,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://github.com/Maydisease/chat-gpt-gui/releases/download/updater/update.json"
+        "https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/gh-pages/updater.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"
