@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "CHAT-GPT-GUI",
-    "version": "1.0.3"
+    "version": "1.0.5"
   },
   "tauri": {
     "allowlist": {
@@ -41,7 +41,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/gh-pages/updater.json"
+        "https://maydisease.github.io/chat-gpt-gui/updater.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"

@@ -35,45 +35,34 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    const unlisten = await onUpdaterEvent(({ error, status }) => {
+    const unlisten = await onUpdaterEvent(({error, status}) => {
       console.log('Updater event', error, status);
     });
 
 // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-    unlisten();
-
-    // await installUpdate();
-    // console.log(10000)
-    //
-    // checkUpdate().then((res) => {
-    //   console.log('res')
-    // }).catch((err) => {
-    //   console.log('err:', err)
-    // }).finally(() => {
-    //   console.log('finally')
-    // })
-
-
+//     unlisten();
 
     // fetch('https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/gh-pages/updater.json').then((res) => res.json()).then(async (re) => {
     //   console.log('res', re, await getVersion())
     // })
 
 
-    try {
-      console.log('checkUpdate:');
-      const {shouldUpdate, manifest} = await checkUpdate();
-      console.log('shouldUpdate:', shouldUpdate);
-      console.log('manifest:', manifest);
-      if (shouldUpdate) {
-        // display dialog
-        await installUpdate()
-        // install complete, restart the app
-        await relaunch()
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    // try {
+    //   //   console.log('checkUpdate:');
+    //   const {shouldUpdate, manifest} = await checkUpdate();
+    //   console.log('manifest:', manifest);
+    //   if (shouldUpdate) {
+    //     // display dialog
+    //     console.log('xxxxx')
+    //     const res = await installUpdate()
+    //     console.log('33333', res)
+    //     // install complete, restart the app
+    //     await relaunch()
+    //     console.log('44444')
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    // }
 
     this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
     this.appService.searchWidgetRef = this.searchWidgetRef;
