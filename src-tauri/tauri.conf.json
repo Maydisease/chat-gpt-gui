@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "CHAT-GPT-GUI",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -41,7 +41,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://github.com/Maydisease/chat-gpt-gui/releases/download/app-v1.0.1/CHAT-GPT-GUI.app.tar.gz"
+        "https://github.com/Maydisease/chat-gpt-gui/releases/download/app-v1.0.2/CHAT-GPT-GUI.app.tar.gz"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"
