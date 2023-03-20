@@ -42,7 +42,7 @@ const getSignature = async (url) => {
         }
     }
 
-    fs.writeFileSync(path.join('uploader', 'uploader.json'), JSON.stringify(uploaderBody));
+    fs.writeFileSync(path.join('.','uploader', 'uploader.json'), JSON.stringify(uploaderBody));
 
     // console.log('uploaderBody:', uploaderBody);
 }())
