@@ -5,10 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy": "node ./delopy/uploader.mjs",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
   "dependencies": {
+    "@actions/github": "^5.1.1",
     "@angular/animations": "^15.2.0",
     "@angular/cdk": "15.2.2",
     "@angular/common": "^15.2.0",
@@ -22,6 +24,7 @@
     "@types/node": "^18.14.6",
     "dexie": "^3.2.3",
     "mousetrap": "^1.6.5",
+    "node-fetch": "^3.3.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
