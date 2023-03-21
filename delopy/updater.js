@@ -12,14 +12,11 @@ const getSignature = async (url) => {
 }
 
 (async function () {
-    const address = 'https://api.github.com/repos/Maydisease/chat-gpt-gui/releases';
-    const response = await fetch('https://api.github.com/repos/Maydisease/chat-gpt-gui/releases').then((res) => res.json())
-    // console.log('response[0]:', response[0].assets)
-    // if()
 
+    const address = 'https://api.github.com/repos/Maydisease/chat-gpt-gui/releases';
+    const response = await fetch(address).then((res) => res.json());
     const tarGzRegx = new RegExp(/tar.gz$/);
     const tarGzSigRegx = new RegExp(/tar.gz.sig$/);
-
     const version = response[0].tag_name.replace('app-v', '');
     const notes = response[0].body;
     const publishedAt = response[0].published_at;
@@ -49,12 +46,8 @@ const getSignature = async (url) => {
     }
 
     const UPDATER_FILE_PATH = path.join(UPDATER_DIR_PATH, 'updater.json');
-
     fs.writeFileSync(UPDATER_FILE_PATH, JSON.stringify(uploaderBody));
-
     console.log('UPDATER_FILE_PATH:', UPDATER_FILE_PATH)
-
-    // console.log('uploaderBody:', uploaderBody);
 }())
 
 
