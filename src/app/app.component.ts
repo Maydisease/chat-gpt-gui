@@ -5,6 +5,7 @@ import {relaunch} from '@tauri-apps/api/process';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
 import {getTauriVersion, getVersion} from "@tauri-apps/api/app";
+import {handleIsTauri} from "../main";
 
 @Component({
   selector: "app-root",
@@ -35,34 +36,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    const unlisten = await onUpdaterEvent(({error, status}) => {
-      console.log('Updater event', error, status);
-    });
-
-// you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-//     unlisten();
-
-    // fetch('https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/gh-pages/updater.json').then((res) => res.json()).then(async (re) => {
-    //   console.log('res', re, await getVersion())
-    // })
-
-
-    // try {
-    //   //   console.log('checkUpdate:');
-    //   const {shouldUpdate, manifest} = await checkUpdate();
-    //   console.log('manifest:', manifest);
-    //   if (shouldUpdate) {
-    //     // display dialog
-    //     console.log('xxxxx')
-    //     const res = await installUpdate()
-    //     console.log('33333', res)
-    //     // install complete, restart the app
-    //     await relaunch()
-    //     console.log('44444')
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    // const unlisten = await onUpdaterEvent(({error, status}) => {
+    //   console.log('Updater event', error, status);
+    // });
 
     this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
     this.appService.searchWidgetRef = this.searchWidgetRef;
@@ -72,7 +48,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // 在页面渲染完成后，将与tauri通信，告知已经渲染完毕
   public async ngAfterViewInit() {
-    await invoke("init_process", {});
+    if (handleIsTauri()) {
+      await invoke("init_process", {});
+    }
   }
 
   // 搜索关键字变更

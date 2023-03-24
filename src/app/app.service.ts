@@ -3,8 +3,10 @@ import {invoke} from "@tauri-apps/api/tauri";
 import {message} from "@tauri-apps/api/dialog";
 import {HttpClient} from "@angular/common/http";
 import Mousetrap from 'mousetrap';
+import showdown from 'showdown';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, FavoriteItem, FavoriteModel} from "./app.model";
+import {handleIsTauri} from "../main";
 
 declare var Prism: any;
 
@@ -145,7 +147,9 @@ export class AppService {
   public async checkConfigAppKey() {
     let ok = true;
     if (!this.appKey) {
-      await message(`未配置GPT密钥，请先配置GPT密钥`, {type: 'warning', title: 'GPT-GUI'});
+      if (handleIsTauri()) {
+        await message(`未配置GPT密钥，请先配置GPT密钥`, {type: 'warning', title: 'GPT-GUI'});
+      }
       this.isOpenSettingPanel = true;
       ok = false;
       setTimeout(() => {
@@ -276,7 +280,7 @@ export class AppService {
   }
 
   public async getFavoriteCount() {
-    setTimeout( async() => {
+    setTimeout(async () => {
       this.favoriteCount = await this.favoriteModel.getListCount();
       console.log('this.favoriteCount:', this.favoriteCount)
     }, 200)
@@ -315,7 +319,7 @@ export class AppService {
 
   // 发送
   public async send() {
-
+    console.log(111389)
     // 如果缺少秘钥
     if (!await this.checkConfigAppKey()) {
       return;
@@ -335,7 +339,7 @@ export class AppService {
     // invoke('request', {content: this.searchKey, app_key: this.appKey}).then((res) => {
     //   console.log('res')
     // })
-
+    console.log(111390)
     this.httpClient.post(address, {
       "content": this.searchKey,
       "appKey": this.appKey,
@@ -344,12 +348,19 @@ export class AppService {
         'content-type': 'application/json'
       }
     }).subscribe(async (result: any) => {
+        console.log(111391)
         // 如果返回的code=1那则代表成功
         if (result && result.code === 1) {
-          let content = result.content;
-          content = await invoke("greet", {name: content});
-          content = this.renderHighlight(content);
-          this.updateAskList(id, content, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
+          let markdown = result.content;
+          let html = '';
+          if (handleIsTauri()) {
+            html = await invoke("greet", {name: markdown});
+          } else {
+            const converter = new showdown.Converter();
+            html = converter.makeHtml(markdown);
+          }
+          html = this.renderHighlight(html);
+          this.updateAskList(id, html, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
 
           this.updateHistorySearchKeyList({
             key: searchKeyClone,
