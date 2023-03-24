@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "build:browser": "ng build --base-href /chat-gpt-gui/ --output-path dist/browser",
     "deploy": "node delopy/updater.js",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@actions/github": "^5.1.1",
     "@angular/animations": "^15.2.0",
-    "@angular/cdk": "15.2.2",
+    "@angular/cdk": "^15.2.4",
     "@angular/common": "^15.2.0",
     "@angular/compiler": "^15.2.0",
     "@angular/core": "^15.2.0",

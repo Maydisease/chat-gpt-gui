@@ -9,12 +9,13 @@ import {TextFieldModule} from '@angular/cdk/text-field';
 import {SendActionDirective} from "./sendAction.directive";
 import {SubstringPipe} from "../pipes/substring.pipe";
 import {IconsModule} from "../component/icons/icons.module";
+import {ModalComponent} from "../component/modal/modal.component";
 
 @NgModule({
-    declarations: [AppComponent, SendActionDirective, SubstringPipe],
-    imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
-    providers: [],
-    bootstrap: [AppComponent],
+  declarations: [AppComponent, ModalComponent, SendActionDirective, SubstringPipe],
+  imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
+  providers: [],
+  bootstrap: [AppComponent],
 })
 export class AppModule {
 }

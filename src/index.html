@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>TauriApp</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    <app-root></app-root>
-  <script>
-
-  </script>
-  </body>
+<head>
+  <meta charset="utf-8"/>
+  <title>TauriApp</title>
+  <base href="/"/>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+<app-root></app-root>
+<script>
+    let lastTouchEnd = 0;
+    document.documentElement.addEventListener('touchend', function (event) {
+        let now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+</script>
+</body>
 </html>

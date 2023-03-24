@@ -1,0 +1,11 @@
+<div class="panel">
+  <div class="wrap">
+    <div class="content">
+      <span>{{this.context.message}}</span>
+    </div>
+    <div class="action-bar">
+      <span *ngIf="this.context.$event.cancel" class="btn" (click)="cancel()">{{this.context.$event.cancelText || '取消'}}</span>
+      <span class="btn active" (click)="confirm()">{{this.context.$event.confirmText || '确定'}}</span>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,7 @@ import showdown from 'showdown';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, FavoriteItem, FavoriteModel} from "./app.model";
 import {handleIsTauri} from "../main";
+import {ModalService} from "../component/modal/modal.service";
 
 declare var Prism: any;
 
@@ -78,6 +79,7 @@ export class AppService {
   public askList: AskDataList = [];
 
   constructor(
+    public modalService: ModalService,
     public httpClient: HttpClient,
     public favoriteModel: FavoriteModel,
   ) {
@@ -149,8 +151,14 @@ export class AppService {
     if (!this.appKey) {
       if (handleIsTauri()) {
         await message(`未配置GPT密钥，请先配置GPT密钥`, {type: 'warning', title: 'GPT-GUI'});
+        this.isOpenSettingPanel = true;
+      } else {
+        this.modalService.create(`未配置GPT密钥，请先配置GPT密钥`, {
+          confirm: () => {
+            this.isOpenSettingPanel = true;
+          }
+        });
       }
-      this.isOpenSettingPanel = true;
       ok = false;
       setTimeout(() => {
         this.appKeyWidgetRef?.nativeElement?.focus();
@@ -289,7 +297,16 @@ export class AppService {
   public async deleteFavorite(id: number | undefined) {
 
     if (!id) {
-      await message('缺少必要的删除id', {title: '', type: 'info'});
+      if (handleIsTauri()) {
+        await message('缺少必要的删除id', {title: '', type: 'info'});
+      } else {
+        this.modalService.create(`缺少必要的删除id`, {
+          confirm: () => {
+            this.isOpenSettingPanel = true;
+          }
+        });
+      }
+
       return;
     }
 
@@ -298,7 +315,12 @@ export class AppService {
       await this.getFavorite();
       await this.getFavoriteCount();
     } else {
-      await message('无效的删除ID', {title: '', type: 'info'});
+      if (handleIsTauri()) {
+        await message('无效的删除ID', {title: '', type: 'info'});
+      } else {
+        this.modalService.create('无效的删除ID');
+      }
+
     }
 
   }
@@ -309,12 +331,22 @@ export class AppService {
       answerContent: item.answerContent,
     };
     if ((await this.favoriteModel.favoriteDB.favorite.where({questionContent: item.questionContent}).count()) !== 0) {
-      await message('该问题已收藏过', {title: '', type: 'info'});
+      if (handleIsTauri()) {
+        await message('该问题已收藏过', {title: '', type: 'info'});
+      } else {
+        this.modalService.create('该问题已收藏过');
+      }
+
       return;
     }
     await this.favoriteModel.add(data);
     await this.getFavoriteCount();
-    await message('收藏成功', {title: '', type: 'info'});
+    if (handleIsTauri()) {
+      await message('收藏成功', {title: '', type: 'info'});
+    } else {
+      this.modalService.create('收藏成功');
+    }
+
   }
 
   // 发送

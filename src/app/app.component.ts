@@ -1,11 +1,9 @@
 import {AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {invoke} from "@tauri-apps/api/tauri";
-import {checkUpdate, installUpdate, onUpdaterEvent} from '@tauri-apps/api/updater';
-import {relaunch} from '@tauri-apps/api/process';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
-import {getTauriVersion, getVersion} from "@tauri-apps/api/app";
 import {handleIsTauri} from "../main";
+import {ModalService} from "../component/modal/modal.service";
 
 @Component({
   selector: "app-root",
@@ -25,7 +23,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     public appService: AppService,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    public modalService: ModalService,
   ) {
 
   }
@@ -36,9 +35,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    // const unlisten = await onUpdaterEvent(({error, status}) => {
-    //   console.log('Updater event', error, status);
-    // });
 
     this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
     this.appService.searchWidgetRef = this.searchWidgetRef;
