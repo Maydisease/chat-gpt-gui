@@ -1,4 +1,4 @@
-<div class="window">
+<div class="window mobile">
   <div class="tab">
     <div
         class="item"
@@ -47,7 +47,7 @@
                [class.fail]="item.state === HISTORY_LIST_ITEM_STATE.FAIL"
           >
             <div class="loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
-            <div class="html"
+            <div class="html preview"
                  [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
                  [innerHTML]="item.answerContent"
             ></div>
@@ -102,6 +102,62 @@
           cdkAutosizeMaxRows="5">
             </textarea>
       <div class="tips" [hidden]="!displaySearchWidgetTips">↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送</div>
+    </div>
+  </div>
+</div>
+
+<div class="window pc">
+  <div class="sidebar">
+    <textarea
+        send-action
+        placeholder="请在这里输入问题  ⌘ + Enter 发送"
+        (sendActionCallback)="send()"
+        [(ngModel)]="appService.searchKey"
+        (ngModelChange)="(appService.tabState === TAB_STATE.FAVORITE_MODE) ? appService.tabState = TAB_STATE.ASK_MODE : null"
+    >
+    </textarea>
+    <div class="send"><span (click)="send()">发送</span></div>
+  </div>
+  <div class="chat">
+    <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
+    <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
+    <div class="action-bar">
+      <div
+          class="action-btn favorite"
+          [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
+          (click)="tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)"
+      >
+        <favorite-icon></favorite-icon>
+      </div>
+    </div>
+    <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+      <div class="item" *ngFor="let item of appService.askList.reverse(); let i = index;">
+        <div class="content question">
+          <p>
+            <span>#Q - {{appService.askList.length - i}}</span>
+            <span class="favorite" (click)="appService.favoriteHandle(item)"
+                  [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
+            {{item.questionContent}}
+          </p>
+        </div>
+        <div class="content answer">
+          <span></span>
+          <div class="preview loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
+          <div class="preview" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
+               [innerHTML]="item.answerContent"></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+      <div class="item" *ngFor="let item of appService.favoriteList.reverse(); let i = index;">
+        <div class="content question">
+          <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
+        </div>
+        <div class="content answer">
+          <span></span>
+          <div class="preview" [innerHTML]="item.answerContent"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
