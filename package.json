@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
-    "build:browser": "ng build --base-href /chat-gpt-gui/ --output-path dist/browser",
+    "build:browser": "ng build --base-href /chat-gpt-gui/ --output-path dist/browser && node delopy/updater.js",
     "deploy": "node delopy/updater.js",
     "watch": "ng build --watch --configuration development"
   },

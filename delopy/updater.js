@@ -39,7 +39,7 @@ const getSignature = async (url) => {
         }
     }
 
-    const UPDATER_DIR_PATH = path.join(__dirname, '..', 'updater');
+    const UPDATER_DIR_PATH = path.join(__dirname, '..', 'dist', 'browser');
 
     if (!fs.existsSync(UPDATER_DIR_PATH)) {
         fs.mkdirSync(UPDATER_DIR_PATH, {recursive: true});

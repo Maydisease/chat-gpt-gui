@@ -40,23 +40,23 @@ jobs:
           releaseBody: '增加多分辨率的支持，支持宽屏幕适配'
           releaseDraft: false
           prerelease: false
-  generate-version-control-file:
-    runs-on: ubuntu-latest
-    needs: [ publish-tauri ]
-
-    steps:
-      - uses: actions/checkout@v2
-      - run: yarn
-      - run: yarn deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate uploader.json file
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./updater
-          force_orphan: true
+#  generate-version-control-file:
+#    runs-on: ubuntu-latest
+#    needs: [ publish-tauri ]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - run: yarn
+#      - run: yarn deploy
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Generate uploader.json file
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./updater
+#          force_orphan: true
   generate-github-page:
     runs-on: ubuntu-latest
     needs: [ publish-tauri ]
