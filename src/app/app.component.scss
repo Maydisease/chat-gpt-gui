@@ -1,6 +1,10 @@
 :host {
 
   @media screen and (max-width: 800px) {
+    .window.pc {
+      display: none;
+    }
+
     .window.mobile {
       width: 100%;
       height: 100%;
@@ -411,6 +415,16 @@
         font-weight: bold;
         color: #777;
         padding-top: 50px;
+
+        p {
+          margin-top: 5px;
+          font-size: 14px;
+
+          span {
+            -webkit-user-select: initial;
+            font-size: 14px;
+          }
+        }
       }
 
       .msg-box {

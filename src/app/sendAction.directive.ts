@@ -1,5 +1,6 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {AppService} from "./app.service";
+import {PlatformUtilService} from "../utils/platform.util";
 
 @Directive({selector: '[send-action]'})
 export class SendActionDirective {
@@ -15,7 +16,8 @@ export class SendActionDirective {
 
   constructor(
     ele: ElementRef,
-    public appService: AppService
+    public appService: AppService,
+    public platformUtilService: PlatformUtilService,
   ) {
   }
 
@@ -39,10 +41,7 @@ export class SendActionDirective {
 
     const isNotUsedKeyCombination = !this.isKeyCombinationCheck(event);
 
-    console.log('isNotUsedKeyCombination:', isNotUsedKeyCombination)
-
-    if (event.metaKey && event.key === 'Enter') {
-      console.log(1212)
+    if ((event.metaKey || this.platformUtilService.isMobile) && event.key === 'Enter') {
       this.timer && clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         this.sendActionCallback.emit();
@@ -51,10 +50,6 @@ export class SendActionDirective {
       event.preventDefault();
       return;
     }
-
-    // if (isNotUsedKeyCombination) {
-    //   return;
-    // }
 
     if (event.key === 'Enter' && isNotUsedKeyCombination && this.appService.isOpenHistorySearchListPanel) {
       this.keyEnterCallback.emit();

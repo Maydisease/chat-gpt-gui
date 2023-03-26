@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '增加多分辨率的支持，支持宽屏幕适配'
+          releaseBody: '增加多分辨率的支持，优化移动设备支持'
           releaseDraft: false
           prerelease: false
 #  generate-version-control-file:
