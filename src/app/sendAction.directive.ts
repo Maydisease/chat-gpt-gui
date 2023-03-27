@@ -41,7 +41,7 @@ export class SendActionDirective {
 
     const isNotUsedKeyCombination = !this.isKeyCombinationCheck(event);
 
-    if ((event.metaKey || this.platformUtilService.isMobile) && event.key === 'Enter') {
+    if ((event.metaKey || (!this.platformUtilService.isPC && !this.platformUtilService.isTauri)) && event.key === 'Enter') {
       this.timer && clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         this.sendActionCallback.emit();

@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '优化不同终端展示下的数据排序'
+          releaseBody: '解决在桌面应用中，使用command + enter 发送消息的问题'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

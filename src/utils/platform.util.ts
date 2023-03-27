@@ -7,6 +7,8 @@ export class PlatformUtilService {
 
   public isPC = false;
 
+  public isTauri = Boolean(typeof window !== 'undefined' && window !== undefined && window.__TAURI_IPC__ !== undefined);
+
   constructor() {
     console.log('platform:isMobile:', this.isMobile);
     this.isPC = document.querySelector('body')!.clientWidth > 800;

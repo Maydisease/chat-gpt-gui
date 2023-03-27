@@ -42,7 +42,6 @@ fn main() {
 #[tauri::command]
 fn get_network() -> String {
     let id: String = machine_uid::get().unwrap();
-    println!("{}", id);
     id
 }
 
