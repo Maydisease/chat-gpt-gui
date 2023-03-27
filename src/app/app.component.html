@@ -27,10 +27,10 @@
       <p>web版: <span>https://maydisease.github.io/chat-gpt-gui</span></p>
     </div>
     <div class="ask-list" *ngIf="appService.askList.length">
-      <div class="ask-group" *ngFor="let item of appService.askList; let i = index;">
+      <div class="ask-group" *ngFor="let item of askList; let i = index;">
         <div class="question">
           <div class="info">
-            <span class="text">#Q - {{i + 1}}</span>
+            <span class="text">#Q - {{i + 1}}  <i class="date">{{item.inputTime | dateFormat}}</i></span>
             <span class="space"></span>
             <span
                 *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FINISH" class="btn action"
@@ -62,7 +62,7 @@
   <div class="favorite-container" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
     <div class="list">
       <div class="wrap">
-        <div class="card" *ngFor="let item of appService.favoriteList">
+        <div class="card" *ngFor="let item of favoriteList">
           <div class="html-wrap question">
             <span class="icon question"><question-icon></question-icon></span>
             <span class="icon delete" (click)="appService.deleteFavorite(item.id)"><delete-icon></delete-icon></span>
@@ -111,6 +111,7 @@
 </div>
 
 <div class="window pc">
+
   <div class="sidebar">
     <textarea
         send-action
@@ -135,13 +136,13 @@
       </div>
     </div>
     <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
-      <div class="item" *ngFor="let item of appService.askList.reverse(); let i = index;">
+      <div class="item" *ngFor="let item of askList let i = index;">
         <div class="content question">
           <p>
-            <span>#Q - {{appService.askList.length - i}}</span>
+            <span>#Q - <i>{{appService.askList.length - i}}</i></span>
             <span class="favorite" (click)="appService.favoriteHandle(item)"
                   [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
-            {{item.questionContent}}
+            {{item.questionContent}} <i class="date">{{item.inputTime | dateFormat}}</i>
           </p>
         </div>
         <div class="content answer">
@@ -153,7 +154,7 @@
       </div>
     </div>
     <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
-      <div class="item" *ngFor="let item of appService.favoriteList.reverse(); let i = index;">
+      <div class="item" *ngFor="let item of favoriteList let i = index;">
         <div class="content question">
           <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
         </div>
@@ -163,6 +164,10 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="qr-code">
+    <span>移动扫码访问</span>
+    <img src="assets/qr-code.png"/>
   </div>
 </div>
 

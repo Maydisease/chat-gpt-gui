@@ -33,6 +33,7 @@ export interface AskDataListItem {
   answerContent?: string,
   state: HISTORY_LIST_ITEM_STATE,
   updateTime: number;
+  inputTime: number;
 }
 
 export type AskDataList = AskDataListItem[];
@@ -187,7 +188,8 @@ export class AppService {
         id,
         state,
         questionContent,
-        updateTime
+        updateTime,
+        inputTime: new Date().getTime()
       })
     }
     this.moveHistoryContainerScrollToBottom();
@@ -275,7 +277,6 @@ export class AppService {
     this.historySearchKeyList = [];
     this.HistorySearchKeyListSelectedIndex = 0;
     localStorage.removeItem('HISTORY-SEARCH-KEY-LIST');
-    // console.log('123123')
   }
 
   public async initFavorite() {
@@ -290,7 +291,6 @@ export class AppService {
   public async getFavoriteCount() {
     setTimeout(async () => {
       this.favoriteCount = await this.favoriteModel.getListCount();
-      console.log('this.favoriteCount:', this.favoriteCount)
     }, 200)
   }
 
@@ -329,6 +329,8 @@ export class AppService {
     const data: FavoriteItem = {
       questionContent: item.questionContent,
       answerContent: item.answerContent,
+      updateTime: item.updateTime,
+      inputTime: item.inputTime
     };
     if ((await this.favoriteModel.favoriteDB.favorite.where({questionContent: item.questionContent}).count()) !== 0) {
       if (handleIsTauri()) {
@@ -351,7 +353,6 @@ export class AppService {
 
   // 发送
   public async send() {
-    console.log(111389)
     // 如果缺少秘钥
     if (!await this.checkConfigAppKey()) {
       return;
@@ -367,11 +368,6 @@ export class AppService {
     const id = `ASK-${timestamp}`;
     const searchKeyClone = this.searchKey;
     this.updateAskList(id, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
-
-    // invoke('request', {content: this.searchKey, app_key: this.appKey}).then((res) => {
-    //   console.log('res')
-    // })
-    console.log(111390)
     this.httpClient.post(address, {
       "content": this.searchKey,
       "appKey": this.appKey,
@@ -380,7 +376,6 @@ export class AppService {
         'content-type': 'application/json'
       }
     }).subscribe(async (result: any) => {
-        console.log(111391)
         // 如果返回的code=1那则代表成功
         if (result && result.code === 1) {
           let markdown = result.content;

@@ -10,9 +10,10 @@ import {SendActionDirective} from "./sendAction.directive";
 import {SubstringPipe} from "../pipes/substring.pipe";
 import {IconsModule} from "../component/icons/icons.module";
 import {ModalComponent} from "../component/modal/modal.component";
+import {DateFormatPipe} from "../pipes/dateFormat.pipe";
 
 @NgModule({
-  declarations: [AppComponent, ModalComponent, SendActionDirective, SubstringPipe],
+  declarations: [DateFormatPipe, AppComponent, ModalComponent, SendActionDirective, SubstringPipe],
   imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
   providers: [],
   bootstrap: [AppComponent],

@@ -25,6 +25,7 @@
     "@types/node": "^18.14.6",
     "@types/showdown": "^2.0.0",
     "current-device": "^0.10.2",
+    "date-fns": "^2.29.3",
     "dexie": "^3.2.3",
     "fetch": "^1.1.0",
     "mousetrap": "^1.6.5",

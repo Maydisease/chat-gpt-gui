@@ -5,6 +5,8 @@ export interface FavoriteItem {
   id?: number;
   questionContent?: string;
   answerContent?: string;
+  inputTime?: number;
+  updateTime?: number;
 
 }
 

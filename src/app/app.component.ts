@@ -4,6 +4,7 @@ import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "./app.service";
 import {handleIsTauri} from "../main";
 import {ModalService} from "../component/modal/modal.service";
+import {PlatformUtilService} from "../utils/platform.util";
 
 @Component({
   selector: "app-root",
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public appService: AppService,
     private _ngZone: NgZone,
     public modalService: ModalService,
+    public platformUtilService: PlatformUtilService,
   ) {
 
   }
@@ -108,6 +110,23 @@ export class AppComponent implements OnInit, AfterViewInit {
   // 配置面板展示/关闭事件处理
   public settingPanelDisplayHandle() {
     this.appService.isOpenSettingPanel = !this.appService.isOpenSettingPanel;
+  }
+
+  public get askList() {
+    let askList = this.appService.askList;
+    return askList.sort((itemA, itemB) => {
+      return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+    });
+  }
+
+  public get favoriteList() {
+    let favoriteList = this.appService.favoriteList;
+    return favoriteList.sort((itemA, itemB) => {
+      if (!itemB.inputTime || !itemA.inputTime) {
+        return 1;
+      }
+      return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+    });
   }
 
   public async tabStateChange(state: TAB_STATE) {

@@ -134,6 +134,11 @@
                   display: inline-block;
                   font-size: 14px;
                   color: RGBA(103, 157, 239, 1);
+
+                  i.date {
+                    color: RGBA(255, 255, 255, .3);
+                    font-size: 12px;
+                  }
                 }
 
                 span.space {
@@ -542,12 +547,37 @@
     .window.pc {
       width: 100%;
       height: 100%;
+      box-sizing: border-box;
       display: flex;
+      position: relative;
+
+      .qr-code {
+        width: 120px;
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+
+        span {
+          width: 100%;
+          height: 30px;
+          font-size: 14px;
+          line-height: 30px;
+          text-align: center;
+          display: inline-block;
+        }
+
+        img {
+          max-width: 120px;
+        }
+      }
 
       .sidebar {
         width: 360px;
         display: flex;
+        padding-bottom: 200px;
+        box-sizing: border-box;
         flex-direction: column;
+        position: relative;
         background: RGBA(33, 34, 36, 1);
 
         .tool-bar {
@@ -592,9 +622,11 @@
 
         .send {
           width: 100%;
-          height: 60px;
           padding: 12px;
           display: flex;
+          position: absolute;
+          bottom: 0;
+          right: 0;
           justify-content: right;
           box-sizing: border-box;
 
@@ -701,6 +733,11 @@
                 padding-right: 40px;
                 box-sizing: border-box;
                 font-weight: bold;
+
+                i.date{
+                  font-size: 12px;
+                  color: RGBA(255, 255, 255, .3);
+                }
 
                 span {
                   width: 80px;
