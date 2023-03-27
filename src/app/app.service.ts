@@ -31,6 +31,7 @@ export interface AskDataListItem {
   id: string,
   questionContent: string,
   answerContent?: string,
+  answerMarkdown?: string,
   state: HISTORY_LIST_ITEM_STATE,
   updateTime: number;
   inputTime: number;
@@ -175,7 +176,7 @@ export class AppService {
   }
 
   // 更新问题集合
-  public updateAskList(id: string, answerContent: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
+  public updateAskList(id: string, answerContent: string | undefined, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
     const findIndex = this.askList.findIndex((item) => item.id === id && item.state === HISTORY_LIST_ITEM_STATE.PENDING);
     const updateTime = new Date().getTime();
 
@@ -183,6 +184,7 @@ export class AppService {
       this.askList[findIndex].state = state;
       this.askList[findIndex].answerContent = answerContent;
       this.askList[findIndex].updateTime = updateTime;
+      this.askList[findIndex].answerMarkdown = answerMarkdown;
     } else if (questionContent) {
       this.askList.push({
         id,
@@ -367,10 +369,27 @@ export class AppService {
     const timestamp = new Date().getTime();
     const id = `ASK-${timestamp}`;
     const searchKeyClone = this.searchKey;
-    this.updateAskList(id, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
+    this.updateAskList(id, undefined, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
+
+    //  追加对话的上下文
+    const context: string[] = [];
+    if (this.askList && this.askList.length > 0) {
+
+      const descAskList = this.askList.sort((itemA, itemB) => {
+        return itemB.inputTime - itemA.inputTime;
+      });
+      console.log('xxxx', descAskList)
+      descAskList.map((item) => {
+        if (item.answerMarkdown) {
+          context.push(item.answerMarkdown);
+        }
+      })
+    }
+
     this.httpClient.post(address, {
       "content": this.searchKey,
       "appKey": this.appKey,
+      context,
     }, {
       headers: {
         'content-type': 'application/json'
@@ -387,7 +406,7 @@ export class AppService {
             html = converter.makeHtml(markdown);
           }
           html = this.renderHighlight(html);
-          this.updateAskList(id, html, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
+          this.updateAskList(id, html, markdown, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
 
           this.updateHistorySearchKeyList({
             key: searchKeyClone,
@@ -398,7 +417,7 @@ export class AppService {
         }
         // 否则就认为失败
         else {
-          this.updateAskList(id, result.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
+          this.updateAskList(id, result.message, undefined, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
           this.updateHistorySearchKeyList({
             key: searchKeyClone,
             state: HISTORY_LIST_ITEM_STATE.FAIL,
@@ -408,7 +427,7 @@ export class AppService {
       },
       // 请求出错，一般是网络问题
       (error) => {
-        this.updateAskList(id, error.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
+        this.updateAskList(id, error.message, undefined, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
         this.updateHistorySearchKeyList({
           key: searchKeyClone,
           state: HISTORY_LIST_ITEM_STATE.FAIL,
