@@ -7,6 +7,7 @@ import showdown from 'showdown';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, FavoriteItem, FavoriteModel} from "./app.model";
 import {handleIsTauri} from "../main";
+import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
 
 declare var Prism: any;
@@ -61,6 +62,8 @@ export type HistorySearchKeyList = HistorySearchKeyListItem[];
 
 @Injectable({providedIn: 'root'})
 export class AppService {
+
+  public version = config.package.version;
 
   public favoriteDb = new FavoriteDatabase();
 
@@ -365,7 +368,7 @@ export class AppService {
       return;
     }
 
-    const address = 'https://deploy-service.f2e.hungrypanda.co/q';
+    const address = 'https://chatgpt.kka.pw/q';
     const timestamp = new Date().getTime();
     const id = `ASK-${timestamp}`;
     const searchKeyClone = this.searchKey;
@@ -376,7 +379,7 @@ export class AppService {
     if (this.askList && this.askList.length > 0) {
 
       const descAskList = this.askList.sort((itemA, itemB) => {
-        return itemB.inputTime - itemA.inputTime;
+        return itemA.inputTime - itemB.inputTime;
       });
       console.log('xxxx', descAskList)
       descAskList.map((item) => {
