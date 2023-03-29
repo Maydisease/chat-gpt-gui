@@ -375,16 +375,18 @@ export class AppService {
     this.updateAskList(id, undefined, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
 
     //  追加对话的上下文
-    const context: string[] = [];
+    const askContext: {content: string, role: string}[] = [];
     if (this.askList && this.askList.length > 0) {
 
       const descAskList = this.askList.sort((itemA, itemB) => {
         return itemA.inputTime - itemB.inputTime;
       });
-      console.log('xxxx', descAskList)
       descAskList.map((item) => {
+        if (item.questionContent) {
+          askContext.push({content: item.questionContent, role: 'user'});
+        }
         if (item.answerMarkdown) {
-          context.push(item.answerMarkdown);
+          askContext.push({content: item.answerMarkdown, role: 'assistant'});
         }
       })
     }
@@ -392,7 +394,7 @@ export class AppService {
     this.httpClient.post(address, {
       "content": this.searchKey,
       "appKey": this.appKey,
-      context,
+      context: askContext,
     }, {
       headers: {
         'content-type': 'application/json'
