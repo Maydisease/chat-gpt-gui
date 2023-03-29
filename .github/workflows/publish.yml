@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '支持上下文对话，可以根据你上一次的问题，来做下一次问题的作答'
+          releaseBody: '优化上下文作答，使用user角色来提问题'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

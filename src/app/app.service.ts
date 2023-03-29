@@ -368,6 +368,7 @@ export class AppService {
       return;
     }
 
+    // const address = 'http://localhost:6200/q';
     const address = 'https://chatgpt.kka.pw/q';
     const timestamp = new Date().getTime();
     const id = `ASK-${timestamp}`;
@@ -375,7 +376,7 @@ export class AppService {
     this.updateAskList(id, undefined, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
 
     //  追加对话的上下文
-    const askContext: {content: string, role: string}[] = [];
+    const askContext: { content: string, role: string }[] = [];
     if (this.askList && this.askList.length > 0) {
 
       const descAskList = this.askList.sort((itemA, itemB) => {
@@ -391,8 +392,10 @@ export class AppService {
       })
     }
 
+    console.log('askContext:', askContext)
+
     this.httpClient.post(address, {
-      "content": this.searchKey,
+      "content": undefined,
       "appKey": this.appKey,
       context: askContext,
     }, {
