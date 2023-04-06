@@ -130,45 +130,73 @@
     </textarea>
     <div class="send"><span (click)="send()">发送</span></div>
   </div>
-  <div class="chat">
-    <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
-    <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
-    <div class="action-bar">
+  <div class="chat" splitter>
+    <div class="container">
+      <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
+      <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
+      <div class="action-bar">
+        <div
+            class="action-btn favorite"
+            [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
+            (click)="tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)"
+        >
+          <favorite-icon></favorite-icon>
+        </div>
+      </div>
+      <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+        <div class="item" *ngFor="let item of askList let i = index;">
+          <div class="content question">
+            <p>
+              <span>#Q - <i>{{appService.askList.length - i}}</i></span>
+              <span class="favorite" (click)="appService.favoriteHandle(item)"
+                    [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
+              {{item.questionContent}} <i class="date">{{item.inputTime | dateFormat}}</i>
+            </p>
+          </div>
+          <div class="content answer">
+            <span></span>
+            <div class="preview loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
+            <div class="preview" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
+                 [innerHTML]="item.answerContent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+        <div class="item" *ngFor="let item of favoriteList let i = index;">
+          <div class="content question">
+            <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
+          </div>
+          <div class="content answer">
+            <span></span>
+            <div class="preview" [innerHTML]="item.answerContent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state-bar">
+      <div class="item switch" [class.active]="appService.enableAskContext" (click)="appService.switchAskContextEnableStateHandle()">
+        Context
+      </div>
+      <div class="item">
+        <span class="label">Tokens≈</span>
+        <span class="value">
+        {{appService.askContextInfo.totalTokensLen}} + <i>({{appService.askContextInfo.tempQuestionTokenLen}}) </i>
+      </span>
+      </div>
+      <div class="item">
+        <span class="label">问题数:</span>
+        <span class="value">{{appService.askContextInfo.questionCount}}</span>
+      </div>
+      <div class="item">
+        <span class="label">答案数:</span>
+        <span class="value">{{appService.askContextInfo.answerCount}}</span>
+      </div>
       <div
-          class="action-btn favorite"
-          [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
-          (click)="tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)"
+          *ngIf="appService.askContextInfo.totalTokensLen > 0"
+          class="item action"
+          (click)="appService.cleanAskContextHandle()"
       >
-        <favorite-icon></favorite-icon>
-      </div>
-    </div>
-    <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
-      <div class="item" *ngFor="let item of askList let i = index;">
-        <div class="content question">
-          <p>
-            <span>#Q - <i>{{appService.askList.length - i}}</i></span>
-            <span class="favorite" (click)="appService.favoriteHandle(item)"
-                  [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
-            {{item.questionContent}} <i class="date">{{item.inputTime | dateFormat}}</i>
-          </p>
-        </div>
-        <div class="content answer">
-          <span></span>
-          <div class="preview loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
-          <div class="preview" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
-               [innerHTML]="item.answerContent"></div>
-        </div>
-      </div>
-    </div>
-    <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
-      <div class="item" *ngFor="let item of favoriteList let i = index;">
-        <div class="content question">
-          <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
-        </div>
-        <div class="content answer">
-          <span></span>
-          <div class="preview" [innerHTML]="item.answerContent"></div>
-        </div>
+        <delete-icon></delete-icon>
       </div>
     </div>
   </div>

@@ -25,7 +25,7 @@ fn init_process(window: Window) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, init_process, get_network, request])
+        .invoke_handler(tauri::generate_handler![greet, init_process, get_machine_uid, request])
         .setup(|app| {
             // #[cfg(debug_assertions)] // only include this code on debug builds
             // {
@@ -40,7 +40,7 @@ fn main() {
 }
 
 #[tauri::command]
-fn get_network() -> String {
+fn get_machine_uid() -> String {
     let id: String = machine_uid::get().unwrap();
     id
 }

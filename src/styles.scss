@@ -15,12 +15,20 @@
   -webkit-text-size-adjust: 100%;
 }
 
-.cdk-overlay-pane{
+body {
+  &.disable-selected-all * {
+    -webkit-user-select: none;
+    pointer-events: none;
+    cursor: col-resize;
+  }
+}
+
+.cdk-overlay-pane {
   display: contents;
 }
 
 .modal-backdrop {
-  background: RGBA(0,0,0,.5);
+  background: RGBA(0, 0, 0, .5);
 }
 
 html, body {

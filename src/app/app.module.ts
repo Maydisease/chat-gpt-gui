@@ -11,12 +11,13 @@ import {SubstringPipe} from "../pipes/substring.pipe";
 import {IconsModule} from "../component/icons/icons.module";
 import {ModalComponent} from "../component/modal/modal.component";
 import {DateFormatPipe} from "../pipes/dateFormat.pipe";
+import {SplitterDirective} from "./splitter.directive";
 
 @NgModule({
-  declarations: [DateFormatPipe, AppComponent, ModalComponent, SendActionDirective, SubstringPipe],
-  imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
-  providers: [],
-  bootstrap: [AppComponent],
+    declarations: [DateFormatPipe, AppComponent, ModalComponent, SendActionDirective, SubstringPipe, SplitterDirective],
+    imports: [BrowserModule, FormsModule, HttpClientModule, TextFieldModule, OverlayModule, IconsModule],
+    providers: [],
+    bootstrap: [AppComponent],
 })
 export class AppModule {
 }

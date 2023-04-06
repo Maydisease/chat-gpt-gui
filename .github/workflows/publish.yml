@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '优化上下文作答，使用user角色来提问题'
+          releaseBody: '增加上下文控制开关，并统计当前上下文的tokens数量'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

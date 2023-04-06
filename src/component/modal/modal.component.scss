@@ -17,9 +17,21 @@
     display: flex;
     box-sizing: border-box;
     border-radius: 8px;
-    border: 1px solid RGBA(255, 255, 255, .05);
-    box-shadow: 3px 3px 10px RGBA(0, 0, 0, .2);
+    border: 3px solid RGBA(63, 121, 232, .5);
+    box-shadow: 0 3px 10px RGBA(0, 0, 0, .3);
     background: RGBA(43, 43, 43, 1);
+    animation: modal-in-anime .1s ease-in forwards;
+
+    @keyframes modal-in-anime {
+      0% {
+        opacity: 0;
+        transform: scale3d(.8, .8, 1) translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale3d(1, 1, 1) translateY(0);
+      }
+    }
 
     .wrap {
       flex: 1;
@@ -30,10 +42,15 @@
       .content {
         flex: 1;
         display: flex;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 0 30px;
+        text-align: center;
         justify-items: center;
         justify-content: center;
         align-items: center;
         align-content: center;
+        color: RGBA(255, 255, 255, .6);
 
         span {
 
@@ -69,6 +86,6 @@
   }
 }
 
-:global{
+:global {
 
 }
