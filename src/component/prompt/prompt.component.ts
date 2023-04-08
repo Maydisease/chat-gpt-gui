@@ -61,8 +61,6 @@ export class PromptComponent implements OnInit {
 
     promptSelectHandle(event: Event) {
 
-        console.log('6666161')
-
         this.lock = true;
         const target = event.target as HTMLOptionElement;
         const container = this.promptListElementRef.nativeElement;
@@ -74,7 +72,6 @@ export class PromptComponent implements OnInit {
         })
 
         const targetElement = container.querySelector('#link_' + md5(target.value)) as HTMLElement;
-        console.log('targetElement::', targetElement)
         targetElement.classList.remove('hidden');
         scrollSmoothTo(undefined, container, targetElement!, 100).then(() => {
             setTimeout(() => {

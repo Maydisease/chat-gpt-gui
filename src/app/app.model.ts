@@ -30,13 +30,9 @@ export class FavoriteModel {
   public favoriteDB = new FavoriteDatabase();
 
   public async add(item: FavoriteItem) {
-    console.log(111)
     return new Promise(async (resolve) => {
-      console.log(112, this.favoriteDB)
       this.favoriteDB.transaction('rw', this.favoriteDB.favorite, async () => {
-        console.log(113)
         const id = await this.favoriteDB.favorite.add(item);
-        console.log(114)
         resolve(id);
       });
 

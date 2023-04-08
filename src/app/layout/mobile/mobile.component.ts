@@ -33,6 +33,5 @@ export class MobileComponent implements OnInit {
         this.appService.appKeyWidgetRef = this.appKeyWidgetRef;
         this.appService.searchWidgetRef = this.searchWidgetRef;
         this.appService.historyElementRef = this.historyElementRef;
-        console.log('xxx:6', this.appService.autosizeRef)
     }
 }
