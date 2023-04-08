@@ -1,12 +1,12 @@
 export function copyText(id: string | undefined, text: string, cb?: Function): void {
     const textString = text.toString();
-    let input: undefined | HTMLInputElement;
+    let input: undefined | HTMLTextAreaElement;
     if (id) {
-        input = document.querySelector(id) as HTMLInputElement;
+        input = document.querySelector(id) as HTMLTextAreaElement;
     }
     if (!input) {
         (document.activeElement as any).blur();
-        input = document.createElement('input');
+        input = document.createElement('textarea');
         input.id = "copy-input";
         input.readOnly = true;
         input.style.position = "absolute";

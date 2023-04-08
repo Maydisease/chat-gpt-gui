@@ -2,10 +2,9 @@
   <div class="search"></div>
   <div class="list" #promptListElementRef (scroll)="promptScrollHandle()">
     <div class="wrap">
-      <div class="item" [id]="'link_' + (item.title | md5)" *ngFor="let item of promptList"
-           (click)="copyHandle(item.content)">
+      <div class="item" [id]="'link_' + (item.title | md5)" *ngFor="let item of promptList">
         <a class="title">{{item.title}}</a>
-        <div class="description">{{item.content}}</div>
+        <div class="description" (click)="copyHandle(item.content)">{{item.content}}</div>
       </div>
     </div>
   </div>

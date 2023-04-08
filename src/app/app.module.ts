@@ -18,10 +18,12 @@ import {LayoutService} from "./layout/layout.service";
 import {AppService} from "./app.service";
 import {PromptComponent} from "../component/prompt/prompt.component";
 import {Md5Pipe} from "../pipes/md5.pipe";
+import {BodyEventDirective} from "../directive/bodyEvent.directive";
 
 @NgModule({
     declarations: [
         Md5Pipe,
+        BodyEventDirective,
         LayoutForPcComponent,
         MobileComponent,
         DateFormatPipe,

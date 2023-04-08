@@ -156,15 +156,17 @@ export class AppService {
             const preElement = item.closest('pre') as HTMLElement;
             const langString = item.getAttribute('class');
             let languageName = '';
-            if (preElement && langString && langString.indexOf('language-') === 0) {
-                languageName = langString.replace('language-', '');
-                try {
-                    const highlightHtml = Prism.highlight(item.textContent, Prism.languages[languageName], languageName);
-                    preElement.innerHTML = highlightHtml;
-                } catch (err) {
-
+            let highlightHtml = '';
+            if (preElement) {
+                highlightHtml = preElement.innerHTML;
+                if (langString && langString.indexOf('language-') === 0) {
+                    languageName = langString.replace('language-', '');
+                    try {
+                        highlightHtml = Prism.highlight(item.textContent, Prism.languages[languageName], languageName);
+                    } catch (err) {
+                    }
                 }
-
+                preElement.innerHTML = `<div class="code-render-container">${highlightHtml}</div><div class="code-render-copy">复制</div>`;
             }
         });
 
@@ -490,6 +492,8 @@ export class AppService {
         if (!this.searchKey) {
             return;
         }
+
+        console.log('this.searchKey:', this.searchKey)
 
         this.isPromptMode = false;
 

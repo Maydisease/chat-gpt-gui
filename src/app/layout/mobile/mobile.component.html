@@ -47,7 +47,7 @@
             </span>
           </div>
           <div class="content">
-            <div class="html">{{item.questionContent}}</div>
+            <div class="html" style="white-space: pre-wrap">{{item.questionContent}}</div>
           </div>
         </div>
         <div class="answer">
@@ -77,7 +77,7 @@
           </div>
           <div class="html-wrap answer">
             <span class="icon smile"><smile-icon></smile-icon></span>
-            <div class="content" [innerHTML]="item.answerContent"></div>
+            <div class="content preview" [innerHTML]="item.answerContent"></div>
           </div>
         </div>
       </div>

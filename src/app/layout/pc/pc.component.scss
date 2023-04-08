@@ -256,11 +256,12 @@
 
               .content.question {
                 position: relative;
+                white-space: pre-wrap;
 
                 p {
                   overflow-wrap: break-word;
                   padding-left: 100px;
-                  padding-right: 40px;
+                  padding-right: 80px;
                   box-sizing: border-box;
                   font-weight: bold;
 
@@ -313,6 +314,10 @@
 
                 .preview {
                   animation: pc-preview-anime-in .3s ease-in forwards;
+
+                  &::ng-deep h1 {
+                    font-size: 14px;
+                  }
 
                   &.loading {
                     animation: answer-loading-text-shake-anime 1.5s linear infinite;
