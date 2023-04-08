@@ -1,7 +1,7 @@
 import {Directive, ElementRef, Renderer2, Input, ViewChild} from '@angular/core';
 
-@Directive({selector: '[splitter]'})
-export class SplitterDirective {
+@Directive({selector: '[layout-splitter]'})
+export class LayoutSplitterDirective {
 
     public startMousedownX: number | null = null;
     public currentElementWidthNum = 0;

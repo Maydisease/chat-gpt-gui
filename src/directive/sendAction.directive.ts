@@ -1,5 +1,5 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {AppService} from "./app.service";
+import {AppService} from "../app/app.service";
 import {PlatformUtilService} from "../utils/platform.util";
 
 @Directive({selector: '[send-action]'})

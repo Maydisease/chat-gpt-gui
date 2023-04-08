@@ -7,6 +7,7 @@ import {BookIconComponent} from "./bookIcon.component";
 import {QuestionIconComponent} from "./questionIcon.component";
 import {SmileIconComponent} from "./smileIcon.component";
 import {DeleteIconComponent} from "./deleteIcon.component";
+import {CloseIconComponent} from "./closeIcon.component";
 
 const iconsList = [
   CommitIconComponent,
@@ -15,7 +16,8 @@ const iconsList = [
   BookIconComponent,
   QuestionIconComponent,
   SmileIconComponent,
-  DeleteIconComponent
+  DeleteIconComponent,
+  CloseIconComponent
 ];
 
 @NgModule({

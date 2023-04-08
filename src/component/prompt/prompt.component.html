@@ -1,0 +1,18 @@
+<div class="prompt-container">
+  <div class="search"></div>
+  <div class="list" #promptListElementRef (scroll)="promptScrollHandle()">
+    <div class="wrap">
+      <div class="item" [id]="'link_' + (item.title | md5)" *ngFor="let item of promptList"
+           (click)="copyHandle(item.content)">
+        <a class="title">{{item.title}}</a>
+        <div class="description">{{item.content}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="selector">
+    <button (click)="appService.isPromptMode = false">离开</button>
+    <select (change)="promptSelectHandle($event)">
+      <option [value]="item.title" *ngFor="let item of promptList">{{item.title}}</option>
+    </select>
+  </div>
+</div>

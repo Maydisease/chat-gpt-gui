@@ -1,0 +1,58 @@
+.preview {
+  line-height: 130%;
+
+  ::ng-deep {
+    pre {
+      font-size: 12px;
+      width: 100%;
+      overflow: hidden;
+      overflow-x: auto;
+      line-height: 16px;
+      margin-top: 8px;
+      margin-bottom: 25px;
+      padding: 10px;
+      border-radius: 5px;
+      box-sizing: border-box;
+      -webkit-user-select: initial;
+      background: RGBA(43, 43, 43, .3);
+
+      code {
+        font-size: 12px;
+        -webkit-user-select: initial;
+      }
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    ol {
+      box-sizing: border-box;
+      margin-top: 5px;
+
+      > li {
+        width: 100%;
+        box-sizing: border-box;
+        padding-left: 20px;
+        position: relative;
+        margin-bottom: 5px;
+
+        &:before {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #ccc;
+          content: '';
+          position: absolute;
+          left: 7px;
+          top: 6px;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}

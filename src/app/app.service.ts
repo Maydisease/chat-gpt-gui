@@ -10,6 +10,7 @@ import {handleIsTauri} from "../main";
 import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
 import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
+import {PlatformUtilService} from "../utils/platform.util";
 // @ts-ignore
 
 declare var Prism: any;
@@ -74,6 +75,7 @@ type AskContextList = AskContextItem[];
 export class AppService {
 
     public version = config.package.version;
+    public isPromptMode = false;
 
     public favoriteDb = new FavoriteDatabase();
 
@@ -98,6 +100,7 @@ export class AppService {
 
     constructor(
         public modalService: ModalService,
+        public platformUtilService: PlatformUtilService,
         public httpClient: HttpClient,
         public favoriteModel: FavoriteModel,
     ) {
@@ -410,6 +413,31 @@ export class AppService {
 
     }
 
+    public async tabStateChange(state: TAB_STATE) {
+        this.tabState = state;
+        if (state === TAB_STATE.FAVORITE_MODE) {
+            await this.getFavorite();
+            await this.getFavoriteCount();
+        }
+    }
+
+    public get sortAskList() {
+        let askList = this.askList;
+        return askList.sort((itemA, itemB) => {
+            return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+        });
+    }
+
+    public get sortFavoriteList() {
+        let favoriteList = this.favoriteList;
+        return favoriteList.sort((itemA, itemB) => {
+            if (!itemB.inputTime || !itemA.inputTime) {
+                return 1;
+            }
+            return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+        });
+    }
+
     public async cleanAskContextHandle() {
         if (handleIsTauri()) {
             const confirmed = await confirm('与Chat GTP聊天时，有上下文它可以更好的理解你的问题，确认要清理上下文吗？', 'GPT-GUI');
@@ -462,6 +490,8 @@ export class AppService {
         if (!this.searchKey) {
             return;
         }
+
+        this.isPromptMode = false;
 
         // const address = 'http://localhost:6200/q';
         const address = 'https://chatgpt.kka.pw/q';
