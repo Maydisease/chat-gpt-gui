@@ -11,9 +11,7 @@ import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
 import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
 import {PlatformUtilService} from "../utils/platform.util";
-// @ts-ignore
-
-declare var Prism: any;
+import {HtmlUtilService} from "../utils/html.util";
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -103,6 +101,7 @@ export class AppService {
         public platformUtilService: PlatformUtilService,
         public httpClient: HttpClient,
         public favoriteModel: FavoriteModel,
+        public htmlUtilService: HtmlUtilService,
     ) {
         this.appKey = localStorage.getItem('APP-KEY') || '';
         this.initShortcutKeyBind();
@@ -147,30 +146,6 @@ export class AppService {
         this.updateAppKeyHandleTimer = setTimeout(() => {
             localStorage.setItem('APP-KEY', this.appKey!);
         }, 500);
-    }
-
-    // 渲染高亮（针对答案中的代码做高亮展示）
-    renderHighlight(htmlString: string) {
-        const htmlElement = new DOMParser().parseFromString(htmlString, 'text/html');
-        htmlElement.querySelectorAll('pre code').forEach((item) => {
-            const preElement = item.closest('pre') as HTMLElement;
-            const langString = item.getAttribute('class');
-            let languageName = '';
-            let highlightHtml = '';
-            if (preElement) {
-                highlightHtml = preElement.innerHTML;
-                if (langString && langString.indexOf('language-') === 0) {
-                    languageName = langString.replace('language-', '');
-                    try {
-                        highlightHtml = Prism.highlight(item.textContent, Prism.languages[languageName], languageName);
-                    } catch (err) {
-                    }
-                }
-                preElement.innerHTML = `<div class="code-render-container">${highlightHtml}</div><div class="code-render-copy">复制</div>`;
-            }
-        });
-
-        return htmlElement.querySelector('body')!.innerHTML;
     }
 
     // 验证是否有配置密钥，如若没有将弹出tauri提供的原生弹窗
@@ -542,11 +517,15 @@ export class AppService {
                     let html = '';
                     if (handleIsTauri()) {
                         html = await invoke("greet", {name: markdown});
+                        console.log('55:markdown::', markdown);
+                        console.log('55:html::', html);
                     } else {
                         const converter = new showdown.Converter();
                         html = converter.makeHtml(markdown);
+                        console.log('55:markdown::', markdown);
+                        console.log('55:html::', html);
                     }
-                    html = this.renderHighlight(html);
+                    html = this.htmlUtilService.renderHighlight(html);
                     this.updateAskList(id, html, markdown, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
 
                     this.updateHistorySearchKeyList({

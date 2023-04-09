@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostBinding, HostListener} from '@angular/core';
-import {HtmlUtilService} from "../utils/removeHtml.util";
+import {HtmlUtilService} from "../utils/html.util";
 import {copyText} from "../libs/copy.util";
 
 @Directive({selector: '[top-container-event]'})
@@ -12,9 +12,12 @@ export class BodyEventDirective {
     handle($event: MouseEvent) {
         const element = $event.target as HTMLElement;
         if (element.classList.contains('code-render-copy')) {
-            const codeContainerElement = element.previousElementSibling;
-            if (codeContainerElement?.classList.contains('code-render-container')) {
-                const prueCodeStr = this.htmlUtilService.removeHtmlTag(codeContainerElement.outerHTML);
+            const preElement = element.previousElementSibling;
+            const codeElement = preElement?.querySelector('code');
+            console.log('codeElement:', preElement)
+            if (codeElement) {
+                const prueCodeStr = this.htmlUtilService.removeHtmlTag(codeElement.outerHTML);
+                console.log('prueCodeStr:', prueCodeStr)
                 if (prueCodeStr) {
                     copyText(undefined, prueCodeStr)
                 }
