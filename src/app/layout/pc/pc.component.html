@@ -32,7 +32,7 @@
           <div class="content question">
             <p>
               <span>#Q - <i>{{appService.askList.length - i}}</i></span>
-              <span class="favorite" (click)="appService.favoriteHandle(item)" style="white-space: pre-wrap"
+              <span class="favorite" (click)="appService.favoriteHandle(item)"
                     [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
               {{item.questionContent}} <i class="date">{{item.inputTime | dateFormat}}</i>
             </p>
@@ -40,7 +40,7 @@
           <div class="content answer">
             <span></span>
             <div class="preview loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
-            <div class="preview" style="white-space: pre-wrap" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
+            <div class="preview" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
                  [innerHTML]="item.answerContent"></div>
           </div>
         </div>
@@ -48,11 +48,11 @@
       <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
         <div class="item" *ngFor="let item of appService.sortFavoriteList let i = index;">
           <div class="content question">
-            <p><span style="white-space: pre-wrap">#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
+            <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
           </div>
           <div class="content answer">
             <span></span>
-            <div class="preview" style="white-space: pre-wrap" [innerHTML]="item.answerContent"></div>
+            <div class="preview" [innerHTML]="item.answerContent"></div>
           </div>
         </div>
       </div>
@@ -87,9 +87,5 @@
         提示词
       </div>
     </div>
-  </div>
-  <div class="qr-code">
-    <span>移动扫码访问</span>
-    <img src="../../../assets/qr-code.png"/>
   </div>
 </div>

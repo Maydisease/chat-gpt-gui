@@ -12,7 +12,7 @@
       margin: 20px 0;
       position: relative;
       border-radius: 5px;
-      padding: 30px 10px 0 10px;
+      padding: 18px 10px 0 10px;
       box-sizing: border-box;
       background: RGBA(43, 43, 43, .3);
 
@@ -32,18 +32,16 @@
       }
 
       pre {
-        font-size: 12px;
         width: 100%;
-        line-height: 16px;
         position: relative;
         overflow-y: hidden;
         overflow-x: auto;
         box-sizing: border-box;
-        padding-bottom: 25px;
+        padding-bottom: 10px;
         -webkit-user-select: initial;
 
         code {
-          font-size: 12px;
+          font-size: 14px;
           -webkit-user-select: initial;
         }
       }
