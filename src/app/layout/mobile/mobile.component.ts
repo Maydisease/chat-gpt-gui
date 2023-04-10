@@ -34,4 +34,5 @@ export class MobileComponent implements OnInit {
         this.appService.searchWidgetRef = this.searchWidgetRef;
         this.appService.historyElementRef = this.historyElementRef;
     }
+
 }

@@ -19,6 +19,7 @@ import {AppService} from "./app.service";
 import {PromptComponent} from "../component/prompt/prompt.component";
 import {Md5Pipe} from "../pipes/md5.pipe";
 import {BodyEventDirective} from "../directive/bodyEvent.directive";
+import {NoDataComponent} from "../component/no_data/noData.component";
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import {BodyEventDirective} from "../directive/bodyEvent.directive";
         MobileComponent,
         DateFormatPipe,
         AppComponent,
+        NoDataComponent,
         ModalComponent,
         PromptComponent,
         SendActionDirective,

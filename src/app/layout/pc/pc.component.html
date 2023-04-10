@@ -28,6 +28,7 @@
         </div>
       </div>
       <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+        <app-no-data *ngIf="!appService.askList.length"></app-no-data>
         <div class="item" *ngFor="let item of appService.sortAskList let i = index;">
           <div class="content question">
             <p>
