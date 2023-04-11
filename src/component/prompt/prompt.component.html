@@ -1,17 +1,29 @@
 <div class="prompt-container">
-  <div class="search"></div>
+
+  <div class="search-bar">
+    <div class="input-wrap">
+      <input
+          [(ngModel)]="promptService.searchKeyword"
+          (ngModelChange)="searchPrompt()"
+          placeholder="这里可以搜索提示词"
+      />
+      <div class="clean" [hidden]="promptService.searchKeyword === ''" (click)="cleanSearchKeyword()">
+        <close-icon></close-icon>
+      </div>
+    </div>
+  </div>
   <div class="list" #promptListElementRef (scroll)="promptScrollHandle()">
-    <div class="wrap">
+    <div class="wrap" #wrapElementRef>
       <div class="item" [id]="'link_' + (item.title | md5)" *ngFor="let item of promptList">
         <a class="title">{{item.title}}</a>
         <div class="description" (click)="copyHandle(item.content)">{{item.content}}</div>
       </div>
     </div>
   </div>
-  <div class="selector">
-    <button (click)="appService.isPromptMode = false">离开</button>
+  <div class="action-bar">
     <select (change)="promptSelectHandle($event)">
-      <option [value]="item.title" *ngFor="let item of promptList">{{item.title}}</option>
+      <option [value]="item.title" *ngFor="let item of promptListClone">{{item.title}}</option>
     </select>
+    <button (click)="appService.isPromptMode = false">离开</button>
   </div>
 </div>

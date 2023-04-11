@@ -59,7 +59,11 @@ export class LayoutService {
 
     // 搜索关键字变更
     public searchKeyChangeHandle(value: string) {
-        this.appService.autosizeRef!.reset();
+        if (value === '') {
+            this.appService.autosizeRef!.reset();
+        } else {
+            this.appService.autosizeRef!.resizeToFitContent(true);
+        }
         this.isUsedHistorySearchKeying = false;
         if (this.appService.searchKey) {
             this.appService.isOpenHistorySearchListPanel = false;

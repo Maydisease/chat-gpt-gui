@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1.增加提示词，扩展更多的智能对话可能，GPT 可以根据你扮演的角色给予更丰富的对话 <br/> 2.增加代码块的复制功能 <br/> 3.修复代码块高亮失效的问题 <br/> 4. 增加prompt示列'
+          releaseBody: '1. 优化一些已知的bug，2.支持提示词可检索'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

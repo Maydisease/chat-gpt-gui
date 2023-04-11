@@ -1,18 +1,26 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class PlatformUtilService {
 
-  public isMobile = () => window.screen.width < 500;
+    public deviceChange = new EventEmitter();
 
-  public isPC = false;
+    public isMobile = () => window.screen.width < 500;
 
-  public isTauri = Boolean(typeof window !== 'undefined' && window !== undefined && window.__TAURI_IPC__ !== undefined);
+    public isPC = false;
 
-  constructor() {
-    this.isPC = document.querySelector('body')!.clientWidth > 800;
-    window.onresize = () => {
-      this.isPC = document.querySelector('body')!.clientWidth > 800;
+    public isTauri = Boolean(typeof window !== 'undefined' && window !== undefined && window.__TAURI_IPC__ !== undefined);
+
+    constructor() {
+        this.isPC = document.querySelector('body')!.clientWidth > 800;
+        window.onresize = () => {
+            const state = document.querySelector('body')!.clientWidth > 800;
+            if (this.isPC !== state) {
+                console.log(1003)
+                this.deviceChange.emit(this.isPC);
+            }
+            this.isPC = state;
+
+        }
     }
-  }
 }
