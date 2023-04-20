@@ -1,0 +1,22 @@
+{
+  "name": "pulldown-cmark-wasm",
+  "collaborators": [
+    "Till Schneidereit <till@tillschneidereit.net>"
+  ],
+  "description": "A WebAssembly wrapper for pulldown-cmark, a pull parser for CommonMark (i.e. Markdown)",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tschneidereit/pulldown-cmark-wasm"
+  },
+  "files": [
+    "pulldown_cmark_wasm_bg.wasm",
+    "pulldown_cmark_wasm.js",
+    "pulldown_cmark_wasm.d.ts",
+    "LICENSE_MIT"
+  ],
+  "module": "pulldown_cmark_wasm.js",
+  "types": "pulldown_cmark_wasm.d.ts",
+  "sideEffects": false
+}
