@@ -1,0 +1,71 @@
+<div class="window pc">
+
+  <div class="sidebar">
+    <textarea
+        send-action
+        placeholder="请在这里输入问题  ⌘ + Enter 发送"
+        (sendActionCallback)="appService.send()"
+        [(ngModel)]="appService.searchKey"
+        (ngModelChange)="(appService.tabState === TAB_STATE.FAVORITE_MODE) ? appService.tabState = TAB_STATE.ASK_MODE : null"
+    >
+    </textarea>
+    <div class="send"><span (click)="appService.send()">发送</span></div>
+  </div>
+  <div class="chat" layout-splitter>
+    <div class="prompt-container" *ngIf="appService.isPromptMode">
+      <app-prompt [isPC]="true"></app-prompt>
+    </div>
+    <div *ngIf="!appService.isPromptMode" class="main">
+      <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
+      <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
+      <div class="action-bar">
+        <div
+            class="action-btn favorite"
+            [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
+            (click)="appService.tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)"
+        >
+          <favorite-icon></favorite-icon>
+        </div>
+      </div>
+      <div class="container">
+        <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+          <app-no-data *ngIf="!appService.askList.length"></app-no-data>
+<!--          <message-card *ngIf="appService.askList.length"></message-card>-->
+        </div>
+        <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+<!--          <message-card *ngIf="appService.favoriteList.length" [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"></message-card>-->
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!appService.isPromptMode" class="state-bar">
+      <div class="item switch" [class.active]="appService.enableAskContext"
+           (click)="appService.switchAskContextEnableStateHandle()">
+        Context
+      </div>
+      <div class="item">
+        <span class="label">Tokens≈</span>
+        <span class="value">
+        {{appService.askContextInfo.totalTokensLen}} + <i>({{appService.askContextInfo.tempQuestionTokenLen}}) </i>
+      </span>
+      </div>
+      <div class="item">
+        <span class="label">问题数:</span>
+        <span class="value">{{appService.askContextInfo.questionCount}}</span>
+      </div>
+      <div class="item">
+        <span class="label">答案数:</span>
+        <span class="value">{{appService.askContextInfo.answerCount}}</span>
+      </div>
+      <div
+          *ngIf="appService.askContextInfo.totalTokensLen > 0"
+          class="item action"
+          (click)="appService.cleanAskContextHandle()"
+      >
+        <delete-icon></delete-icon>
+      </div>
+      <div class="item action" (click)="appService.isPromptMode = true">
+        提示词
+      </div>
+    </div>
+  </div>
+</div>

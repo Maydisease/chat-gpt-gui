@@ -7,22 +7,26 @@ import {BookIconComponent} from "./bookIcon.component";
 import {QuestionIconComponent} from "./questionIcon.component";
 import {SmileIconComponent} from "./smileIcon.component";
 import {DeleteIconComponent} from "./deleteIcon.component";
+import {CloseIconComponent} from "./closeIcon.component";
+import {BulbIconComponent} from "./bulbIcon.component";
 
 const iconsList = [
-  CommitIconComponent,
-  FavoriteIconComponent,
-  GearIconComponent,
-  BookIconComponent,
-  QuestionIconComponent,
-  SmileIconComponent,
-  DeleteIconComponent
+    CommitIconComponent,
+    FavoriteIconComponent,
+    GearIconComponent,
+    BookIconComponent,
+    QuestionIconComponent,
+    SmileIconComponent,
+    DeleteIconComponent,
+    CloseIconComponent,
+    BulbIconComponent
 ];
 
 @NgModule({
-  imports: [],
-  exports: iconsList,
-  declarations: iconsList,
-  providers: [],
+    imports: [],
+    exports: iconsList,
+    declarations: iconsList,
+    providers: [],
 })
 export class IconsModule {
 }

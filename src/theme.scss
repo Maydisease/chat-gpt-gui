@@ -1,0 +1,122 @@
+@import "github-markdown-dark-dimmed";
+@import "github-markdown-light.scss";
+//@import "github-markdown-dark-dimmed.scss";
+@import "github-markdown.css";
+@import "hljs.dark-dimmed";
+@import "hljs.light";
+
+:root {
+
+  @include markdownDarkMimmed;
+  @include hljsDarkDimmed;
+
+  // 默认激活文字颜色
+  --font-active-color: #000;
+  // 默认文字色
+  --font-color: #adbac7;
+  // 默认文字辅助色
+  --font-secondary-color: #768390;
+
+  // 默认按钮文字色
+  --button-font-color: #FFF;
+  // 默认按钮背景色
+  --button-background-color: #1f883d;
+  // 默认按钮背景辅助色
+  --button-active-background-color: #939392;
+  --button-border-color: #rgba (31, 35, 40, 0.15);
+
+  --link-button-font-color: #0969da;
+
+  // 默认背景色
+  --background-color: #23272E;
+  // 默认背景辅助色
+  --secondary-background-color: #1D2127;
+
+  // 边框颜色
+  --border-color: #454C56;
+
+  // 控件的边框颜色
+  --widget-border-color: #454C56;
+  --widget-focus-border-color: #1f883d;
+  // 控件的激活边框颜色
+  --widget-active-border-color: #0969da;
+
+  // 控件的边框颜色
+  --widget-background-color: #1D2127;
+
+  --widget-focus-background-color: #1D2127;
+
+  // 控件文字颜色
+  --widget-font-color: #adbac7;
+
+  // 控件占位符颜色
+  --widget-placeholder-font-color: #768390;
+
+  --color-shadow-medium: 0 3px 6px #1c2128;
+
+  --color-primer-active: #fd8c73;
+  --color-action-list-item-default-hover-bg: #2B3037;
+
+}
+
+[data-theme="dark"] {
+
+  @include markdownLight;
+  @include hljsLight;
+
+  // 默认激活文字颜色
+  --font-active-color: #000;
+  // 默认文字色
+  --font-color: #1F2328;
+  // 默认文字辅助色
+  --font-secondary-color: #656d76;
+
+  // 默认按钮文字色
+  --button-font-color: #FFF;
+  // 默认按钮背景色
+  --button-background-color: #1f883d;
+  // 默认按钮背景辅助色
+  --button-active-background-color: #939392;
+  --button-border-color: #rgba (31, 35, 40, 0.15);
+
+  --link-button-font-color: #0969da;
+
+  // 默认背景色
+  --background-color: #FFF;
+  // 默认背景辅助色
+  --secondary-background-color: #f6f8fa;
+
+  // 边框颜色
+  --border-color: #d0d7de;
+
+  // 控件的边框颜色
+  --widget-border-color: #D0D7DE;
+  --widget-focus-border-color: #1f883d;
+  // 控件的激活边框颜色
+  --widget-active-border-color: #D0D7DE;
+
+  // 控件的边框颜色
+  --widget-background-color: #F6F7FA;
+
+  --widget-focus-background-color: #FFF;
+
+  // 控件文字颜色
+  --widget-font-color: #1F2328;
+
+  // 控件占位符颜色
+  --widget-placeholder-font-color: #656d76;
+
+  --color-shadow-medium: 0 3px 6px rgba(140, 149, 159, 0.15);
+
+  --color-primer-active: #fd8c73;
+  --color-action-list-item-default-hover-bg: rgba(208, 215, 222, 0.32);
+}
+
+//
+//@media (prefers-color-scheme: light) {
+//
+//}
+//
+//@media (prefers-color-scheme: dark) {
+//
+//}

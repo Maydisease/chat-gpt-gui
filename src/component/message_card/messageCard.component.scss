@@ -1,0 +1,192 @@
+@mixin x_y_center {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+:host {
+  color: #1F2328;
+  display: contents;
+
+  .message-cards {
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
+    padding: 16px 16px 120px 16px;
+    box-sizing: border-box;
+
+    .card {
+      padding: 16px 0;
+
+      .item {
+        box-sizing: border-box;
+        border-radius: 6px;
+
+        .tip-bar {
+          height: 36px;
+          line-height: 36px;
+          padding-left: 5px;
+          box-sizing: border-box;
+          display: flex;
+
+          .text {
+            font-size: 14px;
+            margin-right: 5px;
+
+            &.sn {
+              color: var(--font-color);
+              font-weight: bold;
+            }
+
+            &.date {
+              color: var(--font-secondary-color);
+            }
+          }
+
+          .space {
+            flex: 1;
+          }
+
+          .icon {
+            width: 28px;
+            height: 28px;
+            line-height: 36px;
+            cursor: pointer;
+            margin: 4px;
+            border-radius: 4px;
+            color: var(--font-secondary-color);
+            @include x_y_center;
+
+            &:hover {
+              color: var(--font-color);
+              background: var(--color-action-list-item-default-hover-bg);
+            }
+          }
+
+
+        }
+
+        .question {
+          width: 100%;
+          font-size: 14px;
+          padding: 5px 5px 15px 5px;
+          box-sizing: border-box;
+          margin-bottom: 15px;
+          color: var(--font-color);
+          border-bottom: 1px dashed var(--border-color);
+        }
+
+        .content {
+          width: 100%;
+          overflow: hidden;
+          padding: 16px;
+          box-sizing: border-box;
+          transition: all, .3s;
+          background: var(--background-color);
+          border: 1px solid var(--border-color);
+          box-shadow: var(--color-shadow-medium);
+          border-radius: 4px;
+          transform-origin: 100% 100%;
+          animation: content-anime-in .3s forwards;
+          @keyframes content-anime-in {
+            0% {
+              //opacity: 0;
+              //transform: translateY(20px);
+            }
+            100% {
+              //opacity: 1;
+              //transform: translateY(0);
+            }
+          }
+
+          .wrap {
+            font-size: 14px;
+            box-sizing: border-box;
+
+            &.answer {
+              padding-bottom: 0;
+              animation: answer-anime-in .3s forwards;
+              @keyframes answer-anime-in {
+                0% {
+                  opacity: 0;
+                }
+                100% {
+                  opacity: 1;
+                }
+              }
+
+              ::ng-deep .code-render {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                margin-bottom: 15px;
+                border-radius: 6px;
+                padding-bottom: 0;
+                box-sizing: border-box;
+                background: var(--secondary-background-color);
+
+                pre {
+                  margin-bottom: 0;
+                }
+
+                .tools {
+                  opacity: 0;
+                  height: 22px;
+                  line-height: 22px;
+                  padding: 0 5px;
+                  position: absolute;
+                  right: 8px;
+                  top: 8px;
+                  cursor: pointer;
+                  transform: translateX(20px);
+                  transition: all, .2s;
+                  color: var(--link-button-font-color);
+                  font-size: 12px;
+                  border-radius: 5px;
+                  background: var(--background-color);
+                  border: 1px solid var(--border-color);
+                }
+
+                &:hover {
+                  .tools {
+                    opacity: 1;
+                    font-weight: bold;
+                    transform: translateX(0);
+                  }
+                }
+              }
+            }
+          }
+
+          .pending {
+            font-size: 14px;
+            color: var(--font-color);
+          }
+        }
+      }
+
+      .item:first-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .item:last-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: none;
+      }
+    }
+  }
+
+  .message-cards.pc-mode {
+    height: initial;
+    overflow-y: initial;
+    padding-bottom: 20px;
+
+    .card .item .content {
+      border: none;
+    }
+  }
+}

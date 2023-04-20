@@ -25,11 +25,11 @@ fn init_process(window: Window) {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, init_process, get_network, request])
+        .invoke_handler(tauri::generate_handler![greet, init_process, get_machine_uid, request])
         .setup(|app| {
             // #[cfg(debug_assertions)] // only include this code on debug builds
             // {
-            //     let window = app.get_window("main").unwrap();
+                let mut window = app.get_window("main").unwrap();
             //     window.open_devtools();
             //     window.close_devtools();
             // }
@@ -40,9 +40,8 @@ fn main() {
 }
 
 #[tauri::command]
-fn get_network() -> String {
+fn get_machine_uid() -> String {
     let id: String = machine_uid::get().unwrap();
-    println!("{}", id);
     id
 }
 

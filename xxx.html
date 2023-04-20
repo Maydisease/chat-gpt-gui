@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+<script>
+    function encrypt(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        return Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+    }
+
+    console.log(encrypt("Hello World! 你好👍"));
+
+    function decrypt(hex) {
+        const bytes = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+        const decoder = new TextDecoder();
+        return decoder.decode(bytes);
+    }
+
+    console.log(decrypt(encrypt("Hello World! 你好👍")));
+</script>
+
+</body>
+</html>

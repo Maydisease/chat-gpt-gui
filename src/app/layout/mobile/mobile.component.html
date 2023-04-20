@@ -1,0 +1,179 @@
+<div class="window mobile" [class.show]="!appService.isPromptMode">
+  <div class="tab">
+    <div
+        class="item"
+        [class.active]="appService.tabState === TAB_STATE.ASK_MODE"
+        (click)="appService.tabStateChange(TAB_STATE.ASK_MODE);"
+    >
+      <span class="icon">
+        <commit-icon></commit-icon>
+      </span>
+      <span class="text">问答</span>
+    </div>
+    <div
+        class="item favorite"
+        [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
+        (click)="appService.tabStateChange(TAB_STATE.FAVORITE_MODE)"
+    >
+      <span class="icon" style="color: RGBA(248,209,82,1)">
+        <favorite-icon></favorite-icon>
+      </span>
+      <span class="text">收藏 <i *ngIf="appService.favoriteCount > 0"> ({{appService.favoriteCount}})</i></span>
+    </div>
+  </div>
+  <div [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE" class="chat-logs" #historyElementRef>
+    <app-no-data *ngIf="!appService.askList.length"></app-no-data>
+    <message-card
+        [dataList]="appService.askList"
+        *ngIf="appService.askList.length"
+    ></message-card>
+  </div>
+  <div class="favorite-container" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+    <message-card
+        [dataList]="appService.favoriteList"
+        [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"
+    ></message-card>
+    <div *ngIf="!appService.favoriteList.length" class="favorite-null">暂无任何收藏～</div>
+  </div>
+
+
+  <div class="msg-box"
+       [hidden]="appService.tabState !== TAB_STATE.ASK_MODE"
+       cdkOverlayOrigin
+       #trigger1="cdkOverlayOrigin"
+       #trigger2="cdkOverlayOrigin"
+  >
+    <div class="state-bar" *ngIf="appService.tabState === TAB_STATE.ASK_MODE">
+      <div class="wrap">
+        <div class="item switch"
+             [class.active]="appService.enableAskContext"
+             (click)="appService.switchAskContextEnableStateHandle()"
+        >Context
+        </div>
+        <div class="item">
+          <span class="label">Tokens</span>
+          <span class="value">
+          {{appService.askContextInfo.totalTokensLen}} +
+          <i>({{appService.askContextInfo.tempQuestionTokenLen}})</i>
+        </span>
+        </div>
+        <div class="item">
+          <span class="label">问题数:</span>
+          <span class="value">{{appService.askContextInfo.questionCount}}</span>
+        </div>
+        <div class="item">
+          <span class="label">答案数:</span>
+          <span class="value">{{appService.askContextInfo.answerCount}}</span>
+        </div>
+        <div class="item btn icon"
+             *ngIf="appService.askContextInfo.totalTokensLen > 0"
+             (click)="appService.cleanAskContextHandle()"
+        >
+          <delete-icon></delete-icon>
+        </div>
+        <div class="item btn" (click)="appService.isPromptMode = true">提示词</div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="wrap">
+
+        <span class="icon" [class.active]="appService.isOpenSettingPanel"
+              (click)="layoutService.settingPanelDisplayHandle()">
+          <gear-icon></gear-icon>
+        </span>
+        <textarea
+            type="submit"
+            send-action
+            (sendActionCallback)="appService.send()"
+            (focusCallback)="appService.isOpenSettingPanel = false; layoutService.searchWidgetIsFocus = true"
+            (blurCallback)="layoutService.searchKeyBlur();"
+            (useHistorySearchCallback)="layoutService.useHistorySearchHandle($event)"
+            (keyEnterCallback)="layoutService.keyEnterHandle()"
+            #searchWidgetRef
+            [(ngModel)]="appService.searchKey"
+            (ngModelChange)="layoutService.searchKeyChangeHandle($event)"
+            [isUsedHistorySearchKeying]="layoutService.isUsedHistorySearchKeying"
+            placeholder="请输入问题"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5">
+            </textarea>
+        <div class="tips" [hidden]="!layoutService.displaySearchWidgetTips">↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送</div>
+        <div class="clean-search-key" (click)="appService.clearSearchKey()" *ngIf="appService.searchKey.length > 0">
+          <close-icon></close-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger1"
+      [cdkConnectedOverlayOpen]="appService.isOpenSettingPanel"
+      (overlayOutsideClick)="appService.isOpenSettingPanel = false"
+  >
+    <div class="setting-panel">
+      <div class="wrap">
+        <div class="row">
+          <div class="item">
+            <label>秘钥</label>
+            <div class="control">
+            <textarea
+                tabindex="-1"
+                #appKeyWidgetRef
+                [ngModel]="appService.appKey"
+                (ngModelChange)="appService.updateAppKeyHandle($event)"
+                placeholder="请在这里输入秘钥 密钥格式 sk-*"
+                contenteditable="true"
+            ></textarea>
+            </div>
+          </div>
+          <div class="item">
+            <label>模型</label>
+            <div class="control">
+              <select tabindex="-1">
+                <option>gpt-3.5-turbo</option>
+                <option>text-davinci-003</option>
+              </select>
+            </div>
+          </div>
+          <div class="item">
+            <label>主题</label>
+            <div class="control">
+              <select tabindex="-1"  (change)="themeHandle($event)">
+                <option>Dark</option>
+                <option>Light</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger2"
+      [cdkConnectedOverlayOpen]="appService.isOpenHistorySearchListPanel"
+      (detach)="layoutService.historySearchListPanelDetachHandle()"
+  >
+    <div class="history-search-list-panel">
+      <div class="action-bar">
+        <span (click)="appService.cleanHistorySearchKeyList($event)">清理</span>
+      </div>
+      <div class="item" [class.active]="item.selected" *ngFor="let item of appService.historySearchKeyList">
+        {{item.key}}
+      </div>
+    </div>
+  </ng-template>
+</div>
+<div class="window mobile" [class.show]="appService.isPromptMode">
+  <app-prompt [isPC]="false" *ngIf="appService.isPromptMode"></app-prompt>
+</div>
+
+
+
+

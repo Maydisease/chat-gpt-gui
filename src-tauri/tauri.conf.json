@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "GPT-GUI",
-    "version": "0.0.0"
+    "productName": "CHAT-GPT-GUI",
+    "version": "1.2.7"
   },
   "tauri": {
     "allowlist": {
@@ -21,6 +21,10 @@
         "all": true,
         "open": true,
         "save": true
+      },
+      "window": {
+        "all": true,
+        "setTitle": true
       }
     },
     "bundle": {
@@ -39,7 +43,12 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://maydisease.github.io/chat-gpt-gui/updater.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"
     },
     "windows": [
       {
@@ -51,7 +60,8 @@
         "height": 800,
         "minHeight": 800,
         "hiddenTitle": true,
-        "visible": false
+        "visible": false,
+        "theme": "Dark"
       }
     ]
   }
