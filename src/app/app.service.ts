@@ -1,11 +1,12 @@
 import {ElementRef, Injectable} from '@angular/core';
 import {invoke} from "@tauri-apps/api/tauri";
 import {message, confirm} from "@tauri-apps/api/dialog";
+
 import {HttpClient} from "@angular/common/http";
 import Mousetrap from 'mousetrap';
 import showdown from 'showdown';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {FavoriteDatabase, FavoriteItem, FavoriteModel} from "./app.model";
+import {FavoriteDatabase, AskFavoriteListItem, FavoriteModel, AskFavoriteList} from "./app.model";
 import {handleIsTauri} from "../main";
 import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
@@ -28,18 +29,6 @@ export enum HISTORY_LIST_ITEM_TYPE {
     'ANSWER' = 'answer',
     'QUESTION' = 'question',
 }
-
-export interface AskDataListItem {
-    id: string,
-    questionContent: string,
-    answerContent?: string,
-    answerMarkdown?: string,
-    state: HISTORY_LIST_ITEM_STATE,
-    updateTime: number;
-    inputTime: number;
-}
-
-export type AskDataList = AskDataListItem[];
 
 export interface HistoryListItem {
     id: string,
@@ -78,7 +67,7 @@ export class AppService {
     public favoriteDb = new FavoriteDatabase();
 
     public tabState: TAB_STATE = TAB_STATE.ASK_MODE;
-    public favoriteList: FavoriteItem[] = [];
+    public favoriteList: AskFavoriteListItem[] = [];
     public favoriteCount: number = 0;
     public appKey = localStorage.getItem('APP-KEY');
     public searchKey = '';
@@ -91,7 +80,7 @@ export class AppService {
     public autosizeRef: CdkTextareaAutosize | undefined;
     public HistorySearchKeyListSelectedIndex = 0;
     public historySearchKeyList: HistorySearchKeyList = [];
-    public askList: AskDataList = [];
+    public askList: AskFavoriteList = [];
 
     public askContext: AskContextList = [];
     public enableAskContext = false;
@@ -177,8 +166,8 @@ export class AppService {
     }
 
     // 更新问题集合
-    public updateAskList(id: string, answerContent: string | undefined, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
-        const findIndex = this.askList.findIndex((item) => item.id === id && item.state === HISTORY_LIST_ITEM_STATE.PENDING);
+    public updateAskList(key: string, answerContent: string | undefined, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
+        const findIndex = this.askList.findIndex((item) => item.key === key && item.state === HISTORY_LIST_ITEM_STATE.PENDING);
         const updateTime = new Date().getTime();
 
         if (findIndex > -1) {
@@ -188,7 +177,7 @@ export class AppService {
             this.askList[findIndex].answerMarkdown = answerMarkdown;
         } else if (questionContent) {
             this.askList.push({
-                id,
+                key,
                 state,
                 questionContent,
                 updateTime,
@@ -328,10 +317,14 @@ export class AppService {
 
     }
 
-    public async favoriteHandle(item: AskDataListItem) {
-        const data: FavoriteItem = {
+    public async favoriteHandle(item: AskFavoriteListItem) {
+        const data: AskFavoriteListItem = {
+            key: item.key!,
+            id: item.id!,
+            state: item.state,
             questionContent: item.questionContent,
             answerContent: item.answerContent,
+            answerMarkdown: item.answerMarkdown,
             updateTime: item.updateTime,
             inputTime: item.inputTime
         };
@@ -401,7 +394,7 @@ export class AppService {
     public get sortAskList() {
         let askList = this.askList;
         return askList.sort((itemA, itemB) => {
-            return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+            return this.platformUtilService.isPC ? itemB.inputTime! - itemA.inputTime! : itemA.inputTime! - itemB.inputTime!
         });
     }
 
@@ -484,7 +477,7 @@ export class AppService {
         if (this.enableAskContext) {
             if (this.askList && this.askList.length > 0) {
                 const descAskList = this.askList.sort((itemA, itemB) => {
-                    return itemA.inputTime - itemB.inputTime;
+                    return itemA.inputTime! - itemB.inputTime!;
                 });
                 descAskList.map((item) => {
                     if (item.state !== HISTORY_LIST_ITEM_STATE.FAIL) {

@@ -15,7 +15,7 @@
     <div class="prompt-container" *ngIf="appService.isPromptMode">
       <app-prompt [isPC]="true"></app-prompt>
     </div>
-    <div *ngIf="!appService.isPromptMode" class="container">
+    <div *ngIf="!appService.isPromptMode" class="main">
       <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
       <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
       <div class="action-bar">
@@ -27,34 +27,13 @@
           <favorite-icon></favorite-icon>
         </div>
       </div>
-      <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
-        <app-no-data *ngIf="!appService.askList.length"></app-no-data>
-        <div class="item" *ngFor="let item of appService.sortAskList let i = index;">
-          <div class="content question">
-            <p>
-              <span>#Q - <i>{{appService.askList.length - i}}</i></span>
-              <span class="favorite" (click)="appService.favoriteHandle(item)"
-                    [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH">[收藏]</span>
-              {{item.questionContent}} <i class="date">{{item.inputTime | dateFormat}}</i>
-            </p>
-          </div>
-          <div class="content answer">
-            <span></span>
-            <div class="preview loading" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">LOADING...</div>
-            <div class="preview" [hidden]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
-                 [innerHTML]="item.answerContent"></div>
-          </div>
+      <div class="container">
+        <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+          <app-no-data *ngIf="!appService.askList.length"></app-no-data>
+<!--          <message-card *ngIf="appService.askList.length"></message-card>-->
         </div>
-      </div>
-      <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
-        <div class="item" *ngFor="let item of appService.sortFavoriteList let i = index;">
-          <div class="content question">
-            <p><span>#F-{{appService.favoriteList.length - i}}</span>{{item.questionContent}}</p>
-          </div>
-          <div class="content answer">
-            <span></span>
-            <div class="preview" [innerHTML]="item.answerContent"></div>
-          </div>
+        <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+<!--          <message-card *ngIf="appService.favoriteList.length" [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"></message-card>-->
         </div>
       </div>
     </div>

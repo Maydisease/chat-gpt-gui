@@ -15,7 +15,7 @@
   <p>
       <span class="demo-container">
         <span class="role"># 扮演技术审查员</span>
-        <textarea readonly class="prompt-demo-textarea">{{promptDemoText}}</textarea>
+        <textarea [ngStyle]="{background: 'none'}" readonly class="prompt-demo-textarea">{{promptDemoText}}</textarea>
         <button (click)="tryPromptDemo()">试一试 Prompt</button>
       </span>
   </p>

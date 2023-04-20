@@ -21,6 +21,10 @@
         "all": true,
         "open": true,
         "save": true
+      },
+      "window": {
+        "all": true,
+        "setTitle": true
       }
     },
     "bundle": {
@@ -56,7 +60,8 @@
         "height": 800,
         "minHeight": 800,
         "hiddenTitle": true,
-        "visible": false
+        "visible": false,
+        "theme": "Dark"
       }
     ]
   }

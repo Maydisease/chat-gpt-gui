@@ -20,6 +20,7 @@
       transition: all, .5s;
       transform: scale(0.8);
       opacity: 0;
+      background: var(--secondary-background-color);
 
       &.show {
         display: flex;
@@ -32,9 +33,7 @@
         height: 40px;
         line-height: 40px;
         display: flex;
-        border-bottom: 1px solid RGBA(255, 255, 255, .1);
-        background: RGBA(41, 42, 45, 1);
-        box-shadow: 0 -3px 5px inset RGBA(0, 0, 0, .3);
+        box-shadow: var(--color-shadow-medium);
 
         .item {
           flex: 1;
@@ -49,12 +48,34 @@
           display: flex;
           cursor: pointer;
           transition: all, .2s;
-          text-shadow: 1px 1px 1px RGBA(0, 0, 0, 1);
-          color: RGBA(255, 255, 255, .5);
-          background: RGBA(0, 0, 0, 0);
+          color: var(--font-color);
+          background: var(--background-color);
+
+          &:before {
+            content: '';
+            width: 100%;
+            height: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: RGBA(255, 255, 255, 0);
+          }
 
           &.active {
-            background: RGBA(0, 0, 0, .2);
+            &:before {
+              background: var(--color-primer-active);
+              animation: tab-active-bottom-in .3s forwards;
+              @keyframes tab-active-bottom-in {
+                0% {
+                  opacity: 0;
+                  transform: scaleX(0);
+                }
+                100% {
+                  opacity: 1;
+                  transform: scaleX(1);
+                }
+              }
+            }
           }
 
           .icon {
@@ -82,7 +103,7 @@
                 font-size: 12px;
                 border-radius: 8px;
                 padding: 0 4px;
-                color: RGBA(98, 148, 98, 1);
+                color: var(--button-background-color);
                 box-shadow: initial;
                 font-family: Arial, sans-serif;
               }
@@ -270,6 +291,13 @@
         display: flex;
         flex-direction: column;
 
+        .favorite-null {
+          width: 100%;
+          margin-top: 200px;
+          text-align: center;
+          color: var(--font-secondary-color);
+        }
+
         &[hidden] {
           display: none;
         }
@@ -444,7 +472,8 @@
           padding: 12px 12px 16px 0;
           box-sizing: border-box;
           position: relative;
-          background: RGBA(22, 22, 22, 1);
+          background: var(--background-color);
+          box-shadow: var(--color-shadow-medium);
 
           .wrap {
             width: 100%;
@@ -464,7 +493,8 @@
               position: absolute;
               right: 0;
               top: 0;
-              color: #999;
+              cursor: pointer;
+              color: var(--font-secondary-color);
             }
 
             .tips {
@@ -472,7 +502,8 @@
               height: 25px;
               right: 0;
               bottom: 0;
-              color: RGBA(255, 255, 255, .3);
+              pointer-events: none;
+              color: var(--font-secondary-color);
               font-size: 12px;
               position: absolute;
               box-sizing: border-box;
@@ -488,17 +519,19 @@
               justify-items: center;
               justify-content: center;
               align-items: center;
-              color: #999;
+              cursor: pointer;
+              color: var(--font-secondary-color);
               border-radius: 5px;
               align-content: center;
 
               &.active {
-                color: RGBA(59, 131, 240, 1);
-                background: RGBA(37, 37, 37, 1);
+                color: var(--font-active-color);
+                background: var(--secondary-background-color);
               }
 
               &:hover {
-                background: RGBA(37, 37, 37, 1);
+                color: var(--font-color);
+                background: var(--secondary-background-color)
               }
             }
 
@@ -507,16 +540,13 @@
               height: 100%;
               border-radius: 5px;
               outline: none;
-              color: #999;
               font-size: 14px;
               resize: none;
-              border: 1px solid RGBA(59, 131, 240, 0);
               padding: 5px 37px 5px 5px;
               box-sizing: border-box;
-              background: RGBA(37, 37, 37, 1);
 
               &:focus {
-                border: 1px solid RGBA(59, 131, 240, .7);
+                border: 1px solid var(--widget-active-border-color);
               }
             }
 
@@ -574,7 +604,8 @@
             padding: 0 15px;
             border-radius: 8px;
             box-sizing: border-box;
-            background: RGBA(38, 38, 38, 1);
+            background: var(--background-color);
+            box-shadow: var(--color-shadow-medium);
 
             .item {
               font-size: 12px;
@@ -586,41 +617,41 @@
               align-items: center;
 
               &.switch {
-                color: RGBA(255, 255, 255, .3);
+                color: var(--font-secondary-color);
                 position: relative;
-                padding-left: 12px;
+                padding-left: 16px;
                 cursor: pointer;
 
                 &:before {
                   content: '';
-                  width: 8px;
-                  height: 8px;
+                  width: 10px;
+                  height: 10px;
                   left: 0;
-                  top: 8px;
-                  border-radius: 5px;
+                  top: 7px;
+                  border-radius: 3px;
                   position: absolute;
-                  background: RGBA(255, 255, 255, .3);
+                  background: var(--font-secondary-color);
                 }
 
                 &.active {
-                  color: RGBA(98, 148, 98, 1);
+                  color: var(--font-secondary-color);
 
                   &:before {
-                    background: RGBA(98, 148, 98, 1);
+                    background: var(--button-background-color);
                   }
                 }
               }
 
               .label {
-                color: RGBA(255, 255, 255, .3);
+                color: var(--font-secondary-color);
               }
 
               .value {
-                color: RGBA(255, 255, 255, .3);
+                color: var(--font-secondary-color);
                 margin-left: 3px;
 
                 i {
-                  color: RGBA(98, 148, 98, 1);
+                  color: var(--button-background-color);
                 }
               }
 
@@ -634,24 +665,16 @@
                 border-radius: 5px;
                 justify-items: center;
                 align-items: center;
-                color: RGBA(255, 255, 255, .3);
+                color: var(--link-button-font-color);
 
                 &.icon {
                   line-height: 24px;
-                }
-
-                &:hover {
-                  background: RGBA(0, 0, 0, .3);
                 }
               }
             }
           }
         }
-
-
       }
-
-
     }
   }
 }
@@ -659,10 +682,10 @@
 .history-search-list-panel {
   width: 100%;
   padding: 0 20px 20px 20px;
-  background: RGBA(22, 22, 22, 1);
+  background: var(--background-color);
   position: absolute;
   bottom: 60px;
-  box-shadow: 0 -1px 5px RGBA(0, 0, 0, .3);
+  box-shadow: var(--color-shadow-medium);
   box-sizing: border-box;
 
   .action-bar {
@@ -672,7 +695,7 @@
     text-align: right;
 
     span {
-      color: RGBA(59, 131, 240, 1);
+      color: var(--link-button-font-color);
       font-size: 12px;
     }
   }
@@ -680,18 +703,18 @@
   .item {
     width: 100%;
     height: 35px;
-    line-height: 29px;
+    line-height: 33px;
     padding: 0 15px;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: 3px solid RGBA(59, 131, 240, 0);
+    border: 1px solid RGBA(255, 255, 255, 0);
 
     &.active {
-      color: RGBA(59, 131, 240, 1);
-      border: 3px solid RGBA(59, 131, 240, 1);
+      color: var(--widget-font-color);
+      border: 1px solid var(--widget-focus-border-color);
     }
   }
 }
@@ -705,7 +728,8 @@
   transition: all, .5s;
   padding: 25px 0 52px 0;
   box-sizing: border-box;
-  background: RGBA(22, 22, 22, 1);
+  background: var(--background-color);
+  box-shadow: var(--color-shadow-medium);
 
   .wrap {
     width: 100%;
@@ -726,6 +750,7 @@
           box-sizing: border-box;
           display: inline-block;
           font-size: 14px;
+          color: var(--font-color);
         }
 
         .control {
@@ -736,15 +761,9 @@
             height: 25px;
             padding: 0 10px;
             -webkit-appearance: none;
-            color: #FFF;
             outline: none;
-            border: 1px solid RGBA(59, 131, 240, 0);
-            background: RGBA(255, 255, 255, .1);
 
             &:focus {
-              border: 1px solid RGBA(59, 131, 240, 0.7);
-              background: RGBA(255, 255, 255, .25);
-
               option {
                 height: 35px;
               }
@@ -761,17 +780,10 @@
       display: block;
       border-radius: 5px;
       outline: none;
-      color: #999;
       padding: 6px;
       box-sizing: border-box;
       font-size: 12px;
       word-break: break-all;
-      border: 1px solid RGBA(255, 255, 255, .08);
-      background: RGBA(37, 37, 37, 1);
-
-      &:focus {
-        border: 1px solid RGBA(59, 131, 240, 1);
-      }
     }
   }
 }

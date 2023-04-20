@@ -1,0 +1,38 @@
+<div class="message-cards" [class.pc-mode]="platformUtilService.isPC">
+  <div class="card" *ngFor="let item of dataList">
+    <div class="item">
+      <div class="tip-bar">
+        <span class="text sn" (click)="add()">#232323</span>
+        <span class="text date">{{item.updateTime | dateFormat}}</span>
+        <span class="space"></span>
+        <span
+            class="icon favorite"
+            *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK"
+            (click)="appService.favoriteHandle(item)"
+        >
+          <favorite-icon></favorite-icon>
+        </span>
+        <span
+            class="icon delete"
+            *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE"
+            (click)="appService.deleteFavorite(item.id)"
+        >
+          <delete-icon></delete-icon>
+        </span>
+      </div>
+      <div class="question">
+        {{item.questionContent}}
+      </div>
+      <div class="content">
+        <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
+        <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">{{item.answerMarkdown}}</div>
+        <div
+            class="finish answer wrap markdown-body"
+            [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH"
+            [innerHTML]="item.answerMarkdown | md2html"
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

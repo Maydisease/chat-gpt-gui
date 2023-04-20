@@ -1,0 +1,14 @@
+input, textarea, select {
+  background: var(--widget-background-color);
+  border: 1px solid var(--widget-border-color);
+  color: var(--widget-font-color);
+
+  &:focus {
+    background: var(--widget-focus-background-color);
+    border: 1px solid var(--widget-active-border-color);
+  }
+
+  &::placeholder {
+    color: var(--widget-placeholder-font-color);
+  }
+}
