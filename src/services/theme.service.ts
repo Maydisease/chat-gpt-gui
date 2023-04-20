@@ -26,12 +26,13 @@ export class ThemeService {
 
         if (name === 'Dark') {
             body.classList.add(this.darkThemeClass);
-            body.setAttribute('data-theme', 'dark');
+            body.removeAttribute('data-theme');
         }
 
         if (name === 'Light') {
             body.classList.remove(this.darkThemeClass);
-            body.removeAttribute('data-theme');
+            body.setAttribute('data-theme', 'light');
+
         }
 
     }

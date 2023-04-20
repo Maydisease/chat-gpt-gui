@@ -1,5 +1,5 @@
 <div class="message-cards" [class.pc-mode]="platformUtilService.isPC">
-  <div class="card" *ngFor="let item of dataList">
+  <div class="card" *ngFor="let item of dataList;trackBy: trackByMethod">
     <div class="item">
       <div class="tip-bar">
         <span class="text sn" (click)="add()">#232323</span>

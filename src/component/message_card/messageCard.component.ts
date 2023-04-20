@@ -91,4 +91,7 @@ export class MessageCardComponent implements OnInit, DoCheck {
 
     public ngDoCheck() {
     }
+    trackByMethod(index:number, el:any): number {
+        return index;
+    }
 }
