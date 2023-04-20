@@ -31,7 +31,7 @@ export class HtmlUtilService {
                 if (langString && langString.indexOf('language-') > -1) {
                     const startIndex = langString.indexOf('language-') + 'language-'.length;
                     const endIndex = langString.length;
-                    languageName = langString.substring(startIndex, endIndex);
+                    languageName = langString.substring(startIndex, endIndex) || "javascript";
                     try {
                         highlightHtml = Prism.highlight(item.textContent, Prism.languages[languageName], languageName);
                     } catch (err) {

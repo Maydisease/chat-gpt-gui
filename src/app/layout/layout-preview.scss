@@ -2,7 +2,7 @@
   line-height: 130%;
 
   ::ng-deep {
-    font-size: 14px;
+    font-size: 16px;
 
     .code-render-container {
       width: 100%;
@@ -14,7 +14,7 @@
       border-radius: 5px;
       padding: 18px 10px 0 10px;
       box-sizing: border-box;
-      background: RGBA(43, 43, 43, .3);
+      background: RGBA(43, 43, 43, 1);
 
       .code-render-copy {
         right: 0;
