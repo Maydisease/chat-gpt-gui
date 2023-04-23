@@ -16,6 +16,7 @@ import swift from 'highlight.js/lib/languages/swift';
 import xml from 'highlight.js/lib/languages/xml';
 import wasm from 'highlight.js/lib/languages/wasm';
 import objectivec from 'highlight.js/lib/languages/objectivec';
+import {invoke} from "@tauri-apps/api/tauri";
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);
@@ -42,7 +43,7 @@ export class Md2HtmlPipe implements PipeTransform {
     constructor(public markdownService: MarkdownService) {
     }
 
-    public transform(md: any, ...args: any[]): string {
+    public async transform(md: any, ...args: any[]): Promise<string> {
 
         let result = '';
 
@@ -52,10 +53,9 @@ export class Md2HtmlPipe implements PipeTransform {
 
         try {
             result = this.markdownService.toHtml(md);
-            console.log(100000, result)
+            // result = await invoke("md_2_html", {markdown: md});
             const htmlDom = new DOMParser().parseFromString(result, 'text/html').body;
             htmlDom.querySelectorAll('pre').forEach((element) => {
-                console.log(119191)
                 const codeElement = element.querySelector('code')!
                 const languageString = codeElement.getAttribute('class');
                 let languageName = '';
@@ -72,18 +72,17 @@ export class Md2HtmlPipe implements PipeTransform {
                 element.outerHTML = `
                     <div class="code-render">
                         <div class="tools">
-                            <span class="copy">copy</span>
+                            <span class="copy code-render-copy">copy</span>
+                            <code class="value">${codeElement.innerText}</code>
                         </div>
                         <pre class="container">${html}</pre>
                     </div>
                 `;
             })
-            console.log('result:', htmlDom)
             result = htmlDom.innerHTML;
         } catch (err) {
-            console.log('err...', md, err)
         }
 
-        return md;
+        return result;
     }
 }

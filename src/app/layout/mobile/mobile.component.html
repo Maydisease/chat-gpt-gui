@@ -24,16 +24,17 @@
   <div [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE" class="chat-logs" #historyElementRef>
     <app-no-data *ngIf="!appService.askList.length"></app-no-data>
     <message-card
-        [dataList]="appService.askList"
-        *ngIf="appService.askList.length"
+        [dataList]="appService.sortAskList"
+        *ngIf="appService.sortAskList.length"
     ></message-card>
   </div>
   <div class="favorite-container" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
     <message-card
-        [dataList]="appService.favoriteList"
+        [dataList]="appService.sortFavoriteList"
         [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"
+        *ngIf="appService.sortFavoriteList.length"
     ></message-card>
-    <div *ngIf="!appService.favoriteList.length" class="favorite-null">暂无任何收藏～</div>
+    <div *ngIf="!appService.sortFavoriteList.length" class="favorite-null">暂无任何收藏～</div>
   </div>
 
 
@@ -139,15 +140,15 @@
               </select>
             </div>
           </div>
-          <div class="item">
-            <label>主题</label>
-            <div class="control">
-              <select tabindex="-1"  (change)="themeHandle($event)">
-                <option>Dark</option>
-                <option>Light</option>
-              </select>
-            </div>
-          </div>
+<!--          <div class="item">-->
+<!--            <label>主题</label>-->
+<!--            <div class="control">-->
+<!--              <select tabindex="-1"  (change)="themeHandle($event)">-->
+<!--                <option>Dark</option>-->
+<!--                <option>Light</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>

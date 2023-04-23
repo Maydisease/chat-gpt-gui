@@ -23,6 +23,8 @@ import {BrowserModule} from "@angular/platform-browser";
 import {LayoutComponent} from "./layout/layout.component";
 import {InitTaskResolveService} from "../resolve/initTask-resolve.service";
 import {HljsDirective} from "../component/message_card/directive/hljs.directive";
+import {ObserversModule} from "@angular/cdk/observers";
+import {PullDownDirective} from "../component/message_card/directive/pullDown.directive";
 
 const routes: Routes = [
     {path: '', pathMatch: 'full', redirectTo: 'layout'},
@@ -36,6 +38,7 @@ const routes: Routes = [
         Md5Pipe,
         HljsDirective,
         Md2HtmlPipe,
+        PullDownDirective,
         BodyEventDirective,
         LayoutForPcComponent,
         MobileComponent,
@@ -51,6 +54,7 @@ const routes: Routes = [
         MessageCardComponent
     ],
     imports: [
+        ObserversModule,
         BrowserModule,
         FormsModule,
         HttpClientModule,

@@ -4,6 +4,8 @@
 extern crate machine_uid;
 
 use ureq;
+extern crate pulldown_cmark;
+use pulldown_cmark::{html, Parser};
 use tauri::Window;
 use comrak::{markdown_to_html, ComrakOptions};
 use tauri::{AppHandle, Manager};
@@ -23,9 +25,17 @@ fn init_process(window: Window) {
     window.show().unwrap();
 }
 
+#[tauri::command]
+fn md_2_html(window: Window, markdown: &str) -> String {
+    let mut html_buf = String::new();
+    let parser = Parser::new(markdown);
+    html::push_html(&mut html_buf, parser);
+    html_buf
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, init_process, get_machine_uid, request])
+        .invoke_handler(tauri::generate_handler![greet, init_process, get_machine_uid, request, md_2_html])
         .setup(|app| {
             // #[cfg(debug_assertions)] // only include this code on debug builds
             // {

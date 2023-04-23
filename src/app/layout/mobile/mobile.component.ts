@@ -43,8 +43,6 @@ export class MobileComponent implements OnInit {
 
     themeHandle(event: Event) {
         const target = event.target as HTMLOptionElement;
-        console.log('target:', appWindow)
-
         this.themeService.setTheme(target.value as 'Dark' | 'Light');
     }
 

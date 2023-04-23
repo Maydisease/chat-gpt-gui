@@ -37,10 +37,10 @@
 
   // 控件的边框颜色
   --widget-border-color: #454C56;
-  --widget-focus-border-color: #1f883d;
+  // 控件聚焦的边框颜色;
+  --widget-focus-border-color: #0969da;
   // 控件的激活边框颜色
   --widget-active-border-color: #0969da;
-
   // 控件的边框颜色
   --widget-background-color: #1D2127;
 
@@ -112,11 +112,15 @@
   --color-action-list-item-default-hover-bg: rgba(208, 215, 222, 0.32);
 }
 
-//
-//@media (prefers-color-scheme: light) {
-//
-//}
-//
-//@media (prefers-color-scheme: dark) {
-//
-//}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    background-color: #f6f8fa;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #23272E;
+  }
+}

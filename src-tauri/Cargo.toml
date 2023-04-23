@@ -21,6 +21,7 @@ comrak = "0.16"
 ping = "0.4.0"
 machine-uid = "0.2.0"
 ureq = { version = "*", features = ["json", "charset"] }
+pulldown-cmark = "0.1.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

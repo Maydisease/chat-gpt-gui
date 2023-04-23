@@ -114,8 +114,7 @@
 
       .chat-logs {
         width: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
+        height: 100%;
         -webkit-user-select: none;
         flex: 1;
 
@@ -544,10 +543,6 @@
               resize: none;
               padding: 5px 37px 5px 5px;
               box-sizing: border-box;
-
-              &:focus {
-                border: 1px solid var(--widget-active-border-color);
-              }
             }
 
             i.icon {

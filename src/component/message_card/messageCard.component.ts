@@ -7,13 +7,15 @@ import {
     Renderer2,
     ViewChild,
     NgZone,
-    ViewContainerRef, ChangeDetectorRef
+    ViewContainerRef, ChangeDetectorRef, ElementRef, AfterViewInit
 } from '@angular/core';
 import {MarkdownService} from "../../services/markdown.service";
 import {AppService, HISTORY_LIST_ITEM_STATE} from "../../app/app.service";
 import {AskFavoriteList} from "../../app/app.model";
 import {PlatformUtilService} from "../../utils/platform.util";
 import {HighlightService} from "../../services/highlight.service";
+import {MessageCardService} from "./messageCard.service";
+import {ObserversModule} from '@angular/cdk/observers';
 
 export enum MESSAGE_CARD_USE_TYPE {
     ASK = 'ask',
@@ -26,7 +28,10 @@ export enum MESSAGE_CARD_USE_TYPE {
     styleUrls: ['./messageCard.component.scss'],
 })
 
-export class MessageCardComponent implements OnInit, DoCheck {
+export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
+
+    @ViewChild('messageCardsElementRef', {static: true}) messageCardsElementRef!: ElementRef<HTMLDivElement>;
+    @ViewChild('pullDownElementRef', {static: false}) pullDownElementRef!: ElementRef<HTMLDivElement>;
 
     MESSAGE_CARD_USE_TYPE = MESSAGE_CARD_USE_TYPE;
 
@@ -37,61 +42,30 @@ export class MessageCardComponent implements OnInit, DoCheck {
 
     public HISTORY_LIST_ITEM_STATE = HISTORY_LIST_ITEM_STATE;
 
-    // public askList: AskFavoriteList = [
-    //     {
-    //         updateTime: new Date().getTime(),
-    //         questionContent: '今天天气不错',
-    //         answerMarkdown: `# 答案`,
-    //         answerContent: '',
-    //         id: 33333,
-    //         key: '333',
-    //         state: HISTORY_LIST_ITEM_STATE.FINISH,
-    //         inputTime: new Date().getTime(),
-    //     },
-    //     {
-    //         updateTime: new Date().getTime(),
-    //         questionContent: '今天天气不错',
-    //         answerMarkdown: `# 答案`,
-    //         answerContent: '',
-    //         id: 33333,
-    //         state: HISTORY_LIST_ITEM_STATE.FAIL,
-    //         inputTime: new Date().getTime(),
-    //     },
-    //     {
-    //         updateTime: new Date().getTime(),
-    //         questionContent: '今天天气不错',
-    //         answerMarkdown: `# 答案`,
-    //         answerContent: '',
-    //         id: 33333,
-    //         state: HISTORY_LIST_ITEM_STATE.PENDING,
-    //         inputTime: new Date().getTime(),
-    //     }
-    // ];
-
     constructor(
-        public ngZone: NgZone,
-        public platformUtilService: PlatformUtilService,
         public appService: AppService,
-        public highlightService: HighlightService,
-        public cdr: ChangeDetectorRef
+        public platformUtilService: PlatformUtilService
     ) {
-
     }
 
     @ViewChild('dynamicComponent', {read: ViewContainerRef}) dynamicComponent: ViewContainerRef | undefined;
 
-
-    public async add() {
-
+    public ngOnInit() {
     }
 
-    public ngOnInit() {
-        console.log('this.dataList', this.dataList)
+    ngAfterViewInit() {
+
     }
 
     public ngDoCheck() {
     }
-    trackByMethod(index:number, el:any): number {
+
+    public getDataNumber(i: number) {
+        const len = this.dataList.length;
+        return len - i;
+    }
+
+    trackByMethod(index: number, el: any): number {
         return index;
     }
 }

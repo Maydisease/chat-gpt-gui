@@ -5,7 +5,7 @@ input, textarea, select {
 
   &:focus {
     background: var(--widget-focus-background-color);
-    border: 1px solid var(--widget-active-border-color);
+    border: 1px solid var(--widget-focus-border-color);
   }
 
   &::placeholder {

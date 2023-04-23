@@ -1,5 +1,4 @@
 const scrollSmoothTo = (position?: number, scrollContainerElement?: HTMLElement, element?: HTMLElement, offsetY = 0): Promise<boolean> => {
-
   return new Promise((resolve, reject) => {
 
     let _scrollContainerElement = scrollContainerElement || window;

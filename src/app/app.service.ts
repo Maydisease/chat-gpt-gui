@@ -1,4 +1,4 @@
-import {ElementRef, Injectable} from '@angular/core';
+import {ElementRef, EventEmitter, Injectable} from '@angular/core';
 import {invoke} from "@tauri-apps/api/tauri";
 import {message, confirm} from "@tauri-apps/api/dialog";
 
@@ -13,6 +13,7 @@ import {ModalService} from "../component/modal/modal.service";
 import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
 import {PlatformUtilService} from "../utils/platform.util";
 import {HtmlUtilService} from "../utils/html.util";
+import {MessageCardService} from "../component/message_card/messageCard.service";
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -66,6 +67,8 @@ export class AppService {
 
     public favoriteDb = new FavoriteDatabase();
 
+    public askSendResultEvent = new EventEmitter();
+
     public tabState: TAB_STATE = TAB_STATE.ASK_MODE;
     public favoriteList: AskFavoriteListItem[] = [];
     public favoriteCount: number = 0;
@@ -86,6 +89,7 @@ export class AppService {
     public enableAskContext = false;
 
     constructor(
+        public messageCardService: MessageCardService,
         public modalService: ModalService,
         public platformUtilService: PlatformUtilService,
         public httpClient: HttpClient,
@@ -166,13 +170,12 @@ export class AppService {
     }
 
     // 更新问题集合
-    public updateAskList(key: string, answerContent: string | undefined, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
+    public updateAskList(key: string, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
         const findIndex = this.askList.findIndex((item) => item.key === key && item.state === HISTORY_LIST_ITEM_STATE.PENDING);
         const updateTime = new Date().getTime();
 
         if (findIndex > -1) {
             this.askList[findIndex].state = state;
-            this.askList[findIndex].answerContent = answerContent;
             this.askList[findIndex].updateTime = updateTime;
             this.askList[findIndex].answerMarkdown = answerMarkdown;
         } else if (questionContent) {
@@ -461,8 +464,6 @@ export class AppService {
             return;
         }
 
-        console.log('this.searchKey:', this.searchKey)
-
         this.isPromptMode = false;
 
         // const address = 'http://localhost:6200/q';
@@ -470,7 +471,7 @@ export class AppService {
         const timestamp = new Date().getTime();
         const id = `ASK-${timestamp}`;
         const searchKeyClone = this.searchKey;
-        this.updateAskList(id, undefined, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
+        this.updateAskList(id, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
 
         //  追加对话的上下文
         this.askContext = [];
@@ -494,7 +495,7 @@ export class AppService {
             this.askContext.push({content: this.searchKey, role: 'user'});
         }
 
-
+        this.askSendResultEvent.emit();
         this.httpClient.post(address, {
             "content": undefined,
             "appKey": this.appKey,
@@ -504,22 +505,13 @@ export class AppService {
                 'content-type': 'application/json'
             }
         }).subscribe(async (result: any) => {
+
                 // 如果返回的code=1那则代表成功
                 if (result && result.code === 1) {
                     let markdown = result.content;
-                    let html = '';
-                    if (handleIsTauri()) {
-                        html = await invoke("greet", {name: markdown});
-                        console.log('55:markdown::', markdown);
-                        console.log('55:html::', html);
-                    } else {
-                        const converter = new showdown.Converter();
-                        html = converter.makeHtml(markdown);
-                        console.log('55:markdown::', markdown);
-                        console.log('55:html::', html);
-                    }
-                    html = this.htmlUtilService.renderHighlight(html);
-                    this.updateAskList(id, html, markdown, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
+                    markdown = markdown.replace(/\/n/g, '\\');
+                    console.log('markdown:', markdown)
+                    this.updateAskList(id, markdown, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
 
                     this.updateHistorySearchKeyList({
                         key: searchKeyClone,
@@ -530,17 +522,22 @@ export class AppService {
                 }
                 // 否则就认为失败
                 else {
-                    this.updateAskList(id, result.message, undefined, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
+                    this.updateAskList(id, result.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
                     this.updateHistorySearchKeyList({
                         key: searchKeyClone,
                         state: HISTORY_LIST_ITEM_STATE.FAIL,
                         selected: false
                     });
                 }
+                this.askSendResultEvent.emit();
+                // setTimeout(() => {
+                //
+                //     console.log('this.messageCardService.pullDown')
+                // }, 3000)
             },
             // 请求出错，一般是网络问题
             (error) => {
-                this.updateAskList(id, error.message, undefined, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
+                this.updateAskList(id, error.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
                 this.updateHistorySearchKeyList({
                     key: searchKeyClone,
                     state: HISTORY_LIST_ITEM_STATE.FAIL,

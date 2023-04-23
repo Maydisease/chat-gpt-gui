@@ -41,7 +41,7 @@
       .sidebar {
         width: 360px;
         display: flex;
-        padding-bottom: 0px;
+        padding-bottom: 0;
         box-sizing: border-box;
         flex-direction: column;
         position: relative;
@@ -77,20 +77,20 @@
         textarea {
           flex: 1;
           width: 100%;
+          line-height: 150%;
           resize: none;
           outline: none;
           background: none;
           color: var(--font-color);
-          font-size: 16px;
+          font-size: 14px;
           padding: 20px 15px 20px 15px;
           box-sizing: border-box;
-          caret-color: #63e2b7;
           transition: all 0.2s;
-          border:1px solid #0000;
           height: 300px;
-          &:focus{
-            border: 1px solid #7fe7c4;
-            background-color: rgb(102, 226, 184,0.1);
+          border: none;
+
+          &:focus {
+            border: none;
           }
         }
 

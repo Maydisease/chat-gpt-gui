@@ -1,8 +1,11 @@
-<div class="message-cards" [class.pc-mode]="platformUtilService.isPC">
-  <div class="card" *ngFor="let item of dataList;trackBy: trackByMethod">
+<div
+    class="message-cards"
+    [class.pc-mode]="platformUtilService.isPC"
+>
+  <div class="card" *ngFor="let item of dataList;trackBy: trackByMethod; let i = index;">
     <div class="item">
       <div class="tip-bar">
-        <span class="text sn" (click)="add()">#232323</span>
+        <span class="text sn">#{{getDataNumber(i)}}</span>
         <span class="text date">{{item.updateTime | dateFormat}}</span>
         <span class="space"></span>
         <span
@@ -29,10 +32,11 @@
         <div
             class="finish answer wrap markdown-body"
             [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH"
-            [innerHTML]="item.answerMarkdown | md2html"
+            [innerHTML]="item.answerMarkdown | md2html | async"
         >
         </div>
       </div>
     </div>
   </div>
+  <div class="pull-down-element" pull-down></div>
 </div>

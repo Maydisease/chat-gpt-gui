@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "CHAT-GPT-GUI",
-    "version": "1.2.7"
+    "version": "1.2.8"
   },
   "tauri": {
     "allowlist": {
@@ -60,8 +60,7 @@
         "height": 800,
         "minHeight": 800,
         "hiddenTitle": true,
-        "visible": false,
-        "theme": "Dark"
+        "visible": false
       }
     ]
   }

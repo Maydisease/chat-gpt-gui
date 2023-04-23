@@ -1,22 +1,29 @@
 <div class="null">
-  <h3><span>ChatGPT<i>{{appService.version}}</i></span></h3>
-  <p>
+  <div class="wrap">
+    <h3>
+      <span>
+        <b [class.is-dark]="platformUtilService.isDarkMode">ChatGPT</b>
+        <i>{{appService.version}}</i>
+      </span>
+    </h3>
+    <p>
         <span class="label" [hidden]="!platformUtilService.isPC && !platformUtilService.isTauri">
           <i class="i"><bulb-icon></bulb-icon></i>
           <i class="v">拖拽窗口更改尺寸可以切换至PC模式布局</i>
         </span>
-  </p>
-  <p>
+    </p>
+    <p>
         <span class="label">
           <i class="i"><bulb-icon></bulb-icon></i>
           <i class="v">合理用提示词（prompt）将会让AI更精确理解你的问题</i>
         </span>
-  </p>
-  <p>
+    </p>
+    <p>
       <span class="demo-container">
         <span class="role"># 扮演技术审查员</span>
         <textarea [ngStyle]="{background: 'none'}" readonly class="prompt-demo-textarea">{{promptDemoText}}</textarea>
         <button (click)="tryPromptDemo()">试一试 Prompt</button>
       </span>
-  </p>
+    </p>
+  </div>
 </div>

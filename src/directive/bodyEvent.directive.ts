@@ -12,15 +12,10 @@ export class BodyEventDirective {
     handle($event: MouseEvent) {
         const element = $event.target as HTMLElement;
         if (element.classList.contains('code-render-copy')) {
-            const preElement = element.previousElementSibling;
-            const codeElement = preElement?.querySelector('code');
-            console.log('codeElement:', preElement)
-            if (codeElement) {
-                const prueCodeStr = this.htmlUtilService.removeHtmlTag(codeElement.outerHTML);
-                console.log('prueCodeStr:', prueCodeStr)
-                if (prueCodeStr) {
-                    copyText(undefined, prueCodeStr)
-                }
+            const nextElement = element.nextElementSibling;
+            if (nextElement?.classList.contains('value') && nextElement!.tagName === 'CODE') {
+                console.log('nextElement.textContent!:', nextElement.textContent!)
+                copyText(undefined, nextElement.textContent!)
             }
         }
     }
