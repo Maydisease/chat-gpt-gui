@@ -9,6 +9,8 @@ import {SmileIconComponent} from "./smileIcon.component";
 import {DeleteIconComponent} from "./deleteIcon.component";
 import {CloseIconComponent} from "./closeIcon.component";
 import {BulbIconComponent} from "./bulbIcon.component";
+import {CopyIconComponent} from "./copy.component";
+import {RollBackIconComponent} from "./rollBackIcon.component";
 
 const iconsList = [
     CommitIconComponent,
@@ -19,7 +21,9 @@ const iconsList = [
     SmileIconComponent,
     DeleteIconComponent,
     CloseIconComponent,
-    BulbIconComponent
+    BulbIconComponent,
+    CopyIconComponent,
+    RollBackIconComponent
 ];
 
 @NgModule({

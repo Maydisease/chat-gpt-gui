@@ -62,7 +62,19 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
 
     public getDataNumber(i: number) {
         const len = this.dataList.length;
-        return len - i;
+        return this.platformUtilService.isPC ? len - i : i + 1;
+    }
+
+    public againSend(keyword: string | undefined) {
+        if (keyword) {
+            this.appService.searchKey = keyword;
+        }
+    }
+
+    public copyQuestion(value: string | undefined) {
+        if (value) {
+
+        }
     }
 
     trackByMethod(index: number, el: any): number {

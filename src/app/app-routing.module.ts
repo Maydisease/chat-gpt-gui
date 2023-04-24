@@ -21,6 +21,7 @@ import {TextFieldModule} from "@angular/cdk/text-field";
 import {OverlayModule} from "@angular/cdk/overlay";
 import {BrowserModule} from "@angular/platform-browser";
 import {LayoutComponent} from "./layout/layout.component";
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import {InitTaskResolveService} from "../resolve/initTask-resolve.service";
 import {HljsDirective} from "../component/message_card/directive/hljs.directive";
 import {ObserversModule} from "@angular/cdk/observers";
@@ -57,6 +58,7 @@ const routes: Routes = [
         ObserversModule,
         BrowserModule,
         FormsModule,
+        ClipboardModule,
         HttpClientModule,
         TextFieldModule,
         OverlayModule,

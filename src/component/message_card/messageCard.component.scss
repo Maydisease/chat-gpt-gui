@@ -36,7 +36,7 @@
             margin-right: 5px;
 
             &.sn {
-              color: var(--font-color);
+              color: var(--button-background-color);
               font-weight: bold;
             }
 
@@ -74,8 +74,27 @@
           padding: 5px 5px 15px 5px;
           box-sizing: border-box;
           margin-bottom: 15px;
+          font-weight: bold;
           color: var(--font-color);
+          -webkit-user-select: initial;
           border-bottom: 1px dashed var(--border-color);
+
+          i {
+            font-size: 14px;
+            height: 20px;
+            line-height: 20px;
+            padding: 0 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            color: var(--link-button-font-color);
+
+            &:hover {
+              background: var(--color-action-list-item-default-hover-bg);
+            }
+          }
         }
 
         .content {
@@ -92,12 +111,12 @@
           animation: content-anime-in .3s forwards;
           @keyframes content-anime-in {
             0% {
-              //opacity: 0;
-              //transform: translateY(20px);
+              opacity: 0;
+              transform: translateY(20px);
             }
             100% {
-              //opacity: 1;
-              //transform: translateY(0);
+              opacity: 1;
+              transform: translateY(0);
             }
           }
 
@@ -107,6 +126,7 @@
 
             &.answer {
               padding-bottom: 0;
+              -webkit-user-select: initial;
               animation: answer-anime-in .3s forwards;
               @keyframes answer-anime-in {
                 0% {
@@ -173,9 +193,21 @@
           .pending {
             font-size: 14px;
             color: var(--font-color);
-            @keyframes move-bg {
+            background-image: -webkit-linear-gradient(
+                            left,
+                            var(--button-background-color),
+                            var(--font-secondary-color) 25%,
+                            var(--button-background-color) 50%,
+                            var(--font-secondary-color) 75%,
+                            var(--button-background-color)
+            );
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-animation: masked-animation 1s infinite linear;
+            -webkit-background-size: 200% 100%;
+            @keyframes masked-animation {
               to {
-                background-position: var(--bg-size) 0;
+                background-position: 100% 0;
               }
             }
           }

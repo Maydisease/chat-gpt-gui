@@ -2,7 +2,7 @@
     class="message-cards"
     [class.pc-mode]="platformUtilService.isPC"
 >
-  <div class="card" *ngFor="let item of dataList;trackBy: trackByMethod; let i = index;">
+  <div class="card" *ngFor="let item of dataList; trackBy: trackByMethod; let i = index;">
     <div class="item">
       <div class="tip-bar">
         <span class="text sn">#{{getDataNumber(i)}}</span>
@@ -13,7 +13,7 @@
             *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK"
             (click)="appService.favoriteHandle(item)"
         >
-          <favorite-icon></favorite-icon>
+          <favorite-icon *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FINISH"></favorite-icon>
         </span>
         <span
             class="icon delete"
@@ -25,6 +25,18 @@
       </div>
       <div class="question">
         {{item.questionContent}}
+        <i
+            (click)="againSend(item.questionContent)"
+            *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK"
+        >
+          <roll-back-icon></roll-back-icon>
+        </i>
+        <i
+            [cdkCopyToClipboard]="item.questionContent!"
+            *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE"
+        >
+          <copy-icon></copy-icon>
+        </i>
       </div>
       <div class="content">
         <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
