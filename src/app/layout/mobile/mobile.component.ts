@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AppService, HISTORY_LIST_ITEM_STATE, TAB_STATE} from "../../app.service";
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE, TAB_STATE} from "../../app.service";
 import {PlatformUtilService} from "../../../utils/platform.util";
 import {LayoutService} from "../layout.service";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
@@ -25,11 +25,13 @@ export class MobileComponent implements OnInit {
     public MESSAGE_CARD_USE_TYPE = MESSAGE_CARD_USE_TYPE;
     public TAB_STATE = TAB_STATE;
 
+    public STREAM_STATE = STREAM_STATE;
+
     constructor(
         public themeService: ThemeService,
         public layoutService: LayoutService,
         public platformUtilService: PlatformUtilService,
-        public appService: AppService,
+        public appService: AppService
     ) {
 
     }
@@ -44,6 +46,10 @@ export class MobileComponent implements OnInit {
     themeHandle(event: Event) {
         const target = event.target as HTMLOptionElement;
         this.themeService.setTheme(target.value as 'Dark' | 'Light');
+    }
+
+    public get SHOW_NO_DATA(){
+        return this.appService.newTempDataAppEndState === STREAM_STATE.DONE && this.appService.askList.length === 0;
     }
 
 }

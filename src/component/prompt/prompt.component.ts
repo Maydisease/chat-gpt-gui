@@ -72,7 +72,6 @@ export class PromptComponent implements OnInit {
     }
 
     setSearchMark() {
-        console.log(88181)
         this.promptList = this.promptListClone.filter((item) => {
 
             let isFind = false;

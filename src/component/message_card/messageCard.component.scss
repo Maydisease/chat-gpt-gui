@@ -88,7 +88,11 @@
             cursor: pointer;
             border-radius: 4px;
             font-weight: bold;
-            display: inline-block;
+            display: inline-flex;
+            justify-items: center;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
             color: var(--link-button-font-color);
 
             &:hover {
@@ -98,6 +102,15 @@
         }
 
         .content {
+
+          &.state-fail {
+            border: 1px solid var(--color-primer-active);
+          }
+
+          &.state-pending {
+            border: 1px solid var(--button-background-color);
+          }
+
           width: 100%;
           overflow: hidden;
           padding: 16px;
@@ -108,17 +121,17 @@
           box-shadow: var(--color-shadow-medium);
           border-radius: 4px;
           transform-origin: 100% 100%;
-          animation: content-anime-in .3s forwards;
-          @keyframes content-anime-in {
-            0% {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+          //animation: content-anime-in .3s forwards;
+          //@keyframes content-anime-in {
+          //  0% {
+          //    opacity: 0;
+          //    transform: translateY(20px);
+          //  }
+          //  100% {
+          //    opacity: 1;
+          //    transform: translateY(0);
+          //  }
+          //}
 
           .wrap {
             font-size: 14px;
@@ -127,15 +140,15 @@
             &.answer {
               padding-bottom: 0;
               -webkit-user-select: initial;
-              animation: answer-anime-in .3s forwards;
-              @keyframes answer-anime-in {
-                0% {
-                  opacity: 0;
-                }
-                100% {
-                  opacity: 1;
-                }
-              }
+              //animation: answer-anime-in .3s forwards;
+              //@keyframes answer-anime-in {
+              //  0% {
+              //    opacity: 0;
+              //  }
+              //  100% {
+              //    opacity: 1;
+              //  }
+              //}
 
               ::ng-deep .code-render {
                 position: relative;
@@ -149,6 +162,9 @@
 
                 pre {
                   margin-bottom: 0;
+                  code{
+                    color: var(--font-color);
+                  }
                 }
 
                 .tools {
@@ -188,6 +204,11 @@
                 }
               }
             }
+          }
+
+          .fail {
+            color: var(--color-primer-active);
+            -webkit-user-select: initial;
           }
 
           .pending {
@@ -230,6 +251,10 @@
       width: 100%;
       height: 1px;
     }
+  }
+
+  .message-cards.favorite-mode {
+    padding-bottom: 20px;
   }
 
   .message-cards.pc-mode {

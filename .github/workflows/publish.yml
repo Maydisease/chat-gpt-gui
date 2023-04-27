@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1. 支持多主题配置，会随着系统主题来适配　GUI 样式, 2.增加一些小细节'
+          releaseBody: '1. 优化回复效率，使用 text/event-stream 方案来加快第一个字符出现的速度'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

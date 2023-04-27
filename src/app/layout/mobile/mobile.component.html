@@ -18,15 +18,12 @@
       <span class="icon" style="color: RGBA(248,209,82,1)">
         <favorite-icon></favorite-icon>
       </span>
-      <span class="text">收藏 <i *ngIf="appService.favoriteCount > 0"> ({{appService.favoriteCount}})</i></span>
+      <span class="text">收藏<i *ngIf="appService.favoriteCount > 0"> ({{appService.favoriteCount}})</i></span>
     </div>
   </div>
   <div [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE" class="chat-logs" #historyElementRef>
-    <app-no-data *ngIf="!appService.askList.length"></app-no-data>
-    <message-card
-        [dataList]="appService.sortAskList"
-        *ngIf="appService.sortAskList.length"
-    ></message-card>
+    <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
+    <message-card [dataList]="appService.sortAskList"></message-card>
   </div>
   <div class="favorite-container" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
     <message-card
@@ -140,15 +137,15 @@
               </select>
             </div>
           </div>
-<!--          <div class="item">-->
-<!--            <label>主题</label>-->
-<!--            <div class="control">-->
-<!--              <select tabindex="-1"  (change)="themeHandle($event)">-->
-<!--                <option>Dark</option>-->
-<!--                <option>Light</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--          </div>-->
+          <!--          <div class="item">-->
+          <!--            <label>主题</label>-->
+          <!--            <div class="control">-->
+          <!--              <select tabindex="-1"  (change)="themeHandle($event)">-->
+          <!--                <option>Dark</option>-->
+          <!--                <option>Light</option>-->
+          <!--              </select>-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
       </div>
     </div>
@@ -163,7 +160,10 @@
   >
     <div class="history-search-list-panel">
       <div class="action-bar">
-        <span (click)="appService.cleanHistorySearchKeyList($event)">清理</span>
+        <span class="action" (click)="appService.cleanHistorySearchKeyList($event)">
+          <delete-icon></delete-icon>
+          清理
+        </span>
       </div>
       <div class="item" [class.active]="item.selected" *ngFor="let item of appService.historySearchKeyList">
         {{item.key}}

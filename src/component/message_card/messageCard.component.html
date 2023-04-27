@@ -1,7 +1,9 @@
 <div
     class="message-cards"
     [class.pc-mode]="platformUtilService.isPC"
+    [class.favorite-mode]="type === MESSAGE_CARD_USE_TYPE.FAVORITE"
 >
+
   <div class="card" *ngFor="let item of dataList; trackBy: trackByMethod; let i = index;">
     <div class="item">
       <div class="tip-bar">
@@ -27,7 +29,7 @@
         {{item.questionContent}}
         <i
             (click)="againSend(item.questionContent)"
-            *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK"
+            *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK && item.state === HISTORY_LIST_ITEM_STATE.FINISH"
         >
           <roll-back-icon></roll-back-icon>
         </i>
@@ -37,8 +39,18 @@
         >
           <copy-icon></copy-icon>
         </i>
+        <i
+            (click)="againSend(item.questionContent, true)"
+            *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FAIL"
+        >
+          <reload-icon></reload-icon>
+        </i>
       </div>
-      <div class="content">
+      <div
+          class="content"
+          [class.state-fail]="item.state === HISTORY_LIST_ITEM_STATE.FAIL"
+          [class.state-pending]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
+      >
         <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
         <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">{{item.answerMarkdown}}</div>
         <div
@@ -50,5 +62,39 @@
       </div>
     </div>
   </div>
+  <!--临时 dom! [S]-->
+  <div class="card temp" *ngIf="SHOW_TEMP_CARD">
+    <div class="item">
+      <div class="tip-bar">
+        <span class="text sn">#NEW</span>
+        <span class="text date">/-/-/</span>
+        <span class="space"></span>
+        <span class="icon favorite">
+          <favorite-icon></favorite-icon>
+        </span>
+      </div>
+      <div class="question">
+        {{appService.newTempDataQuestionContent}}
+        <i>
+          <roll-back-icon></roll-back-icon>
+        </i>
+      </div>
+      <div class="content">
+        <div
+            class="pending"
+            [hidden]="HIDE_PENDING_STATE"
+        >PENDING
+        </div>
+        <div
+            class="card-new-temp-container finish answer wrap markdown-body"
+            [hidden]="HIDE_FINISH_STATE"
+            new-temp>
+          1000
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--临时 dom! [E]-->
+
   <div class="pull-down-element" pull-down></div>
 </div>

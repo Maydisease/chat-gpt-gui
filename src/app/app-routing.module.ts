@@ -26,6 +26,7 @@ import {InitTaskResolveService} from "../resolve/initTask-resolve.service";
 import {HljsDirective} from "../component/message_card/directive/hljs.directive";
 import {ObserversModule} from "@angular/cdk/observers";
 import {PullDownDirective} from "../component/message_card/directive/pullDown.directive";
+import {NewTempDirective} from "../component/message_card/directive/newTemp.directive";
 
 const routes: Routes = [
     {path: '', pathMatch: 'full', redirectTo: 'layout'},
@@ -36,6 +37,7 @@ const routes: Routes = [
 
 @NgModule({
     declarations: [
+        NewTempDirective,
         Md5Pipe,
         HljsDirective,
         Md2HtmlPipe,

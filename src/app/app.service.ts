@@ -1,10 +1,7 @@
-import {ElementRef, EventEmitter, Injectable} from '@angular/core';
-import {invoke} from "@tauri-apps/api/tauri";
+import {ApplicationRef, ChangeDetectorRef, ElementRef, EventEmitter, Injectable, NgZone} from '@angular/core';
 import {message, confirm} from "@tauri-apps/api/dialog";
-
 import {HttpClient} from "@angular/common/http";
 import Mousetrap from 'mousetrap';
-import showdown from 'showdown';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, AskFavoriteListItem, FavoriteModel, AskFavoriteList} from "./app.model";
 import {handleIsTauri} from "../main";
@@ -18,6 +15,13 @@ import {MessageCardService} from "../component/message_card/messageCard.service"
 export enum TAB_STATE {
     FAVORITE_MODE,
     ASK_MODE
+}
+
+export enum STREAM_STATE {
+    PENDING,
+    APPENDING,
+    DONE,
+    FAIL
 }
 
 export enum HISTORY_LIST_ITEM_STATE {
@@ -62,6 +66,8 @@ type AskContextList = AskContextItem[];
 @Injectable({providedIn: 'root'})
 export class AppService {
 
+    public worker = new Worker(new URL('./app.worker', import.meta.url));
+
     public version = config.package.version;
     public isPromptMode = false;
 
@@ -69,8 +75,12 @@ export class AppService {
 
     public askSendResultEvent = new EventEmitter();
 
+    public requestHtmlChuckEvent = new EventEmitter();
+
     public tabState: TAB_STATE = TAB_STATE.ASK_MODE;
     public favoriteList: AskFavoriteListItem[] = [];
+
+
     public favoriteCount: number = 0;
     public appKey = localStorage.getItem('APP-KEY');
     public searchKey = '';
@@ -85,31 +95,63 @@ export class AppService {
     public historySearchKeyList: HistorySearchKeyList = [];
     public askList: AskFavoriteList = [];
 
+    public newTempDataAppEndState: STREAM_STATE = STREAM_STATE.DONE;
+    public newTempDataError = '';
+    public newTempDataQuestionContent = '';
+
     public askContext: AskContextList = [];
     public enableAskContext = false;
 
     constructor(
-        public messageCardService: MessageCardService,
         public modalService: ModalService,
-        public platformUtilService: PlatformUtilService,
-        public httpClient: HttpClient,
         public favoriteModel: FavoriteModel,
-        public htmlUtilService: HtmlUtilService,
     ) {
         this.appKey = localStorage.getItem('APP-KEY') || '';
         this.initShortcutKeyBind();
         this.initHistorySearchKeyList();
         this.initFavorite();
         this.initAskContext();
+        this.initWorkerMessageListen();
+    }
+
+    public initWorkerMessageListen() {
+
+        this.worker.addEventListener('message', ({data}) => {
+            // chunk开始
+            if (data.eventName === 'responseChunkStart') {
+                this.searchKey = '';
+                this.newTempDataAppEndState = STREAM_STATE.APPENDING;
+            }
+            // chunk结束
+            if (data.eventName === 'responseChunkEnd') {
+                this.searchKey = '';
+                this.newTempDataAppEndState = STREAM_STATE.DONE;
+                const {key, mdChunk, questionContent} = data.message;
+                this.updateHistorySearchKeyList({
+                    key: questionContent,
+                    state: HISTORY_LIST_ITEM_STATE.FINISH,
+                    selected: false
+                });
+                this.updateAskList(key, mdChunk, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
+                this.askSendResultEvent.emit();
+            }
+            // chunk 错误
+            if (data.eventName === 'responseError') {
+                this.searchKey = '';
+                const {key, errorContent, questionContent} = data.message;
+                this.newTempDataAppEndState = STREAM_STATE.DONE;
+                this.updateAskList(key, errorContent, questionContent, HISTORY_LIST_ITEM_STATE.FAIL, STREAM_STATE.DONE);
+            }
+        })
     }
 
 
     // 每次有答案返回时，将容器的滚动条滚动至最底部
-    public moveHistoryContainerScrollToBottom() {
-        setTimeout(() => {
-            this.historyElementRef?.nativeElement.scrollTo({behavior: 'smooth', top: 999999999})
-        }, 200);
-    }
+    // public moveHistoryContainerScrollToBottom() {
+    //     setTimeout(() => {
+    //         this.historyElementRef?.nativeElement.scrollTo({behavior: 'smooth', top: 999999999})
+    //     }, 200);
+    // }
 
     public initAskContext() {
         this.enableAskContext = localStorage.getItem('ENABLE-ASK-CONTEXT') === '1' || false;
@@ -170,24 +212,28 @@ export class AppService {
     }
 
     // 更新问题集合
-    public updateAskList(key: string, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE) {
-        const findIndex = this.askList.findIndex((item) => item.key === key && item.state === HISTORY_LIST_ITEM_STATE.PENDING);
+    public updateAskList(key: string, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE, streamState: STREAM_STATE) {
+        const findIndex = this.askList.findIndex((item) => item.key === key);
         const updateTime = new Date().getTime();
 
         if (findIndex > -1) {
             this.askList[findIndex].state = state;
             this.askList[findIndex].updateTime = updateTime;
-            this.askList[findIndex].answerMarkdown = answerMarkdown;
+            this.askList[findIndex].answerMarkdown = (this.askList[findIndex].answerMarkdown! || '') + (answerMarkdown || '');
+            this.askList[findIndex].streamDone = streamState;
+            // this.askList[findIndex].sn = sn;
         } else if (questionContent) {
             this.askList.push({
                 key,
                 state,
+                streamDone: STREAM_STATE.APPENDING,
                 questionContent,
+                answerMarkdown,
                 updateTime,
                 inputTime: new Date().getTime()
             })
         }
-        this.moveHistoryContainerScrollToBottom();
+        // this.moveHistoryContainerScrollToBottom();
     }
 
 
@@ -329,7 +375,8 @@ export class AppService {
             answerContent: item.answerContent,
             answerMarkdown: item.answerMarkdown,
             updateTime: item.updateTime,
-            inputTime: item.inputTime
+            inputTime: item.inputTime,
+            streamDone: STREAM_STATE.DONE
         };
         if ((await this.favoriteModel.favoriteDB.favorite.where({questionContent: item.questionContent}).count()) !== 0) {
             if (handleIsTauri()) {
@@ -397,7 +444,7 @@ export class AppService {
     public get sortAskList() {
         let askList = this.askList;
         return askList.sort((itemA, itemB) => {
-            return this.platformUtilService.isPC ? itemB.inputTime! - itemA.inputTime! : itemA.inputTime! - itemB.inputTime!
+            return itemA.inputTime! - itemB.inputTime!
         });
     }
 
@@ -407,10 +454,11 @@ export class AppService {
             if (!itemB.inputTime || !itemA.inputTime) {
                 return 1;
             }
-            return this.platformUtilService.isPC ? itemB.inputTime - itemA.inputTime : itemA.inputTime - itemB.inputTime
+            return itemB.inputTime - itemA.inputTime;
         });
     }
 
+    // 清理上下文信息
     public async cleanAskContextHandle() {
         if (handleIsTauri()) {
             const confirmed = await confirm('与Chat GTP聊天时，有上下文它可以更好的理解你的问题，确认要清理上下文吗？', 'GPT-GUI');
@@ -429,6 +477,7 @@ export class AppService {
         }
     }
 
+    // 获取上下文token相关信息
     get askContextInfo() {
         let contextObj = {
             totalTokensLen: 0,
@@ -452,8 +501,37 @@ export class AppService {
         return contextObj;
     }
 
+    public generateContext() {
+        const askContext: AskContextList = [];
+        if (this.enableAskContext) {
+            if (this.askList && this.askList.length > 0) {
+                const descAskList = this.askList.sort((itemA, itemB) => {
+                    return itemA.inputTime! - itemB.inputTime!;
+                });
+                descAskList.map((item) => {
+                    if (item.state !== HISTORY_LIST_ITEM_STATE.FAIL) {
+                        if (item.questionContent) {
+                            askContext.push({content: item.questionContent, role: 'user'});
+                        }
+                        if (item.answerMarkdown) {
+                            askContext.push({content: item.answerMarkdown, role: 'assistant'});
+                        }
+                    }
+                });
+            }
+        }
+        askContext.push({content: this.searchKey, role: 'user'});
+        return askContext;
+    }
+
     // 发送
     public async send() {
+
+        // 不是done状态将不允许发送下一条记录
+        if (this.newTempDataAppEndState !== STREAM_STATE.DONE) {
+            return;
+        }
+
         // 如果缺少秘钥
         if (!await this.checkConfigAppKey()) {
             return;
@@ -465,85 +543,25 @@ export class AppService {
         }
 
         this.isPromptMode = false;
-
-        // const address = 'http://localhost:6200/q';
-        const address = 'https://chatgpt.kka.pw/q';
+        // const address = 'http://localhost:6200/q/2';
+        const address = 'https://chatgpt.kka.pw/q/2';
         const timestamp = new Date().getTime();
         const id = `ASK-${timestamp}`;
-        const searchKeyClone = this.searchKey;
-        this.updateAskList(id, undefined, searchKeyClone, HISTORY_LIST_ITEM_STATE.PENDING);
-
-        //  追加对话的上下文
-        this.askContext = [];
-        if (this.enableAskContext) {
-            if (this.askList && this.askList.length > 0) {
-                const descAskList = this.askList.sort((itemA, itemB) => {
-                    return itemA.inputTime! - itemB.inputTime!;
-                });
-                descAskList.map((item) => {
-                    if (item.state !== HISTORY_LIST_ITEM_STATE.FAIL) {
-                        if (item.questionContent) {
-                            this.askContext.push({content: item.questionContent, role: 'user'});
-                        }
-                        if (item.answerMarkdown) {
-                            this.askContext.push({content: item.answerMarkdown, role: 'assistant'});
-                        }
-                    }
-                })
-            }
-        } else {
-            this.askContext.push({content: this.searchKey, role: 'user'});
-        }
-
+        // 生成上下文
+        this.askContext = this.generateContext();
+        this.newTempDataAppEndState = STREAM_STATE.PENDING;
+        this.newTempDataQuestionContent = this.searchKey;
         this.askSendResultEvent.emit();
-        this.httpClient.post(address, {
-            "content": undefined,
-            "appKey": this.appKey,
-            context: this.askContext,
-        }, {
-            headers: {
-                'content-type': 'application/json'
+
+        this.worker.postMessage({
+            eventName: 'request',
+            message: {
+                key: id,
+                address,
+                questionContent: this.searchKey,
+                appKey: this.appKey,
+                askContext: this.askContext
             }
-        }).subscribe(async (result: any) => {
-
-                // 如果返回的code=1那则代表成功
-                if (result && result.code === 1) {
-                    let markdown = result.content;
-                    markdown = markdown.replace(/\/n/g, '\\');
-                    console.log('markdown:', markdown)
-                    this.updateAskList(id, markdown, undefined, HISTORY_LIST_ITEM_STATE.FINISH);
-
-                    this.updateHistorySearchKeyList({
-                        key: searchKeyClone,
-                        state: HISTORY_LIST_ITEM_STATE.FINISH,
-                        selected: false
-                    });
-                    this.autosizeRef?.reset();
-                }
-                // 否则就认为失败
-                else {
-                    this.updateAskList(id, result.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
-                    this.updateHistorySearchKeyList({
-                        key: searchKeyClone,
-                        state: HISTORY_LIST_ITEM_STATE.FAIL,
-                        selected: false
-                    });
-                }
-                this.askSendResultEvent.emit();
-                // setTimeout(() => {
-                //
-                //     console.log('this.messageCardService.pullDown')
-                // }, 3000)
-            },
-            // 请求出错，一般是网络问题
-            (error) => {
-                this.updateAskList(id, error.message, undefined, HISTORY_LIST_ITEM_STATE.FAIL);
-                this.updateHistorySearchKeyList({
-                    key: searchKeyClone,
-                    state: HISTORY_LIST_ITEM_STATE.FAIL,
-                    selected: false
-                });
-            });
-        this.clearSearchKey();
+        });
     }
 }

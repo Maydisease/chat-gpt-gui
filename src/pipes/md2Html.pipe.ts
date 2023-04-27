@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform, Renderer2} from '@angular/core';
 import {MarkdownService} from "../services/markdown.service";
 import hljs from 'highlight.js';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -40,7 +40,8 @@ hljs.registerLanguage('objectivec', objectivec);
 
 export class Md2HtmlPipe implements PipeTransform {
 
-    constructor(public markdownService: MarkdownService) {
+    constructor(public markdownService: MarkdownService, r2: Renderer2) {
+
     }
 
     public async transform(md: any, ...args: any[]): Promise<string> {
@@ -50,10 +51,13 @@ export class Md2HtmlPipe implements PipeTransform {
         if (!md) {
             return result;
         }
-
+        console.time('Z')
         try {
+            // result = this.markdownService.toHtml(md);
             result = this.markdownService.toHtml(md);
+            // console.time('X')
             // result = await invoke("md_2_html", {markdown: md});
+            // console.timeEnd('X')
             const htmlDom = new DOMParser().parseFromString(result, 'text/html').body;
             htmlDom.querySelectorAll('pre').forEach((element) => {
                 const codeElement = element.querySelector('code')!
@@ -83,6 +87,10 @@ export class Md2HtmlPipe implements PipeTransform {
         } catch (err) {
         }
 
+
+        console.timeEnd('Z')
+
         return result;
+
     }
 }

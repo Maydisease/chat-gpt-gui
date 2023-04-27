@@ -21,7 +21,6 @@ export class PlatformUtilService {
         window.onresize = () => {
             const state = document.querySelector('body')!.clientWidth > 800;
             if (this.isPC !== state) {
-                console.log(1003)
                 this.deviceChange.emit(this.isPC);
             }
             this.isPC = state;

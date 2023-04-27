@@ -43,10 +43,10 @@ export class LayoutSplitterDirective {
                 const element = this.el.nativeElement as HTMLElement;
                 let newWidthNum = this.currentElementWidthNum + movePosX;
                 if (newWidthNum <= 280) {
-                    newWidthNum = this.getElementWidthNum();
+                    newWidthNum = 280;
                 }
                 if (newWidthNum > 480) {
-                    newWidthNum = this.getElementWidthNum();
+                    newWidthNum = 480;
                 }
                 this.renderer.setStyle(element.previousElementSibling, 'width', `${newWidthNum}px`);
             }

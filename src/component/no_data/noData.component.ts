@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {AppService} from "../../app/app.service";
 import {PlatformUtilService} from "../../utils/platform.util";
 
@@ -19,6 +19,7 @@ export class NoDataComponent implements OnInit {
     }
 
     ngOnInit() {
+
     }
 
     tryPromptDemo(){

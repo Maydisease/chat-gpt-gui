@@ -11,6 +11,7 @@ import {CloseIconComponent} from "./closeIcon.component";
 import {BulbIconComponent} from "./bulbIcon.component";
 import {CopyIconComponent} from "./copy.component";
 import {RollBackIconComponent} from "./rollBackIcon.component";
+import {ReloadIconComponent} from "./reloadIcon.component";
 
 const iconsList = [
     CommitIconComponent,
@@ -22,6 +23,7 @@ const iconsList = [
     DeleteIconComponent,
     CloseIconComponent,
     BulbIconComponent,
+    ReloadIconComponent,
     CopyIconComponent,
     RollBackIconComponent
 ];

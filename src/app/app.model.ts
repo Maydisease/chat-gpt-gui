@@ -1,6 +1,6 @@
 import Dexie, {Table} from "dexie";
 import {Injectable} from "@angular/core";
-import {HISTORY_LIST_ITEM_STATE} from "./app.service";
+import {HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "./app.service";
 
 export interface AskFavoriteListItem {
     id?: number;
@@ -11,6 +11,7 @@ export interface AskFavoriteListItem {
     inputTime: number;
     updateTime: number;
     state: HISTORY_LIST_ITEM_STATE;
+    streamDone: STREAM_STATE;
 }
 
 export type AskFavoriteList = AskFavoriteListItem[];
@@ -26,7 +27,6 @@ export class FavoriteDatabase extends Dexie {
             favorite: "++id,questionContent,answerContent"
         });
     }
-
 }
 
 @Injectable({providedIn: 'root'})
@@ -73,31 +73,3 @@ export class FavoriteModel {
         })
     }
 }
-
-// const db = new FriendDatabase();
-//
-//
-// const db = new FriendDatabase();
-//
-// db.transaction('rw', db.friends, async () => {
-//
-//   // Make sure we have something in DB:
-//   if ((await db.friends.where({questionContent: 'Josephine'}).count()) === 0) {
-//     const id = await db.friends.add({questionContent: "Josephine"});
-//     console.log('Addded friend with id:', id)
-//   }
-//
-//   // Query:
-//   const youngFriends = await db.friends.each((res) => {
-//     console.log('res:', res)
-//   })
-//   //   .where({}).toArray();
-//   //
-//   // console.log('youngFriends:', youngFriends)
-//
-//   // Show result:
-//   // alert("My young friends: " + JSON.stringify(youngFriends));
-//
-// }).catch(e => {
-//   alert(e.stack || e);
-// });

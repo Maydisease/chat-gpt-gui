@@ -29,9 +29,8 @@
       </div>
       <div class="container">
         <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
-          <app-no-data *ngIf="!appService.askList.length"></app-no-data>
+          <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
           <message-card
-              *ngIf="appService.sortAskList.length"
               [dataList]="appService.sortAskList"
           ></message-card>
         </div>

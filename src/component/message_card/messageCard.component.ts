@@ -1,21 +1,14 @@
 import {
     Component,
-    ComponentFactoryResolver,
     OnInit,
     DoCheck,
     Input,
-    Renderer2,
     ViewChild,
-    NgZone,
-    ViewContainerRef, ChangeDetectorRef, ElementRef, AfterViewInit
+    ViewContainerRef, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone
 } from '@angular/core';
-import {MarkdownService} from "../../services/markdown.service";
-import {AppService, HISTORY_LIST_ITEM_STATE} from "../../app/app.service";
+import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../app/app.service";
 import {AskFavoriteList} from "../../app/app.model";
 import {PlatformUtilService} from "../../utils/platform.util";
-import {HighlightService} from "../../services/highlight.service";
-import {MessageCardService} from "./messageCard.service";
-import {ObserversModule} from '@angular/cdk/observers';
 
 export enum MESSAGE_CARD_USE_TYPE {
     ASK = 'ask',
@@ -42,15 +35,22 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
 
     public HISTORY_LIST_ITEM_STATE = HISTORY_LIST_ITEM_STATE;
 
+    public STREAM_STATE = STREAM_STATE;
+
+
     constructor(
         public appService: AppService,
-        public platformUtilService: PlatformUtilService
+        public platformUtilService: PlatformUtilService,
+        public cdr: ChangeDetectorRef,
+        public ngZone: NgZone
     ) {
     }
 
     @ViewChild('dynamicComponent', {read: ViewContainerRef}) dynamicComponent: ViewContainerRef | undefined;
 
     public ngOnInit() {
+
+
     }
 
     ngAfterViewInit() {
@@ -65,9 +65,12 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
         return this.platformUtilService.isPC ? len - i : i + 1;
     }
 
-    public againSend(keyword: string | undefined) {
+    public againSend(keyword: string | undefined, autoSend = false) {
         if (keyword) {
             this.appService.searchKey = keyword;
+            if (autoSend) {
+                this.appService.send();
+            }
         }
     }
 
@@ -79,5 +82,17 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
 
     trackByMethod(index: number, el: any): number {
         return index;
+    }
+
+    public get HIDE_PENDING_STATE() {
+        return this.appService.newTempDataAppEndState !== STREAM_STATE.PENDING;
+    }
+
+    public get SHOW_TEMP_CARD() {
+        return this.appService.newTempDataAppEndState !== STREAM_STATE.DONE;
+    }
+
+    public get HIDE_FINISH_STATE() {
+        return this.appService.newTempDataAppEndState === STREAM_STATE.PENDING;
     }
 }

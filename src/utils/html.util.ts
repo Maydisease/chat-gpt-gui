@@ -47,7 +47,6 @@ export class HtmlUtilService {
 
     public renderHighlight(htmlString: string) {
         const htmlElement = new DOMParser().parseFromString(htmlString, 'text/html');
-        console.log('htmlElement:', htmlElement)
         htmlElement.querySelectorAll('pre code').forEach((item) => {
             const preElement = item.closest('pre') as HTMLElement;
             const langString = item.getAttribute('class');
