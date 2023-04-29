@@ -6,9 +6,9 @@ import {FavoriteDatabase, AskFavoriteListItem, FavoriteModel, AskFavoriteList} f
 import {handleIsTauri} from "../main";
 import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
-import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
 import {ToastService} from "../component/toast/toast.service";
-import * as uuid from 'uuid';
+import {GetUniqueIdUtil} from "../utils/getUniqueId.util";
+import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -54,9 +54,12 @@ export type HistorySearchKeyList = HistorySearchKeyListItem[];
 
 export interface AskContextItem {
     id: string;
-    content: string;
+    list: {
+        role: 'assistant' | 'user' | 'system';
+        content: string;
+        token?: number;
+    }[]
     updateTime: number;
-    role: string;
     token?: number;
 }
 
@@ -109,6 +112,7 @@ export class AppService {
         public toastService: ToastService,
         public modalService: ModalService,
         public favoriteModel: FavoriteModel,
+        public getUniqueIdUtil: GetUniqueIdUtil,
     ) {
         this.appKey = localStorage.getItem('APP-KEY') || '';
         this.initShortcutKeyBind();
@@ -129,14 +133,16 @@ export class AppService {
             // chunk结束
             if (data.eventName === 'responseChunkEnd') {
                 this.newTempDataAppEndState = STREAM_STATE.DONE;
-                const {key, mdChunk, questionContent} = data.message;
+                const {key, answerMarkdown, questionContent} = data.message;
                 this.updateHistorySearchKeyList({
                     key: questionContent,
                     state: HISTORY_LIST_ITEM_STATE.FINISH,
                     selected: false
                 });
-                this.updateAskList(key, mdChunk, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
-                this.askContext = this.generateContext();
+                this.updateAskList(key, answerMarkdown, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
+                // this.askContext = this.generateContext();
+                this.updateContext(questionContent, answerMarkdown);
+                console.log('responseChunkEnd:askContext::::', this.askContext)
                 this.askSendResultEvent.emit();
             }
             // chunk 错误
@@ -475,38 +481,79 @@ export class AppService {
     }
 
     // 获取上下文token相关信息
-    public generateContext() {
-        const askContext: AskContextList = [];
-        if (this.enableAskContext) {
-            if (this.askList && this.askList.length > 0) {
-                const descAskList = this.askList.sort((itemA, itemB) => {
-                    return itemA.inputTime! - itemB.inputTime!;
-                });
-                descAskList.map((item) => {
-                    if (item.state !== HISTORY_LIST_ITEM_STATE.FAIL) {
-                        if (item.questionContent) {
-                            askContext.push({
-                                id: uuid.v4(),
-                                updateTime: item.inputTime,
-                                content: item.questionContent,
-                                role: 'user'
-                            });
-                        }
-                        if (item.answerMarkdown) {
-                            askContext.push({
-                                id: uuid.v4(),
-                                updateTime: item.inputTime,
-                                content: item.answerMarkdown,
-                                role: 'assistant'
-                            });
-                        }
+
+    public updateContext(question: string, answer: string) {
+        this.askContext.push({
+            id: this.getUniqueIdUtil.get(),
+            list: [
+                {
+                    role: 'user',
+                    content: question
+                },
+                {
+                    role: 'assistant',
+                    content: answer
+                }
+            ],
+            updateTime: new Date().getTime(),
+        })
+    }
+
+    // 自动删除token
+    autoRemoveToken(arr: AskContextList, questionTokenNum: number) {
+        const maxToken = 3300 - questionTokenNum;
+        let sum = 0;
+        let i = 0;
+        let j = 0;
+        while (i < arr.length) {
+            const item = arr[i];
+            while (j < item.list.length) {
+                const subItem = item.list[j];
+                if (subItem.token) {
+                    sum += subItem.token;
+                    if (sum > maxToken) {
+                        return arr.slice(i);
                     }
-                });
+                }
+                j++;
             }
-        };
-        console.log('askContext:', askContext)
-        // askContext.push({id: uuid.v4(), updateTime: new Date().getTime(), content: this.searchKey, role: 'user'});
-        return askContext;
+            sum += item.token || 0;
+            if (sum > maxToken) {
+                return arr.slice(i);
+            }
+            i++;
+            j = 0;
+        }
+        return arr;
+    }
+
+
+    public generateRequestContext(questionContent: string) {
+
+        const sourceContextLen = this.askContext.length;
+        const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
+        this.askContext = this.autoRemoveToken(this.askContext, questionTokenNum);
+        const newContextLen = this.askContext.length;
+
+        if (newContextLen < sourceContextLen) {
+            this.toastService.create(`上下文长度超长，裁剪 ${sourceContextLen - newContextLen} 个上下文`, 5000);
+        }
+
+        const context: { role: string, content: string }[] = [];
+
+        this.askContext.map((item: any) => {
+            item.list.map((chatItem: any) => {
+                context.push({role: chatItem.role, content: chatItem.content});
+            })
+        });
+
+        context.push({
+            content: questionContent,
+            role: 'user',
+        });
+
+        return context;
+
     }
 
     // 发送
@@ -545,7 +592,7 @@ export class AppService {
                 address,
                 questionContent: this.searchKey,
                 appKey: this.appKey,
-                askContext: this.askContext
+                askContext: this.generateRequestContext(this.searchKey)
             }
         });
     }

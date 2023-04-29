@@ -1,0 +1,63 @@
+:host {
+  span {
+    width: 5px;
+    height: 10px;
+    margin-right: 3px;
+    display: inline-block;
+    background: var(--button-background-color);
+
+    &:nth-child(1) {
+      animation: text-loading-1-anime 2s infinite;
+      @keyframes text-loading-1-anime {
+        0% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+        50% {
+          opacity: 100%;
+          transform: rotateX(180deg);
+        }
+        100% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+      }
+    }
+
+    &:nth-child(2) {
+      animation: text-loading-2-anime 2s .1s infinite;
+      @keyframes text-loading-2-anime {
+        0% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+        50% {
+          opacity: 100%;
+          transform: rotateX(180deg);
+        }
+        100% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+      }
+    }
+
+    &:nth-child(3) {
+      animation: text-loading-3-anime 2s .2s infinite;
+      @keyframes text-loading-3-anime {
+        0% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+        50% {
+          opacity: 1;
+          transform: rotateX(180deg);
+        }
+        100% {
+          opacity: 1;
+          transform: rotateX(0);
+        }
+      }
+    }
+  }
+}

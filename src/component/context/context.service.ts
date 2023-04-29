@@ -50,7 +50,7 @@ export class ContextService {
       ...{
         height: "0",
         width: "0",
-        hasBackdrop: true,
+        hasBackdrop: false,
         disableClose: false,
         backdropClass: "modal-backdrop-opacity",
         scrollStrategy: this.scrollStrategy,

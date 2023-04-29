@@ -32,6 +32,7 @@ import {ContextComponent} from "../component/context/context.component";
 import {CheckboxComponent} from "../component/unit/checkbox/checkbox.component";
 import {CheckboxClickHandleDirective} from "../component/unit/checkbox/checkboxClickHandle.directive";
 import {CheckboxListDirective} from "../component/unit/checkbox/checkboxList.directive";
+import {TextLoadingComponent} from "../component/text_loading/textLoading.component";
 
 const routes: Routes = [
     // {path: '', pathMatch: 'full'},
@@ -63,7 +64,8 @@ const routes: Routes = [
         LayoutSplitterDirective,
         MessageCardComponent,
         CheckboxClickHandleDirective,
-        CheckboxListDirective
+        CheckboxListDirective,
+        TextLoadingComponent
     ],
     imports: [
         ObserversModule,

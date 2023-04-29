@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {AppService} from "../../app/app.service";
+import {AppService, AskContextList} from "../../app/app.service";
 import {ChatGptTokensUtil} from "../../utils/chatGptTokens.util";
 import {CheckboxListDirective} from "../unit/checkbox/checkboxList.directive";
 import {ContextContextBase} from "./context.service";
@@ -27,10 +27,7 @@ export class ContextComponent implements OnInit {
     public removeContextList: string[] = [];
 
     ngOnInit() {
-        this.appService.askContext.map((item) => {
-            item.token = ChatGptTokensUtil.tokenLen(item.content)
-            this.tokenTotal += item.token;
-        })
+        this.computedTotalToken();
     }
 
     selectedAll() {
@@ -41,18 +38,33 @@ export class ContextComponent implements OnInit {
         }
     }
 
+    computedTotalToken() {
+
+        // const askContext: AskContextList = JSON.parse(JSON.stringify(this.appService.askContext));
+
+        this.appService.askContext.map((item, itemIndex) => {
+            item.list.map((chatItem, chatItemIndex) => {
+                const token = ChatGptTokensUtil.tokenLen(chatItem.content);
+                chatItem.token = token;
+                this.tokenTotal += token;
+            })
+        });
+        // this.appService.askContext = askContext;
+    }
+
     computedToken() {
         this.selectedToken = 0;
         this.tokenTotal = 0;
         this.checkboxListRef.list.map((id) => {
             const findItem = this.appService.askContext.find((item) => item.id === id);
             if (findItem) {
-                this.selectedToken += findItem.token!;
+                findItem.list.map((chatItem) => {
+                    this.selectedToken += chatItem.token!;
+                })
+
             }
         });
-        this.appService.askContext.map((item) => {
-            this.tokenTotal += item.token!;
-        })
+        this.computedTotalToken();
     }
 
     checkboxChangeHandle(list: string[]) {

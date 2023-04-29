@@ -1,21 +1,27 @@
 <div class="mask" (click)="close()"></div>
 <div class="container">
   <h2>管理Context</h2>
-  <div class="close" (click)="close()"><close-icon></close-icon></div>
   <div
       class="list"
       checkboxList
       #checkboxListRef="checkboxListRef"
       (checkboxChange)="checkboxChangeHandle($event)">
     <div class="wrap">
-      <div class="no-data" [hidden]="appService.askContext.length">暂无上下文～</div>
+      <div class="no-data" [hidden]="appService.askContext.length">
+        <ng-container *ngIf="appService.enableAskContext">暂无上下文～</ng-container>
+        <ng-container *ngIf="!appService.enableAskContext">未开启上下文，要开启吗？
+          <div class="btn" (click)="appService.switchAskContextEnableStateHandle()">开启</div>
+        </ng-container>
+      </div>
+
       <div
-          class="item"
+          class="context-group"
           checkboxClickHandle
           #checkboxClickHandleRef="checkboxClickHandleRef"
           [class.active]="checkboxRef.key === item.id && checkboxRef.selected"
           *ngFor="let item of appService.askContext; let i = index"
       >
+
         <div class="action">
           <checkbox
               #checkboxRef
@@ -25,14 +31,24 @@
               [checkboxClickHandleRef]="checkboxClickHandleRef"
           ></checkbox>
         </div>
-        <div class="content">
-          <div class="info">
-            <span class="role"><i class="label">role:</i>{{item.role}}</span>
-            <span class="token"><i class="label">token:</i>{{item.token}}</span>
-            <span class="date"><i class="label">date:</i>{{item.updateTime | dateFormat: 'HH:mm:ss'}}</span>
+        <div class="main">
+          <div class="main-info">
+            <span>#{{item.id}}</span>
+            <span>date: {{item.updateTime |  dateFormat: 'HH:mm:ss'}}</span>
           </div>
-          {{item.content | substring: 500}}
+          <div class="item" [attr.index]="i" *ngFor="let chatItem of item.list; let i = index">
+            <div class="content">
+              <div class="info">
+                <span class="role"><i class="label">role:</i>{{chatItem.role}}</span>
+                <span class="space"></span>
+                <span class="token"><i class="label">token:</i>{{chatItem.token}}</span>
+              </div>
+              {{chatItem.content | substring: 500}}
+            </div>
+          </div>
         </div>
+
+
       </div>
     </div>
     <div class="footer-bar">
@@ -46,6 +62,7 @@
           (click)="selectedAll()"
           [class.disabled]="appService.askContext.length === 0"
       >{{checkboxListRef.isSelectedAll ? '反 选' : '全 选'}}</span>
+      <span class="btn" (click)="close()">退出</span>
     </div>
     <div
         class="action delete"

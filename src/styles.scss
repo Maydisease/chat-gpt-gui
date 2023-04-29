@@ -82,6 +82,7 @@ div, h1, h2, h3, h4, h5, h6, span, i, p, textarea, input {
   margin: 0;
   padding: 0;
   list-style: none;
+  -webkit-tap-highlight-color: RGBA(255, 255, 255, 0);
 }
 
 i {

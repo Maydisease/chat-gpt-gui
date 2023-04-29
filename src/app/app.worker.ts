@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 import {init, format} from '../libs/cmark';
 import uuid from 'uuid';
+import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
 
 
 // console.log('markdown:', markdown)
@@ -77,28 +78,12 @@ addEventListener('message', async ({data}) => {
     if (data.eventName === 'request') {
         const {address, appKey, askContext, key, questionContent} = data.message;
 
-        const context = [
-            ...askContext,
-            {
-                content: questionContent,
-                role: 'user',
-            }
-        ];
-
-        context.map((item: any) => {
-            delete item.updateTime;
-            delete item.id;
-            delete item.token;
-        });
-
-        console.log('context:', context)
-
         fetch(address, {
             method: 'POST',
             body: JSON.stringify({
                 content: undefined,
                 appKey: appKey,
-                context,
+                context: askContext
             }),
             headers: {
                 'accept': 'text/event-stream',
@@ -139,7 +124,7 @@ addEventListener('message', async ({data}) => {
                     doneEvent() {
                         postMessage({
                             eventName: 'responseChunkEnd',
-                            message: {key, sn, mdChunk, questionContent}
+                            message: {key, sn, answerMarkdown: mdChunk, questionContent}
                         });
                     },
                     // chunk事件
