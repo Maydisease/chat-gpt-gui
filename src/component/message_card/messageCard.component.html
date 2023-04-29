@@ -52,7 +52,15 @@
           [class.state-pending]="item.state === HISTORY_LIST_ITEM_STATE.PENDING"
       >
         <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
-        <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">{{item.answerMarkdown}}</div>
+        <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">
+          {{item.answerMarkdown}}
+
+          <div class="tips">
+            <div class="context-clean" *ngIf="item.errorCode === 'context_length_exceeded'">
+              对话上下文超长，请修剪上下文 <i (click)="contextService.create()">[管理上下文]</i>
+            </div>
+          </div>
+        </div>
         <div
             class="finish answer wrap markdown-body"
             [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH"
@@ -63,7 +71,7 @@
     </div>
   </div>
   <!--临时 dom! [S]-->
-  <div class="card temp" *ngIf="SHOW_TEMP_CARD">
+  <div class="card temp" *ngIf="SHOW_TEMP_CARD && type === MESSAGE_CARD_USE_TYPE.ASK">
     <div class="item">
       <div class="tip-bar">
         <span class="text sn">#NEW</span>
@@ -87,9 +95,8 @@
         </div>
         <div
             class="card-new-temp-container finish answer wrap markdown-body"
-            [hidden]="HIDE_FINISH_STATE"
-            new-temp>
-          1000
+            [hidden]="HIDE_FINISH_STATE">
+          <new-temp-render-container></new-temp-render-container>
         </div>
       </div>
     </div>

@@ -378,13 +378,20 @@
           line-height: 17px;
           font-size: 12px;
           padding: 4px 0;
+          align-items: center;
+          display: inline-flex;
           box-sizing: border-box;
           background: var(--background-color);
           box-shadow: var(--color-shadow-medium);
 
           .item {
-            display: inline-block;
+            display: inline-flex;
             margin-left: 5px;
+            cursor: pointer;
+            justify-content: center;
+            justify-items: center;
+            align-content: center;
+            align-items: center;
             vertical-align: top;
             box-sizing: border-box;
             border-right: 1px solid RGBA(0, 0, 0, .3);

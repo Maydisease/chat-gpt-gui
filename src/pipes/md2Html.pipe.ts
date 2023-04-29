@@ -51,7 +51,6 @@ export class Md2HtmlPipe implements PipeTransform {
         if (!md) {
             return result;
         }
-        console.time('Z')
         try {
             // result = this.markdownService.toHtml(md);
             result = this.markdownService.toHtml(md);
@@ -86,9 +85,6 @@ export class Md2HtmlPipe implements PipeTransform {
             result = htmlDom.innerHTML;
         } catch (err) {
         }
-
-
-        console.timeEnd('Z')
 
         return result;
 

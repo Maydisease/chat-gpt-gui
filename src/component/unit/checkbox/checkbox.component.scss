@@ -1,0 +1,35 @@
+:host {
+  display: contents;
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid var(--border-color);
+
+    &:before {
+      position: absolute;
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      left: 50%;
+      top: 50%;
+      transition: all, .2s;
+      transform: scale(0) translate(-50%, -50%);
+      transform-origin: 0 0;
+      background: RGBA(255, 255, 255, 0);
+    }
+
+    &.selected {
+      border: 1px solid var(--button-background-color);
+
+      &:before {
+        transform-origin: 0 0;
+        background: var(--button-background-color);
+        transform: scale(1) translate(-50%, -50%);
+      }
+    }
+  }
+}

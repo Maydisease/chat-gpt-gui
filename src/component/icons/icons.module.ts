@@ -12,8 +12,10 @@ import {BulbIconComponent} from "./bulbIcon.component";
 import {CopyIconComponent} from "./copy.component";
 import {RollBackIconComponent} from "./rollBackIcon.component";
 import {ReloadIconComponent} from "./reloadIcon.component";
+import {ProfileComponent} from "./profileIcon.component";
 
 const iconsList = [
+    ProfileComponent,
     CommitIconComponent,
     FavoriteIconComponent,
     GearIconComponent,

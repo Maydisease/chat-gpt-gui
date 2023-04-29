@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1. 优化回复效率，使用 text/event-stream 方案来加快第一个字符出现的速度'
+          releaseBody: '1. 解决因text/event-stream 引起的性能问题，并重构了上下文，允许手动管理上下文'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

@@ -1,0 +1,60 @@
+<div class="mask" (click)="close()"></div>
+<div class="container">
+  <h2>管理Context</h2>
+  <div class="close" (click)="close()"><close-icon></close-icon></div>
+  <div
+      class="list"
+      checkboxList
+      #checkboxListRef="checkboxListRef"
+      (checkboxChange)="checkboxChangeHandle($event)">
+    <div class="wrap">
+      <div class="no-data" [hidden]="appService.askContext.length">暂无上下文～</div>
+      <div
+          class="item"
+          checkboxClickHandle
+          #checkboxClickHandleRef="checkboxClickHandleRef"
+          [class.active]="checkboxRef.key === item.id && checkboxRef.selected"
+          *ngFor="let item of appService.askContext; let i = index"
+      >
+        <div class="action">
+          <checkbox
+              #checkboxRef
+              [key]="item.id"
+              [defaultSelected]="defaultSelected"
+              [checkboxListRef]="checkboxListRef"
+              [checkboxClickHandleRef]="checkboxClickHandleRef"
+          ></checkbox>
+        </div>
+        <div class="content">
+          <div class="info">
+            <span class="role"><i class="label">role:</i>{{item.role}}</span>
+            <span class="token"><i class="label">token:</i>{{item.token}}</span>
+            <span class="date"><i class="label">date:</i>{{item.updateTime | dateFormat: 'HH:mm:ss'}}</span>
+          </div>
+          {{item.content | substring: 500}}
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span style="margin-right: 8px;">数量: <i class="count">{{appService.askContext.length}}</i></span>
+      <span>token: <i class="total">{{tokenTotal}} </i> - <i class="selected">{{selectedToken}}</i> = <i
+          class="result">{{tokenTotal - selectedToken}}</i></span>
+      <span class="space"></span>
+      <!--      <input class="num"/>-->
+      <span
+          class="btn"
+          (click)="selectedAll()"
+          [class.disabled]="appService.askContext.length === 0"
+      >{{checkboxListRef.isSelectedAll ? '反 选' : '全 选'}}</span>
+    </div>
+    <div
+        class="action delete"
+        [class.active]="checkboxListRef.list.length"
+        (click)="removeContextHandle()"
+    >
+      <delete-icon></delete-icon>
+    </div>
+  </div>
+
+</div>
+

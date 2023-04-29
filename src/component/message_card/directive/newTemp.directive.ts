@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Directive, ElementRef, NgZone, Renderer2} from '@angular/core';
-import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../../app/app.service";
+import {ChangeDetectorRef, Directive, ElementRef, NgZone, OnDestroy, Renderer2} from '@angular/core';
+import {AppService} from "../../../app/app.service";
 
 @Directive({selector: '[new-temp]'})
-export class NewTempDirective {
+export class NewTempDirective implements OnDestroy {
 
     constructor(
         public el: ElementRef,
@@ -11,19 +11,25 @@ export class NewTempDirective {
         public ngZone: NgZone,
         public cdr: ChangeDetectorRef
     ) {
+        this.appService.worker.removeEventListener('message', this.handle);
+        this.appService.worker.addEventListener('message', this.handle)
+    }
 
-        this.appService.worker.onmessage = ({data}) => {
+    public count = 0;
 
-            if (data.eventName === 'responseChunk') {
-                const {htmlChunk} = data.message;
-                this.ngZone.runOutsideAngular(() => {
-                    this.ngZone.run(() => {
-                        document.querySelectorAll('.card-new-temp-container').forEach((element) => {
-                            this.r2.setProperty(element, 'innerHTML', htmlChunk)
-                        })
-                    })
-                });
-            }
+    handle = ({data}: any) => {
+        if (data.eventName === 'responseChunk') {
+            this.count++;
+            const {htmlChunk} = data.message;
+            this.ngZone.runOutsideAngular(() => {
+                document.querySelectorAll('.card-new-temp-container').forEach((element) => {
+                    element.innerHTML = htmlChunk;
+                })
+            });
         }
+    }
+
+    ngOnDestroy() {
+        this.appService.worker.removeEventListener('message', this.handle);
     }
 }

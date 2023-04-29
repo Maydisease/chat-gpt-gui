@@ -1,7 +1,72 @@
 /// <reference lib="webworker" />
 import {init, format} from '../libs/cmark';
+import uuid from 'uuid';
+
+
+// console.log('markdown:', markdown)
+
 
 let isLoad = false;
+
+type handleErrorReturn = Promise<[boolean, {
+    msg: string
+    code: string
+} | null]>
+
+const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: Response): handleErrorReturn => {
+    return new Promise(async (resolve, reject) => {
+        if (
+            response.headers.get('content-type') &&
+            response.headers.get('content-type')!.indexOf('application/json') === 0
+        ) {
+            const {value} = await reader.read();
+            let chunkString = new TextDecoder().decode(value);
+            let jsonObject: any = {};
+            try {
+                jsonObject = JSON.parse(chunkString);
+                //context_length_exceeded
+                if (jsonObject.error && jsonObject.error.message) {
+                    resolve([true, {msg: jsonObject.error.message, code: jsonObject.error.code}])
+                    return;
+
+                }
+            } catch (err: any) {
+                resolve([true, {code: '', msg: err.toString()}])
+                return;
+            }
+        }
+        resolve([false, null])
+    })
+
+}
+
+interface XReadableStreamEvent {
+    doneEvent: () => void;
+    chunkEvent: (chunk: string) => void;
+}
+
+const handleReadableStream = (reader: ReadableStreamDefaultReader<Uint8Array>, event: XReadableStreamEvent) => {
+    new ReadableStream({
+        start: (controller) => {
+            const push = async () => {
+                // "done" is a Boolean and value a "Uint8Array"
+                const {done, value} = await reader.read();
+                // If there is no more data to read
+                if (done) {
+                    event.doneEvent();
+                    controller.close();
+                    return;
+                }
+                controller.enqueue(value);
+                let chunkString = new TextDecoder().decode(value);
+                event.chunkEvent(chunkString);
+                push();
+            }
+            push();
+        },
+    });
+}
+
 addEventListener('message', async ({data}) => {
 
     if (!isLoad) {
@@ -12,12 +77,28 @@ addEventListener('message', async ({data}) => {
     if (data.eventName === 'request') {
         const {address, appKey, askContext, key, questionContent} = data.message;
 
+        const context = [
+            ...askContext,
+            {
+                content: questionContent,
+                role: 'user',
+            }
+        ];
+
+        context.map((item: any) => {
+            delete item.updateTime;
+            delete item.id;
+            delete item.token;
+        });
+
+        console.log('context:', context)
+
         fetch(address, {
             method: 'POST',
             body: JSON.stringify({
                 content: undefined,
                 appKey: appKey,
-                context: askContext,
+                context,
             }),
             headers: {
                 'accept': 'text/event-stream',
@@ -25,80 +106,83 @@ addEventListener('message', async ({data}) => {
             },
         })
             .then((response) => {
-                return response.body;
+                return {body: response.body, response};
             })
-            .then((rb) => {
+            .then(async ({body, response}) => {
+
+                console.time('PUSH-ASK')
+
+                let rawChunk = '';
                 let mdChunk = '';
                 let sn = '';
+                let chunkCount = 0;
                 let firstChunk = true;
+                const reader = body!.getReader();
 
-                const reader = rb!.getReader();
-                return new ReadableStream({
-                    start: (controller) => {
-                        const push = () => {
-                            // "done" is a Boolean and value a "Uint8Array"
-                            reader.read().then(({done, value}) => {
-                                // If there is no more data to read
-                                if (done) {
-                                    console.log('done', done);
-                                    controller.close();
-                                    return;
-                                }
-                                // Get the data and send it to the browser via the controller
-                                controller.enqueue(value);
-                                // Check chunks by logging to the console
-                                let chunkString = new TextDecoder().decode(value);
+                const [err, errInfo] = await handleError(reader, response);
 
-                                const dataList = chunkString.split('\n');
-                                dataList.map((data) => {
-                                    if (data && data.indexOf('data:') === 0) {
-
-                                        if (data.indexOf('data: [DONE]') === 0) {
-                                            postMessage({
-                                                eventName: 'responseChunkEnd',
-                                                message: {key, sn, mdChunk, questionContent}
-                                            })
-                                            return;
-                                        }
-
-                                        let chunkObject: any = {};
-
-                                        try {
-                                            chunkObject = JSON.parse(data.replace('data: ', ''));
-                                        } catch (err) {
-
-                                        }
-
-                                        if (chunkObject.choices[0].delta.content) {
-                                            const markdown = chunkObject.choices[0].delta.content;
-                                            sn = chunkObject.id;
-                                            mdChunk += markdown;
-                                            const htmlChunk = format(mdChunk);
-
-                                            if (firstChunk) {
-                                                postMessage({
-                                                    eventName: 'responseChunkStart'
-                                                });
-                                                firstChunk = false;
-                                            }
-                                            postMessage({
-                                                eventName: 'responseChunk',
-                                                message: {
-                                                    htmlChunk,
-                                                    firstChunk
-                                                }
-                                            });
-                                        }
-                                    }
-                                })
-                                push();
-                            });
+                if (err) {
+                    postMessage({
+                        eventName: 'responseError',
+                        message: {
+                            key,
+                            questionContent,
+                            errorContent: errInfo?.msg,
+                            errorCode: errInfo?.code
                         }
-                        push();
+                    });
+                    return;
+                }
+
+                handleReadableStream(reader, {
+                    // chunk完成事件
+                    doneEvent() {
+                        postMessage({
+                            eventName: 'responseChunkEnd',
+                            message: {key, sn, mdChunk, questionContent}
+                        });
                     },
-                });
+                    // chunk事件
+                    async chunkEvent(chunk) {
+                        chunkCount++;
+                        rawChunk += chunk;
+                        if (firstChunk) {
+                            postMessage({
+                                eventName: 'responseChunkStart'
+                            });
+                            firstChunk = false;
+                        }
+
+                        const dataList = rawChunk.split('\n');
+                        mdChunk = '';
+                        for (let i = 0; i < dataList.length; i++) {
+                            let item = dataList[i];
+                            if (item.indexOf('data: ') === 0 && item.indexOf('data: [DONE]') !== 0) {
+                                item = item.replace('data: ', '');
+                                const result = JSON.parse(item);
+                                if (result.choices[0].delta.content) {
+                                    mdChunk += result.choices[0].delta.content;
+                                }
+                            }
+                        }
+
+                        let html = format(mdChunk);
+
+                        postMessage({
+                            eventName: 'responseChunk',
+                            message: {
+                                htmlChunk: html
+                            }
+                        });
+
+                    }
+                })
+
+                console.timeEnd('PUSH-ASK')
+
             })
             .catch((err) => {
+                console.log('ERR', err)
                 postMessage({
                     eventName: 'responseError',
                     message: {

@@ -1,4 +1,8 @@
 input, textarea, select {
+  border-radius: 3px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  outline: none;
   background: var(--widget-background-color);
   border: 1px solid var(--widget-border-color);
   color: var(--widget-font-color);

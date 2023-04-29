@@ -57,6 +57,12 @@
   --color-primer-active: #fd8c73;
   --color-action-list-item-default-hover-bg: #2B3037;
 
+  --modal-panle-shadow-color: 0 8px 24px #1c2128;
+
+  --dep-shadow-color: 0 8px 20px RGBA(0, 0, 0, .2);
+
+  --item-selected-bg-color: #23272E;
+
 }
 
 [data-theme="light"] {
@@ -110,6 +116,12 @@
 
   --color-primer-active: #fd8c73;
   --color-action-list-item-default-hover-bg: rgba(208, 215, 222, 0.32);
+
+  --modal-panle-shadow-color: 0 8px 24px #1c2128;
+
+  --dep-shadow-color: 0 8px 20px RGBA(0, 0, 0, .2);
+
+  --item-selected-bg-color: RGBA(238, 238, 238, 1);
 }
 
 

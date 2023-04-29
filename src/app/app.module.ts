@@ -6,9 +6,13 @@ import {AppService} from "./app.service";
 import {ThemeService} from "../services/theme.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {CommonModule} from "@angular/common";
+import {ToastService} from "../component/toast/toast.service";
+import {ContextService} from "../component/context/context.service";
 
 @NgModule({
-    declarations: [],
+    declarations: [
+
+    ],
     imports: [
         CommonModule,
         AppRoutingModule,
@@ -17,6 +21,9 @@ import {CommonModule} from "@angular/common";
     bootstrap: [AppComponent],
 })
 export class AppModule {
-    constructor() {
+    constructor(
+        public contextService: ContextService,
+        public toastService: ToastService
+    ) {
     }
 }

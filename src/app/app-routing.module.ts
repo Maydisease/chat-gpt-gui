@@ -27,16 +27,23 @@ import {HljsDirective} from "../component/message_card/directive/hljs.directive"
 import {ObserversModule} from "@angular/cdk/observers";
 import {PullDownDirective} from "../component/message_card/directive/pullDown.directive";
 import {NewTempDirective} from "../component/message_card/directive/newTemp.directive";
+import {NewTempComponent} from "../component/message_card/components/newTemp.component";
+import {ContextComponent} from "../component/context/context.component";
+import {CheckboxComponent} from "../component/unit/checkbox/checkbox.component";
+import {CheckboxClickHandleDirective} from "../component/unit/checkbox/checkboxClickHandle.directive";
+import {CheckboxListDirective} from "../component/unit/checkbox/checkboxList.directive";
 
 const routes: Routes = [
-    {path: '', pathMatch: 'full', redirectTo: 'layout'},
-    {path: '', resolve: [], children: []},
-    {path: 'layout', component: LayoutComponent, resolve: [InitTaskResolveService]},
-    {path: '**', redirectTo: 'layout'}
+    // {path: '', pathMatch: 'full'},
+    {path: '', component: LayoutComponent, resolve: [InitTaskResolveService]},
+    {path: '**', redirectTo: ''}
 ]
 
 @NgModule({
     declarations: [
+        CheckboxComponent,
+        ContextComponent,
+        NewTempComponent,
         NewTempDirective,
         Md5Pipe,
         HljsDirective,
@@ -54,7 +61,9 @@ const routes: Routes = [
         SubstringPipe,
         LayoutComponent,
         LayoutSplitterDirective,
-        MessageCardComponent
+        MessageCardComponent,
+        CheckboxClickHandleDirective,
+        CheckboxListDirective
     ],
     imports: [
         ObserversModule,

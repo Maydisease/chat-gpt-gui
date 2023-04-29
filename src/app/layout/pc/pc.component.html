@@ -31,14 +31,14 @@
         <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
           <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
           <message-card
-              [dataList]="appService.sortAskList"
+              [dataList]="appService.askList"
           ></message-card>
         </div>
         <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
           <message-card
-              *ngIf="appService.sortFavoriteList.length"
+              *ngIf="appService.favoriteList.length"
               [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"
-              [dataList]="appService.sortFavoriteList"
+              [dataList]="appService.favoriteList"
           ></message-card>
         </div>
       </div>
@@ -48,26 +48,29 @@
            (click)="appService.switchAskContextEnableStateHandle()">
         Context
       </div>
-      <div class="item">
-        <span class="label">Tokens≈</span>
-        <span class="value">
-        {{appService.askContextInfo.totalTokensLen}} + <i>({{appService.askContextInfo.tempQuestionTokenLen}}) </i>
-      </span>
-      </div>
-      <div class="item">
-        <span class="label">问题数:</span>
-        <span class="value">{{appService.askContextInfo.questionCount}}</span>
-      </div>
-      <div class="item">
-        <span class="label">答案数:</span>
-        <span class="value">{{appService.askContextInfo.answerCount}}</span>
-      </div>
-      <div
-          *ngIf="appService.askContextInfo.totalTokensLen > 0"
-          class="item action"
-          (click)="appService.cleanAskContextHandle()"
-      >
-        <delete-icon></delete-icon>
+<!--      <div class="item">-->
+<!--        <span class="label">Tokens≈</span>-->
+<!--        <span class="value">-->
+<!--        {{appService.askContextInfo.totalTokensLen}} + <i>({{appService.askContextInfo.tempQuestionTokenLen}}) </i>-->
+<!--      </span>-->
+<!--      </div>-->
+<!--      <div class="item">-->
+<!--        <span class="label">问题数:</span>-->
+<!--        <span class="value">{{appService.askContextInfo.questionCount}}</span>-->
+<!--      </div>-->
+<!--      <div class="item">-->
+<!--        <span class="label">答案数:</span>-->
+<!--        <span class="value">{{appService.askContextInfo.answerCount}}</span>-->
+<!--      </div>-->
+<!--      <div-->
+<!--          *ngIf="appService.askContextInfo.totalTokensLen > 0"-->
+<!--          class="item action"-->
+<!--          (click)="appService.cleanAskContextHandle()"-->
+<!--      >-->
+<!--        <delete-icon></delete-icon>-->
+<!--      </div>-->
+      <div class="item btn icon"  (click)="contextService.create()">
+        <profile-icon></profile-icon>
       </div>
       <div class="item action" (click)="appService.isPromptMode = true">
         提示词

@@ -1,6 +1,5 @@
-import {ApplicationRef, ChangeDetectorRef, ElementRef, EventEmitter, Injectable, NgZone} from '@angular/core';
+import {ElementRef, EventEmitter, Injectable} from '@angular/core';
 import {message, confirm} from "@tauri-apps/api/dialog";
-import {HttpClient} from "@angular/common/http";
 import Mousetrap from 'mousetrap';
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, AskFavoriteListItem, FavoriteModel, AskFavoriteList} from "./app.model";
@@ -8,9 +7,8 @@ import {handleIsTauri} from "../main";
 import config from '../../src-tauri/tauri.conf.json';
 import {ModalService} from "../component/modal/modal.service";
 import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
-import {PlatformUtilService} from "../utils/platform.util";
-import {HtmlUtilService} from "../utils/html.util";
-import {MessageCardService} from "../component/message_card/messageCard.service";
+import {ToastService} from "../component/toast/toast.service";
+import * as uuid from 'uuid';
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -55,12 +53,15 @@ export interface HistorySearchKeyListItem {
 export type HistorySearchKeyList = HistorySearchKeyListItem[];
 
 export interface AskContextItem {
-    content: string,
-    role: string
+    id: string;
+    content: string;
+    updateTime: number;
+    role: string;
+    token?: number;
 }
 
 
-type AskContextList = AskContextItem[];
+export type AskContextList = AskContextItem[];
 
 
 @Injectable({providedIn: 'root'})
@@ -95,6 +96,8 @@ export class AppService {
     public historySearchKeyList: HistorySearchKeyList = [];
     public askList: AskFavoriteList = [];
 
+    public askContextTokenInfo = {}
+
     public newTempDataAppEndState: STREAM_STATE = STREAM_STATE.DONE;
     public newTempDataError = '';
     public newTempDataQuestionContent = '';
@@ -103,6 +106,7 @@ export class AppService {
     public enableAskContext = false;
 
     constructor(
+        public toastService: ToastService,
         public modalService: ModalService,
         public favoriteModel: FavoriteModel,
     ) {
@@ -124,7 +128,6 @@ export class AppService {
             }
             // chunk结束
             if (data.eventName === 'responseChunkEnd') {
-                this.searchKey = '';
                 this.newTempDataAppEndState = STREAM_STATE.DONE;
                 const {key, mdChunk, questionContent} = data.message;
                 this.updateHistorySearchKeyList({
@@ -133,25 +136,24 @@ export class AppService {
                     selected: false
                 });
                 this.updateAskList(key, mdChunk, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
+                this.askContext = this.generateContext();
                 this.askSendResultEvent.emit();
             }
             // chunk 错误
             if (data.eventName === 'responseError') {
-                this.searchKey = '';
-                const {key, errorContent, questionContent} = data.message;
+                const {key, errorContent, questionContent, errorCode} = data.message;
                 this.newTempDataAppEndState = STREAM_STATE.DONE;
-                this.updateAskList(key, errorContent, questionContent, HISTORY_LIST_ITEM_STATE.FAIL, STREAM_STATE.DONE);
+                this.updateAskList(
+                    key,
+                    errorContent,
+                    questionContent,
+                    HISTORY_LIST_ITEM_STATE.FAIL,
+                    STREAM_STATE.DONE,
+                    errorCode
+                );
             }
         })
     }
-
-
-    // 每次有答案返回时，将容器的滚动条滚动至最底部
-    // public moveHistoryContainerScrollToBottom() {
-    //     setTimeout(() => {
-    //         this.historyElementRef?.nativeElement.scrollTo({behavior: 'smooth', top: 999999999})
-    //     }, 200);
-    // }
 
     public initAskContext() {
         this.enableAskContext = localStorage.getItem('ENABLE-ASK-CONTEXT') === '1' || false;
@@ -212,7 +214,13 @@ export class AppService {
     }
 
     // 更新问题集合
-    public updateAskList(key: string, answerMarkdown: string | undefined, questionContent: string | undefined, state: HISTORY_LIST_ITEM_STATE, streamState: STREAM_STATE) {
+    public updateAskList(
+        key: string, answerMarkdown: string | undefined,
+        questionContent: string | undefined,
+        state: HISTORY_LIST_ITEM_STATE,
+        streamState: STREAM_STATE,
+        errorCode: string = ''
+    ) {
         const findIndex = this.askList.findIndex((item) => item.key === key);
         const updateTime = new Date().getTime();
 
@@ -221,6 +229,7 @@ export class AppService {
             this.askList[findIndex].updateTime = updateTime;
             this.askList[findIndex].answerMarkdown = (this.askList[findIndex].answerMarkdown! || '') + (answerMarkdown || '');
             this.askList[findIndex].streamDone = streamState;
+            this.askList[findIndex].errorCode = errorCode;
             // this.askList[findIndex].sn = sn;
         } else if (questionContent) {
             this.askList.push({
@@ -230,6 +239,7 @@ export class AppService {
                 questionContent,
                 answerMarkdown,
                 updateTime,
+                errorCode,
                 inputTime: new Date().getTime()
             })
         }
@@ -356,12 +366,7 @@ export class AppService {
             await this.getFavorite();
             await this.getFavoriteCount();
         } else {
-            if (handleIsTauri()) {
-                await message('无效的删除ID', {title: '', type: 'info'});
-            } else {
-                this.modalService.create('无效的删除ID');
-            }
-
+            this.toastService.create('收藏成功')
         }
 
     }
@@ -379,21 +384,13 @@ export class AppService {
             streamDone: STREAM_STATE.DONE
         };
         if ((await this.favoriteModel.favoriteDB.favorite.where({questionContent: item.questionContent}).count()) !== 0) {
-            if (handleIsTauri()) {
-                await message('该问题已收藏过', {title: '', type: 'info'});
-            } else {
-                this.modalService.create('该问题已收藏过');
-            }
+            this.toastService.create('该问题已经收藏过了.')
 
             return;
         }
         await this.favoriteModel.add(data);
         await this.getFavoriteCount();
-        if (handleIsTauri()) {
-            await message('收藏成功', {title: '', type: 'info'});
-        } else {
-            this.modalService.create('收藏成功');
-        }
+        this.toastService.create('收藏成功')
 
     }
 
@@ -478,29 +475,6 @@ export class AppService {
     }
 
     // 获取上下文token相关信息
-    get askContextInfo() {
-        let contextObj = {
-            totalTokensLen: 0,
-            questionCount: 0,
-            answerCount: 0,
-            tempQuestionTokenLen: ChatGptTokensUtil.tokenLen(this.searchKey),
-        };
-        // ChatGptTokensUtil
-        let str = '';
-        this.askContext.map((item) => {
-            str += item.content;
-            if (item.role === 'user') {
-                contextObj.questionCount++
-            } else {
-                contextObj.answerCount++
-            }
-        });
-
-        contextObj.totalTokensLen = ChatGptTokensUtil.tokenLen(str.replace(/\n/g, ''));
-
-        return contextObj;
-    }
-
     public generateContext() {
         const askContext: AskContextList = [];
         if (this.enableAskContext) {
@@ -511,16 +485,27 @@ export class AppService {
                 descAskList.map((item) => {
                     if (item.state !== HISTORY_LIST_ITEM_STATE.FAIL) {
                         if (item.questionContent) {
-                            askContext.push({content: item.questionContent, role: 'user'});
+                            askContext.push({
+                                id: uuid.v4(),
+                                updateTime: item.inputTime,
+                                content: item.questionContent,
+                                role: 'user'
+                            });
                         }
                         if (item.answerMarkdown) {
-                            askContext.push({content: item.answerMarkdown, role: 'assistant'});
+                            askContext.push({
+                                id: uuid.v4(),
+                                updateTime: item.inputTime,
+                                content: item.answerMarkdown,
+                                role: 'assistant'
+                            });
                         }
                     }
                 });
             }
-        }
-        askContext.push({content: this.searchKey, role: 'user'});
+        };
+        console.log('askContext:', askContext)
+        // askContext.push({id: uuid.v4(), updateTime: new Date().getTime(), content: this.searchKey, role: 'user'});
         return askContext;
     }
 
@@ -529,6 +514,7 @@ export class AppService {
 
         // 不是done状态将不允许发送下一条记录
         if (this.newTempDataAppEndState !== STREAM_STATE.DONE) {
+            this.toastService.create('上一个问题还在响应中...');
             return;
         }
 
@@ -548,7 +534,6 @@ export class AppService {
         const timestamp = new Date().getTime();
         const id = `ASK-${timestamp}`;
         // 生成上下文
-        this.askContext = this.generateContext();
         this.newTempDataAppEndState = STREAM_STATE.PENDING;
         this.newTempDataQuestionContent = this.searchKey;
         this.askSendResultEvent.emit();

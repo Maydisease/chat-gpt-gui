@@ -6,6 +6,7 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {ThemeService} from "../../../services/theme.service";
 import {appWindow} from "@tauri-apps/api/window";
 import {MESSAGE_CARD_USE_TYPE} from "../../../component/message_card/messageCard.component";
+import {ContextService} from "../../../component/context/context.service";
 
 @Component({
     selector: 'app-mobile',
@@ -28,6 +29,7 @@ export class MobileComponent implements OnInit {
     public STREAM_STATE = STREAM_STATE;
 
     constructor(
+        public contextService: ContextService,
         public themeService: ThemeService,
         public layoutService: LayoutService,
         public platformUtilService: PlatformUtilService,

@@ -12,6 +12,7 @@ export interface AskFavoriteListItem {
     updateTime: number;
     state: HISTORY_LIST_ITEM_STATE;
     streamDone: STREAM_STATE;
+    errorCode?: string;
 }
 
 export type AskFavoriteList = AskFavoriteListItem[];

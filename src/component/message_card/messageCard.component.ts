@@ -9,6 +9,7 @@ import {
 import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../app/app.service";
 import {AskFavoriteList} from "../../app/app.model";
 import {PlatformUtilService} from "../../utils/platform.util";
+import {ContextService} from "../context/context.service";
 
 export enum MESSAGE_CARD_USE_TYPE {
     ASK = 'ask',
@@ -39,6 +40,7 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
 
 
     constructor(
+        public contextService: ContextService,
         public appService: AppService,
         public platformUtilService: PlatformUtilService,
         public cdr: ChangeDetectorRef,
