@@ -48,31 +48,34 @@
              (click)="appService.switchAskContextEnableStateHandle()"
         >Context
         </div>
-<!--        <div class="item">-->
-<!--          <span class="label">Tokens</span>-->
-<!--          <span class="value">-->
-<!--          {{appService.askContextInfo.totalTokensLen}} +-->
-<!--          <i>({{appService.askContextInfo.tempQuestionTokenLen}})</i>-->
-<!--        </span>-->
-<!--        </div>-->
-<!--        <div class="item">-->
-<!--          <span class="label">问题数:</span>-->
-<!--          <span class="value">{{appService.askContextInfo.questionCount}}</span>-->
-<!--        </div>-->
-<!--        <div class="item">-->
-<!--          <span class="label">答案数:</span>-->
-<!--          <span class="value">{{appService.askContextInfo.answerCount}}</span>-->
-<!--        </div>-->
-<!--        <div class="item btn icon"-->
-<!--             *ngIf="appService.askContextInfo.totalTokensLen > 0"-->
-<!--             (click)="appService.cleanAskContextHandle()"-->
-<!--        >-->
-<!--          <delete-icon></delete-icon>-->
-<!--        </div>-->
-        <div class="item icon" (click)="contextService.create()">
+        <!--        <div class="item">-->
+        <!--          <span class="label">Tokens</span>-->
+        <!--          <span class="value">-->
+        <!--          {{appService.askContextInfo.totalTokensLen}} +-->
+        <!--          <i>({{appService.askContextInfo.tempQuestionTokenLen}})</i>-->
+        <!--        </span>-->
+        <!--        </div>-->
+        <!--        <div class="item">-->
+        <!--          <span class="label">问题数:</span>-->
+        <!--          <span class="value">{{appService.askContextInfo.questionCount}}</span>-->
+        <!--        </div>-->
+        <!--        <div class="item">-->
+        <!--          <span class="label">答案数:</span>-->
+        <!--          <span class="value">{{appService.askContextInfo.answerCount}}</span>-->
+        <!--        </div>-->
+        <!--        <div class="item btn icon"-->
+        <!--             *ngIf="appService.askContextInfo.totalTokensLen > 0"-->
+        <!--             (click)="appService.cleanAskContextHandle()"-->
+        <!--        >-->
+        <!--          <delete-icon></delete-icon>-->
+        <!--        </div>-->
+        <div class="item icon">
+          Token≈ {{appService.askContextTotalContext}}
+        </div>
+        <div class="item btn icon" (click)="contextService.create()">
           <profile-icon></profile-icon>
         </div>
-        <div class="item btn" (click)="appService.isPromptMode = true">提示词</div>
+        <div class="item btn" (click)="appService.isPromptMode = true">Prompt</div>
       </div>
     </div>
     <div class="container">

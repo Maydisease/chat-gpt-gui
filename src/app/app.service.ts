@@ -106,6 +106,7 @@ export class AppService {
     public newTempDataQuestionContent = '';
 
     public askContext: AskContextList = [];
+    public askContextTotalContext = 0;
     public enableAskContext = false;
 
     constructor(
@@ -142,7 +143,6 @@ export class AppService {
                 this.updateAskList(key, answerMarkdown, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
                 // this.askContext = this.generateContext();
                 this.updateContext(questionContent, answerMarkdown);
-                console.log('responseChunkEnd:askContext::::', this.askContext)
                 this.askSendResultEvent.emit();
             }
             // chunk 错误
@@ -483,64 +483,71 @@ export class AppService {
     // 获取上下文token相关信息
 
     public updateContext(question: string, answer: string) {
+
+        const questionToken = ChatGptTokensUtil.tokenLen(question);
+        const answerToken = ChatGptTokensUtil.tokenLen(answer);
+        const itemToken = questionToken + answerToken;
+
         this.askContext.push({
             id: this.getUniqueIdUtil.get(),
             list: [
                 {
                     role: 'user',
-                    content: question
+                    content: question,
+                    token: questionToken
                 },
                 {
                     role: 'assistant',
-                    content: answer
+                    content: answer,
+                    token: answerToken
                 }
             ],
             updateTime: new Date().getTime(),
-        })
+            token: itemToken
+        });
+
+        for (let i = 0; i < this.askContext.length; i++) {
+            this.askContextTotalContext += this.askContext[i].token!;
+        }
+
     }
 
-    // 自动删除token
-    autoRemoveToken(arr: AskContextList, questionTokenNum: number) {
-        const maxToken = 3300 - questionTokenNum;
-        let sum = 0;
-        let i = 0;
-        let j = 0;
-        while (i < arr.length) {
-            const item = arr[i];
-            while (j < item.list.length) {
-                const subItem = item.list[j];
-                if (subItem.token) {
-                    sum += subItem.token;
-                    if (sum > maxToken) {
-                        return arr.slice(i);
-                    }
-                }
-                j++;
-            }
-            sum += item.token || 0;
-            if (sum > maxToken) {
-                return arr.slice(i);
-            }
-            i++;
-            j = 0;
+    // 自动删除上下文
+    autoRemoveToken = (arr: AskContextList, questionTokenNum: number) => {
+        const maxToken = 100 - questionTokenNum;
+        let total = 0;
+        let newArr = [];
+
+        for (let i = 0; i < arr.length; i++) {
+            total += arr[i].token!;
         }
-        return arr;
+
+        if (total < maxToken) {
+            return arr;
+        }
+
+        for (let i = 0; i < arr.length; i++) {
+            const token = arr[i].token!;
+            if (total > maxToken) {
+                total -= token;
+            } else {
+                newArr.push(arr[i]);
+            }
+
+        }
+        return newArr;
     }
 
 
     public generateRequestContext(questionContent: string) {
 
-        const sourceContextLen = this.askContext.length;
-        const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
-        this.askContext = this.autoRemoveToken(this.askContext, questionTokenNum);
-        const newContextLen = this.askContext.length;
-
-        if (newContextLen < sourceContextLen) {
-            this.toastService.create(`上下文长度超长，裁剪 ${sourceContextLen - newContextLen} 个上下文`, 5000);
+        // 如果启用了token
+        if (this.enableAskContext) {
+            const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
+            this.askContext = this.autoRemoveToken(this.askContext, questionTokenNum);
         }
 
         const context: { role: string, content: string }[] = [];
-
         this.askContext.map((item: any) => {
             item.list.map((chatItem: any) => {
                 context.push({role: chatItem.role, content: chatItem.content});

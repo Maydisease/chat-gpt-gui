@@ -39,17 +39,9 @@ export class ContextComponent implements OnInit {
     }
 
     computedTotalToken() {
-
-        // const askContext: AskContextList = JSON.parse(JSON.stringify(this.appService.askContext));
-
         this.appService.askContext.map((item, itemIndex) => {
-            item.list.map((chatItem, chatItemIndex) => {
-                const token = ChatGptTokensUtil.tokenLen(chatItem.content);
-                chatItem.token = token;
-                this.tokenTotal += token;
-            })
+            this.tokenTotal += item.token!;
         });
-        // this.appService.askContext = askContext;
     }
 
     computedToken() {
@@ -58,10 +50,7 @@ export class ContextComponent implements OnInit {
         this.checkboxListRef.list.map((id) => {
             const findItem = this.appService.askContext.find((item) => item.id === id);
             if (findItem) {
-                findItem.list.map((chatItem) => {
-                    this.selectedToken += chatItem.token!;
-                })
-
+                this.selectedToken += findItem.token!;
             }
         });
         this.computedTotalToken();

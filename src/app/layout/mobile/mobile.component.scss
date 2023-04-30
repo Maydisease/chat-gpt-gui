@@ -604,6 +604,7 @@
 
             .item {
               font-size: 12px;
+              height: 25px;
               padding: 0 5px;
               cursor: pointer;
               display: inline-flex;
@@ -631,7 +632,7 @@
                 }
 
                 &.active {
-                  color: var(--font-secondary-color);
+                  color: var(--font-color);
 
                   &:before {
                     background: var(--button-background-color);
@@ -653,9 +654,8 @@
               }
 
               &.btn {
+                height: 25px;
                 min-width: 21px;
-                height: 21px;
-                line-height: 21px;
                 text-align: center;
                 padding: 0 5px;
                 cursor: pointer;
