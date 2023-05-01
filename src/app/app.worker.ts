@@ -1,11 +1,5 @@
 /// <reference lib="webworker" />
 import {init, format} from '../libs/cmark';
-import uuid from 'uuid';
-import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
-
-
-// console.log('markdown:', markdown)
-
 
 let isLoad = false;
 
@@ -76,7 +70,15 @@ addEventListener('message', async ({data}) => {
     }
 
     if (data.eventName === 'request') {
+
         const {address, appKey, askContext, key, questionContent} = data.message;
+
+        postMessage({
+            eventName: 'requestStart',
+            message: {
+                questionContent
+            }
+        });
 
         fetch(address, {
             method: 'POST',
@@ -167,7 +169,6 @@ addEventListener('message', async ({data}) => {
 
             })
             .catch((err) => {
-                console.log('ERR', err)
                 postMessage({
                     eventName: 'responseError',
                     message: {

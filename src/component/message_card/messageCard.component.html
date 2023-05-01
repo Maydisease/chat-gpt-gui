@@ -7,7 +7,7 @@
   <div class="card" *ngFor="let item of dataList; trackBy: trackByMethod; let i = index;">
     <div class="item">
       <div class="tip-bar">
-        <span class="text sn">#{{getDataNumber(i)}}</span>
+        <span class="text sn">#{{i + 1}}</span>
         <span class="text date">{{item.updateTime | dateFormat}}</span>
         <span class="space"></span>
         <span

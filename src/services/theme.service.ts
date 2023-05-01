@@ -31,14 +31,12 @@ export class ThemeService {
     setTheme(name: 'Dark' | 'Light') {
 
         const body = document.getElementsByTagName('body')[0];
-        console.log(99192, name)
         if (name === 'Dark') {
             body.classList.add(this.darkThemeClass);
             body.removeAttribute('data-theme');
         }
 
         if (name === 'Light') {
-            console.log(99192, '1111', this.darkThemeClass)
             body.classList.remove(this.darkThemeClass);
             body.setAttribute('data-theme', 'light');
         }

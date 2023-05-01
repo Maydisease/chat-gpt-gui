@@ -42,7 +42,6 @@ export class CheckboxListDirective {
             })
         }
 
-        console.log('this.list:', this.list)
         this.send();
     }
 

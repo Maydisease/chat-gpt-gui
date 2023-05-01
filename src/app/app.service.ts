@@ -9,6 +9,7 @@ import {ModalService} from "../component/modal/modal.service";
 import {ToastService} from "../component/toast/toast.service";
 import {GetUniqueIdUtil} from "../utils/getUniqueId.util";
 import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
+import {HistoryService} from "../component/histroy/history.service";
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -114,6 +115,7 @@ export class AppService {
         public modalService: ModalService,
         public favoriteModel: FavoriteModel,
         public getUniqueIdUtil: GetUniqueIdUtil,
+        public historyService: HistoryService,
     ) {
         this.appKey = localStorage.getItem('APP-KEY') || '';
         this.initShortcutKeyBind();
@@ -126,12 +128,19 @@ export class AppService {
     public initWorkerMessageListen() {
 
         this.worker.addEventListener('message', ({data}) => {
-            // chunk开始
+
+            // 请求准备开始
+            if (data.eventName === 'requestStart') {
+                this.historyService.update(data.message.questionContent);
+                this.clearSearchKey();
+            }
+
+            // response::chunk开始
             if (data.eventName === 'responseChunkStart') {
-                this.searchKey = '';
                 this.newTempDataAppEndState = STREAM_STATE.APPENDING;
             }
-            // chunk结束
+
+            // response::chunk结束
             if (data.eventName === 'responseChunkEnd') {
                 this.newTempDataAppEndState = STREAM_STATE.DONE;
                 const {key, answerMarkdown, questionContent} = data.message;
@@ -141,11 +150,10 @@ export class AppService {
                     selected: false
                 });
                 this.updateAskList(key, answerMarkdown, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
-                // this.askContext = this.generateContext();
                 this.updateContext(questionContent, answerMarkdown);
                 this.askSendResultEvent.emit();
             }
-            // chunk 错误
+            // response::chunk错误
             if (data.eventName === 'responseError') {
                 const {key, errorContent, questionContent, errorCode} = data.message;
                 this.newTempDataAppEndState = STREAM_STATE.DONE;

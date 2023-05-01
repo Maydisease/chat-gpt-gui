@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE, TAB_STATE} from "../../app.service";
 import {MESSAGE_CARD_USE_TYPE} from "../../../component/message_card/messageCard.component";
 import {ContextService} from "../../../component/context/context.service";
+import {PlatformUtilService} from "../../../utils/platform.util";
 
 @Component({
     selector: 'app-pc',
@@ -15,6 +16,7 @@ export class LayoutForPcComponent implements OnInit {
     public TAB_STATE = TAB_STATE;
 
     constructor(
+        public platformUtilService: PlatformUtilService,
         public contextService: ContextService,
         public appService: AppService,
     ) {
@@ -26,5 +28,9 @@ export class LayoutForPcComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    historySelectedEventHandle(value: string) {
+        this.appService.searchKey = value;
     }
 }

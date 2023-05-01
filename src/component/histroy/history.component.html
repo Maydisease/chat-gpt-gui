@@ -1,0 +1,16 @@
+<div class="history" [class.open]="historyService.isOpen">
+  <div class="action-bar">
+    <span class="space"></span>
+    <span class="btn" (click)="historyService.cleanAll()"><delete-icon></delete-icon><i>清空</i></span>
+  </div>
+  <div class="list" id="#history-item-list">
+    <div
+        class="item"
+        [id]="item.selected ? '#history-item-selected' : ''"
+        [class.active]="item.selected"
+        *ngFor="let item of historyService.historyList; let i = index"
+    >
+      <i>#{{i+1}}</i> {{item.value | substring: 50}}
+    </div>
+  </div>
+</div>

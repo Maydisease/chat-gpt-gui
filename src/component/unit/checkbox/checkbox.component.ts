@@ -42,11 +42,9 @@ export class CheckboxComponent implements OnInit, OnDestroy {
 
         this.allEventSubscription = this.checkboxListRef.allEvent.subscribe((isAllSelected) => {
             if (isAllSelected) {
-                console.log('130')
                 this.selected = true;
                 this.checkboxListRef.add(this.key, true);
             } else {
-                console.log('131')
                 this.selected = false;
             }
         })

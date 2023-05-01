@@ -94,13 +94,15 @@
           }
         }
 
+        .history-container {
+          background: var(--background-color);
+          box-shadow: var(--color-shadow-medium-reverse);
+        }
+
         .send {
           width: 100%;
           padding: 12px;
           display: flex;
-          position: absolute;
-          bottom: 0;
-          right: 0;
           justify-content: right;
           box-sizing: border-box;
 
@@ -385,8 +387,10 @@
           box-shadow: var(--color-shadow-medium);
 
           .item {
+            height: 12px;
             display: inline-flex;
             margin-left: 5px;
+            padding-right: 5px;
             cursor: pointer;
             justify-content: center;
             justify-items: center;
@@ -394,7 +398,7 @@
             align-items: center;
             vertical-align: top;
             box-sizing: border-box;
-            border-right: 1px solid RGBA(0, 0, 0, .3);
+            border-right: 1px solid RGBA(0, 0, 0, .1);
 
             &.switch {
               font-weight: bold;

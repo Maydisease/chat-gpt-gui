@@ -40,6 +40,7 @@
        cdkOverlayOrigin
        #trigger1="cdkOverlayOrigin"
        #trigger2="cdkOverlayOrigin"
+       (outsideClick)="historyService.close()"
   >
     <div class="state-bar" *ngIf="appService.tabState === TAB_STATE.ASK_MODE">
       <div class="wrap">
@@ -48,27 +49,6 @@
              (click)="appService.switchAskContextEnableStateHandle()"
         >Context
         </div>
-        <!--        <div class="item">-->
-        <!--          <span class="label">Tokens</span>-->
-        <!--          <span class="value">-->
-        <!--          {{appService.askContextInfo.totalTokensLen}} +-->
-        <!--          <i>({{appService.askContextInfo.tempQuestionTokenLen}})</i>-->
-        <!--        </span>-->
-        <!--        </div>-->
-        <!--        <div class="item">-->
-        <!--          <span class="label">问题数:</span>-->
-        <!--          <span class="value">{{appService.askContextInfo.questionCount}}</span>-->
-        <!--        </div>-->
-        <!--        <div class="item">-->
-        <!--          <span class="label">答案数:</span>-->
-        <!--          <span class="value">{{appService.askContextInfo.answerCount}}</span>-->
-        <!--        </div>-->
-        <!--        <div class="item btn icon"-->
-        <!--             *ngIf="appService.askContextInfo.totalTokensLen > 0"-->
-        <!--             (click)="appService.cleanAskContextHandle()"-->
-        <!--        >-->
-        <!--          <delete-icon></delete-icon>-->
-        <!--        </div>-->
         <div class="item icon">
           Token≈ {{appService.askContextTotalContext}}
         </div>
@@ -79,8 +59,8 @@
       </div>
     </div>
     <div class="container">
+      <history *ngIf="!platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
       <div class="wrap">
-
         <span class="icon" [class.active]="appService.isOpenSettingPanel"
               (click)="layoutService.settingPanelDisplayHandle()">
           <gear-icon></gear-icon>

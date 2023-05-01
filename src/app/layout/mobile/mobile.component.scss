@@ -468,15 +468,16 @@
 
         .container {
           min-height: 60px;
-          padding: 12px 12px 16px 0;
+          padding: 12px 0 16px 0;
           box-sizing: border-box;
           position: relative;
           background: var(--background-color);
           box-shadow: var(--color-shadow-medium);
 
           .wrap {
-            width: 100%;
+            width: calc(100% - 12px);
             height: 100%;
+            margin-right: 12px;
             position: relative;
             display: flex;
             box-sizing: border-box;

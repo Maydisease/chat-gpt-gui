@@ -10,6 +10,9 @@
     >
     </textarea>
     <div class="send"><span (click)="appService.send()">发送</span></div>
+    <div class="history-container">
+      <history  *ngIf="platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
+    </div>
   </div>
   <div class="chat" layout-splitter>
     <div class="prompt-container" *ngIf="appService.isPromptMode">
@@ -48,27 +51,6 @@
            (click)="appService.switchAskContextEnableStateHandle()">
         Context
       </div>
-      <!--      <div class="item">-->
-      <!--        <span class="label">Tokens≈</span>-->
-      <!--        <span class="value">-->
-      <!--        {{appService.askContextInfo.totalTokensLen}} + <i>({{appService.askContextInfo.tempQuestionTokenLen}}) </i>-->
-      <!--      </span>-->
-      <!--      </div>-->
-      <!--      <div class="item">-->
-      <!--        <span class="label">问题数:</span>-->
-      <!--        <span class="value">{{appService.askContextInfo.questionCount}}</span>-->
-      <!--      </div>-->
-      <!--      <div class="item">-->
-      <!--        <span class="label">答案数:</span>-->
-      <!--        <span class="value">{{appService.askContextInfo.answerCount}}</span>-->
-      <!--      </div>-->
-      <!--      <div-->
-      <!--          *ngIf="appService.askContextInfo.totalTokensLen > 0"-->
-      <!--          class="item action"-->
-      <!--          (click)="appService.cleanAskContextHandle()"-->
-      <!--      >-->
-      <!--        <delete-icon></delete-icon>-->
-      <!--      </div>-->
       <div class="item btn icon">
         Token≈ {{appService.askContextTotalContext}}
       </div>

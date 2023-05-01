@@ -11,7 +11,6 @@ export class HighlightService {
     }
 
     public to(value: string) {
-        console.log(19991)
         let result = '';
 
         if (!value) {
@@ -46,10 +45,7 @@ export class HighlightService {
             })
             result = htmlDom.innerHTML;
         } catch (err) {
-            console.log('err...', value, err)
         }
-
-        console.log('result:', result)
 
         return result;
     }
