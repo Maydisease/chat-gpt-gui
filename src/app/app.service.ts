@@ -138,6 +138,7 @@ export class AppService {
             // response::chunk开始
             if (data.eventName === 'responseChunkStart') {
                 this.newTempDataAppEndState = STREAM_STATE.APPENDING;
+                this.askSendResultEvent.emit();
             }
 
             // response::chunk结束
@@ -165,6 +166,7 @@ export class AppService {
                     STREAM_STATE.DONE,
                     errorCode
                 );
+                this.askSendResultEvent.emit();
             }
         })
     }
@@ -514,9 +516,7 @@ export class AppService {
             token: itemToken
         });
 
-        for (let i = 0; i < this.askContext.length; i++) {
-            this.askContextTotalContext += this.askContext[i].token!;
-        }
+        this.computedTotalToken();
 
     }
 
@@ -546,6 +546,12 @@ export class AppService {
         return newArr;
     }
 
+    computedTotalToken() {
+        this.askContextTotalContext = 0;
+        for (let i = 0; i < this.askContext.length; i++) {
+            this.askContextTotalContext += this.askContext[i].token!;
+        }
+    }
 
     public generateRequestContext(questionContent: string) {
 
@@ -553,6 +559,7 @@ export class AppService {
         if (this.enableAskContext) {
             const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
             this.askContext = this.autoRemoveToken(this.askContext, questionTokenNum);
+            this.computedTotalToken();
         }
 
         const context: { role: string, content: string }[] = [];
@@ -598,7 +605,6 @@ export class AppService {
         // 生成上下文
         this.newTempDataAppEndState = STREAM_STATE.PENDING;
         this.newTempDataQuestionContent = this.searchKey;
-        this.askSendResultEvent.emit();
 
         this.worker.postMessage({
             eventName: 'request',

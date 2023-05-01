@@ -13,8 +13,10 @@ import {CopyIconComponent} from "./copy.component";
 import {RollBackIconComponent} from "./rollBackIcon.component";
 import {ReloadIconComponent} from "./reloadIcon.component";
 import {ProfileComponent} from "./profileIcon.component";
+import {StopIconComponent} from "./stopIcon.component";
 
 const iconsList = [
+    StopIconComponent,
     ProfileComponent,
     CommitIconComponent,
     FavoriteIconComponent,

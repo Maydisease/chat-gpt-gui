@@ -3,6 +3,8 @@ import {init, format} from '../libs/cmark';
 
 let isLoad = false;
 
+let requestController: ReadableStreamController<any> | undefined;
+
 type handleErrorReturn = Promise<[boolean, {
     msg: string
     code: string
@@ -19,6 +21,7 @@ const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: 
             let jsonObject: any = {};
             try {
                 jsonObject = JSON.parse(chunkString);
+                console.log('ERR1:', jsonObject)
                 //context_length_exceeded
                 if (jsonObject.error && jsonObject.error.message) {
                     resolve([true, {msg: jsonObject.error.message, code: jsonObject.error.code}])
@@ -37,22 +40,42 @@ const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: 
 
 interface XReadableStreamEvent {
     doneEvent: () => void;
+    errEvent: (err: string) => void;
     chunkEvent: (chunk: string) => void;
 }
 
 const handleReadableStream = (reader: ReadableStreamDefaultReader<Uint8Array>, event: XReadableStreamEvent) => {
     new ReadableStream({
         start: (controller) => {
+
+            requestController = controller;
+
             const push = async () => {
                 // "done" is a Boolean and value a "Uint8Array"
-                const {done, value} = await reader.read();
+                const readerReadPromise = reader.read();
+
+                readerReadPromise.catch((err) => {
+                    console.log('readerReadPromise:err', err)
+                    event.errEvent(err.toString());
+                    controller.close();
+                    return;
+                })
+
+                const {done, value} = await readerReadPromise;
                 // If there is no more data to read
                 if (done) {
                     event.doneEvent();
                     controller.close();
                     return;
                 }
-                controller.enqueue(value);
+
+                try {
+                    controller.enqueue(value);
+                } catch (err: any) {
+                    event.errEvent('本次请求被取消了...');
+                    return;
+                }
+
                 let chunkString = new TextDecoder().decode(value);
                 event.chunkEvent(chunkString);
                 push();
@@ -85,7 +108,7 @@ addEventListener('message', async ({data}) => {
             body: JSON.stringify({
                 content: undefined,
                 appKey: appKey,
-                context: askContext
+                context: askContext,
             }),
             headers: {
                 'accept': 'text/event-stream',
@@ -129,6 +152,16 @@ addEventListener('message', async ({data}) => {
                             message: {key, sn, answerMarkdown: mdChunk, questionContent}
                         });
                     },
+                    errEvent(err) {
+                        postMessage({
+                            eventName: 'responseError',
+                            message: {
+                                key,
+                                questionContent,
+                                errorContent: err.toString(),
+                            }
+                        });
+                    },
                     // chunk事件
                     async chunkEvent(chunk) {
                         chunkCount++;
@@ -169,6 +202,7 @@ addEventListener('message', async ({data}) => {
 
             })
             .catch((err) => {
+                console.log('ERR2:', err)
                 postMessage({
                     eventName: 'responseError',
                     message: {
@@ -178,5 +212,11 @@ addEventListener('message', async ({data}) => {
                     }
                 });
             })
+    }
+
+    if (data.eventName === 'requestStop') {
+        if (requestController) {
+            requestController.close();
+        }
     }
 });

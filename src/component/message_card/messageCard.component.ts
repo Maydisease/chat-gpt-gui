@@ -10,6 +10,7 @@ import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../app/app.s
 import {AskFavoriteList} from "../../app/app.model";
 import {PlatformUtilService} from "../../utils/platform.util";
 import {ContextService} from "../context/context.service";
+import {MessageCardService} from "./messageCard.service";
 
 export enum MESSAGE_CARD_USE_TYPE {
     ASK = 'ask',
@@ -44,7 +45,8 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
         public appService: AppService,
         public platformUtilService: PlatformUtilService,
         public cdr: ChangeDetectorRef,
-        public ngZone: NgZone
+        public ngZone: NgZone,
+        public messageCardService: MessageCardService,
     ) {
     }
 
