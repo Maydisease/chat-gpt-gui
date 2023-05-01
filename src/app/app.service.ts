@@ -522,7 +522,7 @@ export class AppService {
 
     // 自动删除上下文
     autoRemoveToken = (arr: AskContextList, questionTokenNum: number) => {
-        const maxToken = 100 - questionTokenNum;
+        const maxToken = 3500 - questionTokenNum;
         let total = 0;
         let newArr = [];
 
