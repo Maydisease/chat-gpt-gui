@@ -10,6 +10,10 @@
   color: #1F2328;
   display: contents;
 
+  &[hidden]{
+    display: none;
+  }
+
   .message-cards {
     overflow-y: scroll;
     width: 100%;

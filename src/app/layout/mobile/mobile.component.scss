@@ -482,6 +482,12 @@
             display: flex;
             box-sizing: border-box;
 
+            .input-box {
+              flex: 1;
+              display: flex;
+              position: relative;
+            }
+
             .clean-search-key {
               width: 32px;
               height: 32px;
@@ -577,9 +583,24 @@
                 text-align: center;
               }
             }
+
+            .send {
+              width: 50px;
+              max-height: 32px;
+              margin-left: 5px;
+              border-radius: 3px;
+              display: flex;
+              justify-items: center;
+              justify-content: center;
+              align-items: center;
+              align-content: center;
+              font-weight: bold;
+              box-sizing: border-box;
+              border: 1px solid var(--button-background-color);
+              color: var(--button-background-color);
+            }
           }
         }
-
         .state-bar {
           width: 100%;
           height: 25px;
@@ -590,6 +611,7 @@
           justify-content: center;
           align-content: center;
           align-items: center;
+          position: relative;
 
           .wrap {
             display: flex;

@@ -11,7 +11,7 @@
     </textarea>
     <div class="send"><span (click)="appService.send()">发送</span></div>
     <div class="history-container">
-      <history  *ngIf="platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
+      <history *ngIf="platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
     </div>
   </div>
   <div class="chat" layout-splitter>
@@ -34,6 +34,7 @@
         <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
           <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
           <message-card
+              [hidden]="SHOW_NO_DATA"
               [dataList]="appService.askList"
           ></message-card>
         </div>

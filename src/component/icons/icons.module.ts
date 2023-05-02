@@ -14,6 +14,7 @@ import {RollBackIconComponent} from "./rollBackIcon.component";
 import {ReloadIconComponent} from "./reloadIcon.component";
 import {ProfileComponent} from "./profileIcon.component";
 import {StopIconComponent} from "./stopIcon.component";
+import {SendIconComponent} from "./sendIcon.component";
 
 const iconsList = [
     StopIconComponent,
@@ -29,7 +30,8 @@ const iconsList = [
     BulbIconComponent,
     ReloadIconComponent,
     CopyIconComponent,
-    RollBackIconComponent
+    RollBackIconComponent,
+    SendIconComponent
 ];
 
 @NgModule({

@@ -65,28 +65,28 @@
               (click)="layoutService.settingPanelDisplayHandle()">
           <gear-icon></gear-icon>
         </span>
-        <textarea
-            type="submit"
-            send-action
-            (sendActionCallback)="appService.send()"
-            (focusCallback)="appService.isOpenSettingPanel = false; layoutService.searchWidgetIsFocus = true"
-            (blurCallback)="layoutService.searchKeyBlur();"
-            (useHistorySearchCallback)="layoutService.useHistorySearchHandle($event)"
-            (keyEnterCallback)="layoutService.keyEnterHandle()"
-            #searchWidgetRef
-            [(ngModel)]="appService.searchKey"
-            (ngModelChange)="layoutService.searchKeyChangeHandle($event)"
-            [isUsedHistorySearchKeying]="layoutService.isUsedHistorySearchKeying"
-            placeholder="请输入问题"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5">
+        <div class="input-box">
+           <textarea
+               type="submit"
+               send-action
+               (sendActionCallback)="appService.send()"
+               (focusCallback)="appService.isOpenSettingPanel = false; layoutService.searchWidgetIsFocus = true"
+               (blurCallback)="layoutService.searchKeyBlur();"
+               #searchWidgetRef
+               [(ngModel)]="appService.searchKey"
+               (ngModelChange)="layoutService.searchKeyChangeHandle($event)"
+               placeholder="请输入问题"
+               cdkTextareaAutosize
+               #autosize="cdkTextareaAutosize"
+               cdkAutosizeMinRows="1"
+               cdkAutosizeMaxRows="5">
             </textarea>
-        <div class="tips" [hidden]="!layoutService.displaySearchWidgetTips">↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送</div>
-        <div class="clean-search-key" (click)="appService.clearSearchKey()" *ngIf="appService.searchKey.length > 0">
-          <close-icon></close-icon>
+          <div class="tips" [hidden]="!layoutService.displaySearchWidgetTips">↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送</div>
+          <div class="clean-search-key" (click)="appService.clearSearchKey()" *ngIf="appService.searchKey.length > 0">
+            <close-icon></close-icon>
+          </div>
         </div>
+        <div class="send" (click)="appService.send()" *ngIf="platformUtilService.isBrowserMobile"><send-icon></send-icon></div>
       </div>
     </div>
 
@@ -123,15 +123,6 @@
               </select>
             </div>
           </div>
-          <!--          <div class="item">-->
-          <!--            <label>主题</label>-->
-          <!--            <div class="control">-->
-          <!--              <select tabindex="-1"  (change)="themeHandle($event)">-->
-          <!--                <option>Dark</option>-->
-          <!--                <option>Light</option>-->
-          <!--              </select>-->
-          <!--            </div>-->
-          <!--          </div>-->
         </div>
       </div>
     </div>

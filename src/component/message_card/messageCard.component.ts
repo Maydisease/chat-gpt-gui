@@ -93,7 +93,7 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
     }
 
     public get SHOW_TEMP_CARD() {
-        return this.appService.newTempDataAppEndState !== STREAM_STATE.DONE;
+        return this.appService.newTempDataAppEndState !== STREAM_STATE.DONE && this.type === MESSAGE_CARD_USE_TYPE.ASK;
     }
 
     public get HIDE_FINISH_STATE() {

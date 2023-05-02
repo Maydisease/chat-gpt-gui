@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AppService} from "../app.service";
+import {PlatformUtilService} from "../../utils/platform.util";
 
 @Injectable({providedIn: 'root'})
 export class LayoutService {
@@ -8,7 +9,8 @@ export class LayoutService {
     public isUsedHistorySearchKeying = false;
 
     constructor(
-        public appService: AppService
+        public appService: AppService,
+        public platformUtilService: PlatformUtilService
     ) {
     }
 
@@ -17,11 +19,9 @@ export class LayoutService {
     }
 
     public useHistorySearchHandle(code: string) {
-
         if (this.appService.searchKey && !this.isUsedHistorySearchKeying) {
             return;
         }
-
         this.appService.updateHistorySearchKeyListSelectedIndex(code);
     }
 
@@ -54,7 +54,7 @@ export class LayoutService {
     }
 
     public get displaySearchWidgetTips() {
-        return !this.appService.searchKey;
+        return !this.appService.searchKey && !this.platformUtilService.isBrowserMobile;
     }
 
     // 搜索关键字变更

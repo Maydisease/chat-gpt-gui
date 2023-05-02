@@ -5,15 +5,11 @@ export class PlatformUtilService {
 
     public deviceChange = new EventEmitter();
     public darkModeChange = new EventEmitter();
-
     public isMobile = () => window.screen.width < 500;
-
     public isPC = false;
-
     public isTauri = Boolean(typeof window !== 'undefined' && window !== undefined && window.__TAURI_IPC__ !== undefined);
-
     public isDarkMode = false;
-
+    public isBrowserMobile = !this.isPC && !this.isTauri;
     constructor() {
 
         // 监听PC/Mobile的变化
