@@ -6,6 +6,7 @@ export interface HistoryListItem {
     key: string;
     selected: boolean;
     value: string;
+    updateTime: number;
 }
 
 export type HistoryListItemList = HistoryListItem[];
@@ -15,8 +16,8 @@ export class HistoryDatabase extends Dexie {
 
     public constructor() {
         super("historyDatabase");
-        this.version(4).stores({
-            history: "++id,key,selected,value"
+        this.version(5).stores({
+            history: "++id,updateTime,key,selected,value"
         });
     }
 }
@@ -46,11 +47,8 @@ export class historyModel {
     public getList(): Promise<HistoryListItem[]> {
         return new Promise((resolve) => {
             this.historyDB.transaction('rw', this.historyDB.history, async () => {
-                const list: HistoryListItem[] = [];
-                await this.historyDB.history.each((item) => {
-                    list.push(item);
-                });
-                resolve(list);
+                const result = await this.historyDB.history.orderBy('updateTime').reverse().toArray();
+                resolve(result);
             });
         })
     }

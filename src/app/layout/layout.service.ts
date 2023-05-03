@@ -18,13 +18,6 @@ export class LayoutService {
         this.appService.isOpenSettingPanel = !this.appService.isOpenSettingPanel;
     }
 
-    public useHistorySearchHandle(code: string) {
-        if (this.appService.searchKey && !this.isUsedHistorySearchKeying) {
-            return;
-        }
-        this.appService.updateHistorySearchKeyListSelectedIndex(code);
-    }
-
     public searchKeyBlur() {
         setTimeout(() => {
             this.searchWidgetIsFocus = false;
@@ -32,25 +25,6 @@ export class LayoutService {
             this.appService.autosizeRef?.reset();
             this.appService.autosizeRef?.resizeToFitContent(true)
         }, 100);
-    }
-
-    // 输入回车事件时(使用选中的历史搜索关键字)
-    public keyEnterHandle() {
-        if ((this.appService.searchKey) && !this.isUsedHistorySearchKeying) {
-            return;
-        }
-
-        if (!this.appService.isOpenHistorySearchListPanel) {
-            return;
-        }
-
-        const findItem = this.appService.historySearchKeyList.find((item) => item.selected);
-        if (findItem) {
-            this.appService.searchKey = findItem.key;
-            this.appService.isOpenHistorySearchListPanel = false;
-            this.isUsedHistorySearchKeying = true;
-            this.appService.autosizeRef?.reset();
-        }
     }
 
     public get displaySearchWidgetTips() {
@@ -68,9 +42,5 @@ export class LayoutService {
         if (this.appService.searchKey) {
             this.appService.isOpenHistorySearchListPanel = false;
         }
-    }
-
-    public historySearchListPanelDetachHandle() {
-        this.appService.isOpenHistorySearchListPanel = false;
     }
 }

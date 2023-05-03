@@ -2,6 +2,24 @@
   width: 100%;
   height: 100%;
 
+  @media screen and (max-width: 800px) {
+    .prompt-container {
+      animation: action-sheet-anime .2s ease-out forwards;
+
+      @keyframes action-sheet-anime {
+        0% {
+          opacity: .5;
+          transform: scale(1.5);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          -webkit-filter: blur(0);
+        }
+      }
+    }
+  }
+
   .prompt-container {
     width: 100%;
     height: 100%;

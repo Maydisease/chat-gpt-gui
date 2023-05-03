@@ -23,7 +23,7 @@ export class LayoutForPcComponent implements OnInit {
 
     }
 
-    public get SHOW_NO_DATA(){
+    public get SHOW_NO_DATA() {
         return this.appService.newTempDataAppEndState === STREAM_STATE.DONE && this.appService.askList.length === 0;
     }
 

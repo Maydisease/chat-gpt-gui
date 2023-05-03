@@ -16,18 +16,6 @@ export class ThemeService {
         this.setTheme(this.platformUtilService.isDarkMode ? 'Dark' : 'Light');
     }
 
-    // toggleTheme(): void {
-    //
-    //     const body = document.getElementsByTagName('body')[0];
-    //     if (body.classList.contains(this.darkThemeClass)) {
-    //         body.classList.remove(this.darkThemeClass);
-    //         body.removeAttribute('data-theme');
-    //     } else {
-    //         body.classList.add(this.darkThemeClass);
-    //         body.setAttribute('data-theme', 'dark');
-    //     }
-    // }
-
     setTheme(name: 'Dark' | 'Light') {
 
         const body = document.getElementsByTagName('body')[0];

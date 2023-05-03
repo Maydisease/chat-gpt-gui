@@ -46,4 +46,9 @@ export class HistoryComponent implements OnInit {
             }
         })
     }
+
+    select(value: string) {
+        this.selectedEvent.emit(value);
+        this.historyService.isOpen = false;
+    }
 }

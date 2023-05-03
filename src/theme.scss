@@ -65,6 +65,18 @@
 
   --item-selected-bg-color: #23272E;
 
+  --widget-switch-bg-color: #272E36;
+  --widget-switch-bg-hover-color: #2F353A;
+  --widget-switch-side-block-bg-color: #22272F;
+  --widget-switch-side-block-border-color: #606771;
+  --widget-switch-mark-color: #606771;
+
+  --widget-switch-active-bg-color: #284065;
+  --widget-switch-active-bg-hover-color: #2C4A7E;
+  --widget-switch-active-side-block-bg-color: #22272F;
+  --widget-switch-active-side-block-border-color: RGBA(255, 255, 255, 0);
+  --widget-switch-active-mark-color: #FFF;
+
 }
 
 [data-theme="light"] {
@@ -126,6 +138,20 @@
   --dep-shadow-color: 0 8px 20px RGBA(0, 0, 0, .2);
 
   --item-selected-bg-color: RGBA(238, 238, 238, 1);
+
+
+  --widget-switch-bg-color: #EAEEF2;
+  --widget-switch-bg-hover-color: #E0E6EC;
+  --widget-switch-side-block-bg-color: #FFFFFF;
+  --widget-switch-side-block-border-color: #848F9A;
+  --widget-switch-mark-color: #848F9A;
+
+  --widget-switch-active-bg-color: #066BDA;
+  --widget-switch-active-bg-hover-color: #0361C9;
+  --widget-switch-active-side-block-bg-color: #FFF;
+  --widget-switch-active-side-block-border-color: RGBA(255, 255, 255, 0);
+  --widget-switch-active-mark-color: #FFF;
+
 }
 
 

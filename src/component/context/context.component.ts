@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {AppService, AskContextList} from "../../app/app.service";
 import {ChatGptTokensUtil} from "../../utils/chatGptTokens.util";
 import {CheckboxListDirective} from "../unit/checkbox/checkboxList.directive";
-import {ContextContextBase} from "./context.service";
+import {ContextContextBase, ContextService} from "./context.service";
 
 @Component({
     templateUrl: './context.component.html',
@@ -15,6 +15,7 @@ export class ContextComponent implements OnInit {
 
     constructor(
         public appService: AppService,
+        public contextService: ContextService,
         @Inject('context') public context: ContextContextBase
     ) {
     }
@@ -39,7 +40,7 @@ export class ContextComponent implements OnInit {
     }
 
     computedTotalToken() {
-        this.appService.askContext.map((item, itemIndex) => {
+        this.contextService.askContextList.map((item, itemIndex) => {
             this.tokenTotal += item.token!;
         });
     }
@@ -48,7 +49,7 @@ export class ContextComponent implements OnInit {
         this.selectedToken = 0;
         this.tokenTotal = 0;
         this.checkboxListRef.list.map((id) => {
-            const findItem = this.appService.askContext.find((item) => item.id === id);
+            const findItem = this.contextService.askContextList.find((item) => item.id === id);
             if (findItem) {
                 this.selectedToken += findItem.token!;
             }
@@ -60,12 +61,24 @@ export class ContextComponent implements OnInit {
         this.computedToken();
     }
 
-    removeContextHandle() {
-        this.appService.askContext = this.appService.askContext.filter((item) => {
-            return !this.checkboxListRef.list.includes(item.id);
+    public get HIDE_NO_DATA() {
+        const {enableAskContext, askContextList} = this.contextService;
+        return enableAskContext && askContextList.length > 0;
+    }
+
+    async removeContextHandle() {
+
+        this.contextService.askContextList.map(async (item) => {
+            if (this.checkboxListRef.list.includes(item.id)) {
+                await this.contextService.delete(item.id!);
+            }
         });
+
+        this.contextService.askContextList = await this.contextService.getList();
+
         this.checkboxListRef.list = [];
         this.computedToken();
+        await this.contextService.computedTotalToken();
     }
 
     close() {

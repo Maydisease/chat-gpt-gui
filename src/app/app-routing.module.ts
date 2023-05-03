@@ -8,13 +8,13 @@ import {MobileComponent} from "./layout/mobile/mobile.component";
 import {DateFormatPipe} from "../pipes/dateFormat.pipe";
 import {AppComponent} from "./app.component";
 import {NoDataComponent} from "../component/no_data/noData.component";
-import {ModalComponent} from "../component/modal/modal.component";
+import {ModalComponent} from "../component/unit/modal/modal.component";
 import {PromptComponent} from "../component/prompt/prompt.component";
 import {SendActionDirective} from "../directive/sendAction.directive";
 import {SubstringPipe} from "../pipes/substring.pipe";
 import {LayoutSplitterDirective} from "../directive/layoutSplitter.directive";
 import {MessageCardComponent} from "../component/message_card/messageCard.component";
-import {IconsModule} from "../component/icons/icons.module";
+import {IconsModule} from "../component/unit/icons/icons.module";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {TextFieldModule} from "@angular/cdk/text-field";
@@ -35,6 +35,7 @@ import {CheckboxListDirective} from "../component/unit/checkbox/checkboxList.dir
 import {TextLoadingComponent} from "../component/text_loading/textLoading.component";
 import {HistoryComponent} from "../component/histroy/history.component";
 import {OutsideClickDirective} from "../directive/outsideClick.directive";
+import {SwitchComponent} from "../component/unit/switch/switch.component";
 
 const routes: Routes = [
     // {path: '', pathMatch: 'full'},
@@ -69,6 +70,7 @@ const routes: Routes = [
         CheckboxListDirective,
         TextLoadingComponent,
         HistoryComponent,
+        SwitchComponent,
         OutsideClickDirective
     ],
     imports: [

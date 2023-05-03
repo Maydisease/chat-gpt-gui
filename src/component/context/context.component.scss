@@ -160,10 +160,15 @@
         .context-group {
           width: calc(100% - 20px);
           display: flex;
+          cursor: pointer;
           margin-left: 10px;
           margin-right: 10px;
           margin-bottom: 10px;
           border-radius: 5px;
+
+          &[hidden] {
+            display: none;
+          }
 
           &.active {
             background: var(--item-selected-bg-color);
@@ -203,7 +208,6 @@
               width: calc(100% - 20px);
               display: flex;
               margin-left: 10px;
-              cursor: pointer;
               box-sizing: border-box;
               background: RGBA(0, 0, 0, 0);
 
@@ -258,7 +262,7 @@
         width: 40px;
         height: 40px;
         position: absolute;
-        bottom: 60px;
+        bottom: 80px;
         right: 15px;
         display: flex;
         font-weight: bold;

@@ -27,10 +27,9 @@ const scrollSmoothTo = (position?: number, scrollContainerElement?: HTMLElement,
         // 滚动step方法
         const step = () => {
             // 距离目标滚动距离
-            var distance = _position - scrollTop;
+            let distance = _position - scrollTop;
             // 目标滚动位置
             scrollTop = scrollTop + distance / 5;
-            console.log('scrollTop:', scrollTop)
             if (Math.abs(distance) < 1) {
                 _scrollContainerElement!.scrollTo(0, _position);
                 resolve(true);

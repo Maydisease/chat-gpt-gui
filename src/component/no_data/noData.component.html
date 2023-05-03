@@ -1,4 +1,4 @@
-<div class="null" #container>
+<div class="null">
   <div class="wrap">
     <h3>
       <span>
@@ -25,6 +25,14 @@
           <div class="content">{{promptDemoText}}</div>
           <button (click)="tryPromptDemo()">试一试 Prompt</button>
         </div>
+      </div>
+    </div>
+    <div
+        class="item"
+        *ngIf="contextService.askContextList.length > 0"
+    >
+      <div class="tips">有历史的上下文对话记录，要恢复吗？
+        <button (click)="repairContextToAskChat()">恢复</button>
       </div>
     </div>
   </div>

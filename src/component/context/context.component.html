@@ -7,19 +7,21 @@
       #checkboxListRef="checkboxListRef"
       (checkboxChange)="checkboxChangeHandle($event)">
     <div class="wrap">
-      <div class="no-data" [hidden]="appService.askContext.length">
-        <ng-container *ngIf="appService.enableAskContext">暂无上下文～</ng-container>
-        <ng-container *ngIf="!appService.enableAskContext">未开启上下文，要开启吗？
-          <div class="btn" (click)="appService.switchAskContextEnableStateHandle()">开启</div>
+      <div class="no-data" [hidden]="HIDE_NO_DATA">
+        <ng-container *ngIf="contextService.enableAskContext && contextService.askContextList.length===0">暂无上下文～
+        </ng-container>
+        <ng-container *ngIf="!contextService.enableAskContext">未开启上下文，要开启吗？
+          <div class="btn" (click)="contextService.switchAskContextEnableStateHandle()">开启</div>
         </ng-container>
       </div>
 
       <div
+          [hidden]="!contextService.enableAskContext"
           class="context-group"
           checkboxClickHandle
           #checkboxClickHandleRef="checkboxClickHandleRef"
           [class.active]="checkboxRef.key === item.id && checkboxRef.selected"
-          *ngFor="let item of appService.askContext; let i = index"
+          *ngFor="let item of contextService.askContextList; let i = index"
       >
 
         <div class="action">
@@ -52,7 +54,7 @@
       </div>
     </div>
     <div class="footer-bar">
-      <span style="margin-right: 8px;">数量: <i class="count">{{appService.askContext.length}}</i></span>
+      <span style="margin-right: 8px;">数量: <i class="count">{{contextService.askContextList.length}}</i></span>
       <span>token: <i class="total">{{tokenTotal}} </i> - <i class="selected">{{selectedToken}}</i> = <i
           class="result">{{tokenTotal - selectedToken}}</i></span>
       <span class="space"></span>
@@ -60,7 +62,7 @@
       <span
           class="btn"
           (click)="selectedAll()"
-          [class.disabled]="appService.askContext.length === 0"
+          [class.disabled]="contextService.askContextList.length === 0"
       >{{checkboxListRef.isSelectedAll ? '反 选' : '全 选'}}</span>
       <span class="btn" (click)="close()">退出</span>
     </div>

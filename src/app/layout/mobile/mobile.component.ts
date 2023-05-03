@@ -27,7 +27,6 @@ export class MobileComponent implements OnInit, OnDestroy {
     public MESSAGE_CARD_USE_TYPE = MESSAGE_CARD_USE_TYPE;
     public TAB_STATE = TAB_STATE;
 
-
     public  askKeyboardEventSubscription:  Subscription | undefined;
 
     constructor(
@@ -37,7 +36,7 @@ export class MobileComponent implements OnInit, OnDestroy {
         public layoutService: LayoutService,
         public appService: AppService,
         public sendAction: SendActionService,
-        public historyService: HistoryService
+        public historyService: HistoryService,
     ) {
         this.askKeyboardEventSubscription = this.sendAction.askKeyboardEvent.subscribe((event) => {
             if (event.eventName === ASK_KEYBOARD_EVENT_NAME.SEND) {

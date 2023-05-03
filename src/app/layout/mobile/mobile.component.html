@@ -31,7 +31,10 @@
         [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"
         *ngIf="appService.favoriteList.length"
     ></message-card>
-    <div *ngIf="!appService.favoriteList.length" class="favorite-null">暂无任何收藏～</div>
+    <div *ngIf="!appService.favoriteList.length" class="favorite-null">
+      <text-loading *ngIf="appService.favoriteLoading"></text-loading>
+      <span *ngIf="!appService.favoriteLoading">暂无任何收藏～</span>
+    </div>
   </div>
 
 
@@ -45,12 +48,12 @@
     <div class="state-bar" *ngIf="appService.tabState === TAB_STATE.ASK_MODE">
       <div class="wrap">
         <div class="item switch"
-             [class.active]="appService.enableAskContext"
-             (click)="appService.switchAskContextEnableStateHandle()"
+             [class.active]="contextService.enableAskContext"
+             (click)="contextService.switchAskContextEnableStateHandle()"
         >Context
         </div>
         <div class="item icon">
-          Token≈ {{appService.askContextTotalContext}}
+          Token≈ {{contextService.askContextTotalContext}}
         </div>
         <div class="item btn icon" (click)="contextService.create()">
           <profile-icon></profile-icon>
@@ -81,12 +84,18 @@
                cdkAutosizeMinRows="1"
                cdkAutosizeMaxRows="5">
             </textarea>
-          <div class="tips" [hidden]="!layoutService.displaySearchWidgetTips">↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送</div>
+          <div
+              class="tips"
+              [hidden]="!layoutService.displaySearchWidgetTips">
+            ↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送
+          </div>
           <div class="clean-search-key" (click)="appService.clearSearchKey()" *ngIf="appService.searchKey.length > 0">
             <close-icon></close-icon>
           </div>
         </div>
-        <div class="send" (click)="appService.send()" *ngIf="platformUtilService.isBrowserMobile"><send-icon></send-icon></div>
+        <div class="send" (click)="appService.send()" *ngIf="platformUtilService.isBrowserMobile">
+          <send-icon></send-icon>
+        </div>
       </div>
     </div>
 
@@ -102,7 +111,7 @@
       <div class="wrap">
         <div class="row">
           <div class="item">
-            <label>秘钥</label>
+            <label>key</label>
             <div class="control">
             <textarea
                 tabindex="-1"
@@ -115,35 +124,13 @@
             </div>
           </div>
           <div class="item">
-            <label>模型</label>
+            <label>context</label>
             <div class="control">
-              <select tabindex="-1">
-                <option>gpt-3.5-turbo</option>
-                <option>text-davinci-003</option>
-              </select>
+              <switch></switch>
+              <span class="tips">token超过最大限制自动裁剪历史上下文</span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </ng-template>
-
-
-  <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="trigger2"
-      [cdkConnectedOverlayOpen]="appService.isOpenHistorySearchListPanel"
-      (detach)="layoutService.historySearchListPanelDetachHandle()"
-  >
-    <div class="history-search-list-panel">
-      <div class="action-bar">
-        <span class="action" (click)="appService.cleanHistorySearchKeyList($event)">
-          <delete-icon></delete-icon>
-          清理
-        </span>
-      </div>
-      <div class="item" [class.active]="item.selected" *ngFor="let item of appService.historySearchKeyList">
-        {{item.key}}
       </div>
     </div>
   </ng-template>

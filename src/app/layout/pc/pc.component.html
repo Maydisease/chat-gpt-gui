@@ -48,12 +48,12 @@
       </div>
     </div>
     <div *ngIf="!appService.isPromptMode" class="state-bar">
-      <div class="item switch" [class.active]="appService.enableAskContext"
-           (click)="appService.switchAskContextEnableStateHandle()">
+      <div class="item switch" [class.active]="contextService.enableAskContext"
+           (click)="contextService.switchAskContextEnableStateHandle()">
         Context
       </div>
       <div class="item btn icon">
-        Token≈ {{appService.askContextTotalContext}}
+        Token≈ {{contextService.askContextTotalContext}}
       </div>
       <div class="item btn icon" (click)="contextService.create()">
         <profile-icon></profile-icon>

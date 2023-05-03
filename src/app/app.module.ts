@@ -6,7 +6,7 @@ import {AppService} from "./app.service";
 import {ThemeService} from "../services/theme.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {CommonModule} from "@angular/common";
-import {ToastService} from "../component/toast/toast.service";
+import {ToastService} from "../component/unit/toast/toast.service";
 import {ContextService} from "../component/context/context.service";
 
 @NgModule({

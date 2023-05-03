@@ -41,6 +41,7 @@ export class HistoryService {
     public async move(type: HISTORY_KEYBOARD_SELECT_VALUE) {
 
         const historyList = await this.historyModel.getList();
+        const findIndex = historyList.findIndex((item) => item.selected);
 
         if (!historyList.length) {
             return;
@@ -48,9 +49,15 @@ export class HistoryService {
 
         if (!this.isOpen) {
             this.isOpen = true;
-        }
 
-        const findIndex = historyList.findIndex((item) => item.selected);
+            if (findIndex > -1) {
+                await this.historyModel.update(historyList[findIndex].id!, {selected: false});
+            }
+
+            await this.historyModel.update(historyList[0].id!, {selected: true});
+            this.historyList = await this.historyModel.getList();
+            return;
+        }
 
         let moveIndex = historyList.length - 1;
 
@@ -97,7 +104,8 @@ export class HistoryService {
         await this.historyModel.add({
             selected: false,
             key: this.getUniqueIdUtil.get(),
-            value
+            value,
+            updateTime: new Date().getTime(),
         });
 
         this.historyList = await this.historyModel.getList();

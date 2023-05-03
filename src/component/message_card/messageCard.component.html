@@ -64,7 +64,7 @@
         <div
             class="finish answer wrap markdown-body"
             [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH"
-            [innerHTML]="item.answerMarkdown | md2html | async"
+            [innerHTML]="item.answerMarkdown | md2html"
         >
         </div>
       </div>

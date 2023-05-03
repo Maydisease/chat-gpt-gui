@@ -37,7 +37,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1.重构历史记录，增加持久保存，markdown支持表格'
+          releaseBody: '1. 解决一些性能问题，2.将history与context放在本地存储里，3.允许用户将历史context恢复为聊天状态'
           releaseDraft: false
           prerelease: false
   #  generate-version-control-file:

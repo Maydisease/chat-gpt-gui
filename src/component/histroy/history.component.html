@@ -9,8 +9,9 @@
         [id]="item.selected ? '#history-item-selected' : ''"
         [class.active]="item.selected"
         *ngFor="let item of historyService.historyList; let i = index"
+        (click)="select(item.value)"
     >
-      <i>#{{i+1}}</i> {{item.value | substring: 50}}
+      <i>#{{i + 1}}</i> {{item.value | substring: 50}}
     </div>
   </div>
 </div>

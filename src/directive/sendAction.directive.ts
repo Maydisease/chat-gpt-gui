@@ -51,10 +51,9 @@ export class SendActionDirective {
 
         const isCombination = this.isCombination(event);
         const isEmptyValue = !this.element!.value;
-        const isHistoryOpenState = true;
 
         // 历史记录模式信息发送
-        if (isEmptyValue && isHistoryOpenState) {
+        if (isEmptyValue) {
             // 上下选择事件
             if ((event.code === 'ArrowUp' || event.code === 'ArrowDown') && !isCombination) {
                 event.stopPropagation();
@@ -85,6 +84,7 @@ export class SendActionDirective {
                 });
             }
         }
+
         this.sendActionService.askKeyboardEvent.emit({
             eventName: ASK_KEYBOARD_EVENT_NAME.VALUE_CHANGE,
         });

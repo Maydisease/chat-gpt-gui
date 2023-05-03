@@ -12,7 +12,16 @@
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    padding-top: 140px;
+    animation: null-data-in-anime .3s ease-out forwards;
+
+    @keyframes null-data-in-anime {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
 
     .wrap {
       display: flex;
@@ -21,27 +30,19 @@
       align-items: center;
       align-content: center;
       justify-content: center;
+      margin-top: 140px;
 
       h3 {
         color: var(--font-color);
         margin-bottom: 10px;
         //font-size: 14px;
-
         span {
           position: relative;
           color: var(--font-secondary-color);
 
           b {
             &.is-dark {
-              background-image: -webkit-linear-gradient(
-                              left,
-                              var(--button-font-color),
-                              var(--font-secondary-color) 25%,
-                              var(--button-font-color) 50%,
-                              var(--font-secondary-color) 75%,
-                              var(--button-font-color)
-              );
-
+              background-image: -webkit-linear-gradient(left, var(--button-font-color), var(--font-secondary-color) 25%, var(--button-font-color) 50%, var(--font-secondary-color) 75%, var(--button-font-color));
               -webkit-text-fill-color: transparent;
               -webkit-background-clip: text;
               -webkit-animation: masked-animation 3s infinite linear;
@@ -67,7 +68,6 @@
       }
 
       .item {
-
         box-sizing: border-box;
         margin-top: 5px;
         font-size: 14px;
@@ -83,7 +83,6 @@
           min-width: 450px;
           max-width: 450px;
         }
-
         // Mobile
         @media screen and (max-width: 800px) {
           min-width: calc(100% - 60px);
@@ -159,7 +158,6 @@
               font-weight: bold;
               outline: none;
               cursor: pointer;
-              border-radius: 3px;
               background: none;
               box-sizing: border-box;
               -webkit-appearance: none;
@@ -167,10 +165,26 @@
           }
         }
 
+        .tips {
+          margin-top: 15px;
+          display: block;
+          font-size: 14px;
+          color: var(--font-secondary-color);
+        }
+
+        button {
+          height: 22px;
+          color: var(--link-button-font-color);
+          border: none;
+          font-size: 14px;
+          font-weight: bold;
+          outline: none;
+          cursor: pointer;
+          background: none;
+          box-sizing: border-box;
+          -webkit-appearance: none;
+        }
       }
-
     }
-
-
   }
 }

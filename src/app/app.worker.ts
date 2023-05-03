@@ -21,7 +21,6 @@ const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: 
             let jsonObject: any = {};
             try {
                 jsonObject = JSON.parse(chunkString);
-                console.log('ERR1:', jsonObject)
                 //context_length_exceeded
                 if (jsonObject.error && jsonObject.error.message) {
                     resolve([true, {msg: jsonObject.error.message, code: jsonObject.error.code}])
@@ -55,7 +54,6 @@ const handleReadableStream = (reader: ReadableStreamDefaultReader<Uint8Array>, e
                 const readerReadPromise = reader.read();
 
                 readerReadPromise.catch((err) => {
-                    console.log('readerReadPromise:err', err)
                     event.errEvent(err.toString());
                     controller.close();
                     return;
@@ -202,7 +200,6 @@ addEventListener('message', async ({data}) => {
 
             })
             .catch((err) => {
-                console.log('ERR2:', err)
                 postMessage({
                     eventName: 'responseError',
                     message: {

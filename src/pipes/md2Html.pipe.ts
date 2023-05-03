@@ -44,7 +44,9 @@ export class Md2HtmlPipe implements PipeTransform {
 
     }
 
-    public async transform(md: any, ...args: any[]): Promise<string> {
+    public transform(md: any, ...args: any[]) {
+
+        console.time('X:transform');
 
         let result = '';
 
@@ -53,24 +55,34 @@ export class Md2HtmlPipe implements PipeTransform {
         }
         try {
             // result = this.markdownService.toHtml(md);
+            console.time('X:toHtml');
             result = this.markdownService.toHtml(md);
+            console.timeEnd('X:toHtml');
+
             // console.time('X')
             // result = await invoke("md_2_html", {markdown: md});
             // console.timeEnd('X')
+            console.time('X:DOMParser');
             const htmlDom = new DOMParser().parseFromString(result, 'text/html').body;
+            console.timeEnd('X:DOMParser');
+
             htmlDom.querySelectorAll('pre').forEach((element) => {
                 const codeElement = element.querySelector('code')!
                 const languageString = codeElement.getAttribute('class');
                 let languageName = '';
-                let html = hljs.highlightAuto(codeElement.innerText).value;
+                let codeHighlightHtml = '';
                 if (languageString && languageString.indexOf('language-') > -1) {
                     const startIndex = languageString.indexOf('language-') + 'language-'.length;
                     const endIndex = languageString.length;
                     languageName = languageString.substring(startIndex, endIndex);
                     try {
-                        html = hljs.highlight(codeElement.innerText, {language: languageName}).value;
+                        console.time('X:highlight');
+                        codeHighlightHtml = hljs.highlight(codeElement.innerText, {language: languageName}).value;
+                        console.timeEnd('X:highlight');
                     } catch (err) {
                     }
+                } else {
+                    codeHighlightHtml = hljs.highlightAuto(codeElement.innerText).value;
                 }
                 element.outerHTML = `
                     <div class="code-render">
@@ -78,13 +90,15 @@ export class Md2HtmlPipe implements PipeTransform {
                             <span class="copy code-render-copy">copy</span>
                             <code class="value">${codeElement.innerText}</code>
                         </div>
-                        <pre class="container">${html}</pre>
+                        <pre class="container">${codeHighlightHtml}</pre>
                     </div>
                 `;
             })
             result = htmlDom.innerHTML;
         } catch (err) {
         }
+
+        console.timeEnd('X:transform');
 
         return result;
 

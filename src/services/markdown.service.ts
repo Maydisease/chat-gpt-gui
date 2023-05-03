@@ -8,7 +8,6 @@ export class MarkdownService {
     public timer: any;
 
     constructor() {
-        this.initWasm();
     }
 
     initWasm() {
@@ -20,7 +19,9 @@ export class MarkdownService {
 
             this.timer && clearTimeout(this.timer);
             this.timer = setTimeout(() => {
+                console.time('wasm init');
                 init().then(() => {
+                    console.timeEnd('wasm init');
                     this.isLoad = true;
                     resolve(true);
                 });

@@ -5,11 +5,10 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {FavoriteDatabase, AskFavoriteListItem, FavoriteModel, AskFavoriteList} from "./app.model";
 import {handleIsTauri} from "../main";
 import config from '../../src-tauri/tauri.conf.json';
-import {ModalService} from "../component/modal/modal.service";
-import {ToastService} from "../component/toast/toast.service";
-import {GetUniqueIdUtil} from "../utils/getUniqueId.util";
-import {ChatGptTokensUtil} from "../utils/chatGptTokens.util";
+import {ModalService} from "../component/unit/modal/modal.service";
+import {ToastService} from "../component/unit/toast/toast.service";
 import {HistoryService} from "../component/histroy/history.service";
+import {ContextService} from "../component/context/context.service";
 
 export enum TAB_STATE {
     FAVORITE_MODE,
@@ -42,17 +41,6 @@ export interface HistoryListItem {
     updateTime: number;
 }
 
-export type HistoryList = HistoryListItem[];
-
-
-export interface HistorySearchKeyListItem {
-    key: string;
-    selected: boolean;
-    state: HISTORY_LIST_ITEM_STATE;
-}
-
-export type HistorySearchKeyList = HistorySearchKeyListItem[];
-
 export interface AskContextItem {
     id: string;
     list: {
@@ -67,7 +55,6 @@ export interface AskContextItem {
 
 export type AskContextList = AskContextItem[];
 
-
 @Injectable({providedIn: 'root'})
 export class AppService {
 
@@ -76,15 +63,12 @@ export class AppService {
     public version = config.package.version;
     public isPromptMode = false;
 
-    public favoriteDb = new FavoriteDatabase();
+    public favoriteLoading = false;
 
     public askSendResultEvent = new EventEmitter();
 
-    public requestHtmlChuckEvent = new EventEmitter();
-
     public tabState: TAB_STATE = TAB_STATE.ASK_MODE;
     public favoriteList: AskFavoriteListItem[] = [];
-
 
     public favoriteCount: number = 0;
     public appKey = localStorage.getItem('APP-KEY');
@@ -96,42 +80,29 @@ export class AppService {
     public searchWidgetRef: ElementRef<HTMLInputElement> | undefined;
     public historyElementRef: ElementRef<HTMLElement> | undefined;
     public autosizeRef: CdkTextareaAutosize | undefined;
-    public HistorySearchKeyListSelectedIndex = 0;
-    public historySearchKeyList: HistorySearchKeyList = [];
     public askList: AskFavoriteList = [];
-
-    public askContextTokenInfo = {}
-
     public newTempDataAppEndState: STREAM_STATE = STREAM_STATE.DONE;
-    public newTempDataError = '';
     public newTempDataQuestionContent = '';
-
-    public askContext: AskContextList = [];
-    public askContextTotalContext = 0;
-    public enableAskContext = false;
-
     constructor(
         public toastService: ToastService,
         public modalService: ModalService,
         public favoriteModel: FavoriteModel,
-        public getUniqueIdUtil: GetUniqueIdUtil,
         public historyService: HistoryService,
+        public contextService: ContextService,
     ) {
         this.appKey = localStorage.getItem('APP-KEY') || '';
         this.initShortcutKeyBind();
-        this.initHistorySearchKeyList();
         this.initFavorite();
-        this.initAskContext();
         this.initWorkerMessageListen();
     }
 
     public initWorkerMessageListen() {
 
-        this.worker.addEventListener('message', ({data}) => {
+        this.worker.addEventListener('message', async ({data}) => {
 
             // 请求准备开始
             if (data.eventName === 'requestStart') {
-                this.historyService.update(data.message.questionContent);
+                await this.historyService.update(data.message.questionContent);
                 this.clearSearchKey();
             }
 
@@ -145,13 +116,8 @@ export class AppService {
             if (data.eventName === 'responseChunkEnd') {
                 this.newTempDataAppEndState = STREAM_STATE.DONE;
                 const {key, answerMarkdown, questionContent} = data.message;
-                this.updateHistorySearchKeyList({
-                    key: questionContent,
-                    state: HISTORY_LIST_ITEM_STATE.FINISH,
-                    selected: false
-                });
-                this.updateAskList(key, answerMarkdown, questionContent, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE);
-                this.updateContext(questionContent, answerMarkdown);
+                this.updateAskList(key, answerMarkdown, questionContent, HISTORY_LIST_ITEM_STATE.FINISH,  STREAM_STATE.DONE);
+                await this.contextService.updateContext(questionContent, answerMarkdown);
                 this.askSendResultEvent.emit();
             }
             // response::chunk错误
@@ -164,6 +130,7 @@ export class AppService {
                     questionContent,
                     HISTORY_LIST_ITEM_STATE.FAIL,
                     STREAM_STATE.DONE,
+                    undefined,
                     errorCode
                 );
                 this.askSendResultEvent.emit();
@@ -171,26 +138,11 @@ export class AppService {
         })
     }
 
-    public initAskContext() {
-        this.enableAskContext = localStorage.getItem('ENABLE-ASK-CONTEXT') === '1' || false;
-    }
-
     // 初始化快捷键绑定
     public initShortcutKeyBind() {
         Mousetrap.bind('command+f', () => {
             this.searchWidgetRef?.nativeElement.focus();
         });
-    }
-
-    // 初始化历史搜索关键字列表（从本地存储读取至内存中）
-    public initHistorySearchKeyList() {
-        const historySearchKeyList = localStorage.getItem('HISTORY-SEARCH-KEY-LIST');
-        if (historySearchKeyList) {
-            try {
-                this.historySearchKeyList = JSON.parse(historySearchKeyList);
-            } catch (err) {
-            }
-        }
     }
 
     // 更新密钥,将密钥写入本地存储
@@ -235,8 +187,10 @@ export class AppService {
         questionContent: string | undefined,
         state: HISTORY_LIST_ITEM_STATE,
         streamState: STREAM_STATE,
+        $updateTime: number | undefined = undefined,
         errorCode: string = ''
     ) {
+
         const findIndex = this.askList.findIndex((item) => item.key === key);
         const updateTime = new Date().getTime();
 
@@ -246,104 +200,20 @@ export class AppService {
             this.askList[findIndex].answerMarkdown = (this.askList[findIndex].answerMarkdown! || '') + (answerMarkdown || '');
             this.askList[findIndex].streamDone = streamState;
             this.askList[findIndex].errorCode = errorCode;
-            // this.askList[findIndex].sn = sn;
         } else if (questionContent) {
+            console.time('X');
             this.askList.push({
                 key,
                 state,
                 streamDone: STREAM_STATE.APPENDING,
                 questionContent,
                 answerMarkdown,
-                updateTime,
+                updateTime: $updateTime ? $updateTime : updateTime,
                 errorCode,
-                inputTime: new Date().getTime()
+                inputTime: $updateTime ? $updateTime : updateTime
             })
+            console.timeEnd('X');
         }
-        // this.moveHistoryContainerScrollToBottom();
-    }
-
-
-    // 更新历史搜索关键字
-    public updateHistorySearchKeyList(item: HistorySearchKeyListItem) {
-
-        this.historySearchKeyList.some((item, index) => {
-            if (item.selected) {
-                this.historySearchKeyList[index].selected = false;
-                this.HistorySearchKeyListSelectedIndex = 0;
-                return true;
-            } else {
-                return false;
-            }
-        })
-
-        // 存在相同的
-        if (this.historySearchKeyList.find((_item) => _item.key === item.key)) {
-            return;
-        }
-
-        // 只保留最近的5条记录
-        if (this.historySearchKeyList.length > 5) {
-            this.historySearchKeyList = this.historySearchKeyList.reverse().splice(0, 5).reverse();
-        }
-
-        // 将历史搜索关键字同步至本地存储
-        this.historySearchKeyList.push(item);
-        localStorage.setItem('HISTORY-SEARCH-KEY-LIST', JSON.stringify(this.historySearchKeyList));
-
-    }
-
-
-    // 支持使用键盘上下箭头来选择历史搜索关键字记录
-    public updateHistorySearchKeyListSelectedIndex(code: string) {
-
-        // 如果没有历史搜索关键词时，将跳出
-        if (this.historySearchKeyList.length === 0) {
-            return;
-        }
-
-        // 每一次使用历史搜索都重置上次的选中状态
-        this.historySearchKeyList.map((item, index) => {
-            this.historySearchKeyList[index].selected = false;
-        });
-
-        // 初次默认打开搜索面板
-        if (!this.isOpenHistorySearchListPanel && this.historySearchKeyList.length > 0) {
-            this.HistorySearchKeyListSelectedIndex = this.historySearchKeyList.length - 1;
-            this.isOpenHistorySearchListPanel = true;
-            this.historySearchKeyList[this.HistorySearchKeyListSelectedIndex].selected = true;
-            return;
-        }
-
-        if (code === 'ArrowUp') {
-            this.HistorySearchKeyListSelectedIndex = this.HistorySearchKeyListSelectedIndex - 1;
-        }
-
-        if (code === 'ArrowDown') {
-            this.HistorySearchKeyListSelectedIndex = this.HistorySearchKeyListSelectedIndex + 1;
-        }
-
-        if (this.HistorySearchKeyListSelectedIndex === -1) {
-            this.HistorySearchKeyListSelectedIndex = 0;
-        }
-
-        if (this.HistorySearchKeyListSelectedIndex >= this.historySearchKeyList.length) {
-            this.HistorySearchKeyListSelectedIndex = this.historySearchKeyList.length - 1;
-        }
-
-        if (this.historySearchKeyList[this.HistorySearchKeyListSelectedIndex]) {
-            this.historySearchKeyList[this.HistorySearchKeyListSelectedIndex].selected = true;
-        }
-
-    }
-
-    //清理历史搜索记录
-    cleanHistorySearchKeyList(event: MouseEvent) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.isOpenHistorySearchListPanel = false;
-        this.historySearchKeyList = [];
-        this.HistorySearchKeyListSelectedIndex = 0;
-        localStorage.removeItem('HISTORY-SEARCH-KEY-LIST');
     }
 
     public async initFavorite() {
@@ -410,47 +280,13 @@ export class AppService {
 
     }
 
-    public async switchAskContextEnableStateHandle() {
-
-        if (handleIsTauri()) {
-            const confirmed = await confirm('确定切换上下文状态吗？开启上下文后Chat GTP将会更好的结合你上次的问题与答案，聊天体验将会变得更好，但同时也更加耗费Tokens。', 'GPT-GUI');
-            if (confirmed) {
-                this.askContext = [];
-                if (this.enableAskContext) {
-                    this.enableAskContext = false;
-                    this.askContext = [];
-                    localStorage.setItem('ENABLE-ASK-CONTEXT', '0')
-                } else {
-                    this.enableAskContext = true;
-                    localStorage.setItem('ENABLE-ASK-CONTEXT', '1')
-                }
-            }
-        } else {
-            this.modalService.create(`确定切换上下文状态吗？开启上下文后Chat GTP将会更好的结合你上次的问题与答案，聊天体验将会变得更好，但同时也更加耗费Tokens。`, {
-                confirm: () => {
-                    this.askContext = [];
-                    if (this.enableAskContext) {
-                        this.enableAskContext = false;
-                        this.askContext = [];
-                        localStorage.setItem('ENABLE-ASK-CONTEXT', '0')
-                    } else {
-                        this.enableAskContext = true;
-                        localStorage.setItem('ENABLE-ASK-CONTEXT', '1')
-                    }
-                },
-                cancel: () => {
-
-                }
-            });
-        }
-
-    }
-
     public async tabStateChange(state: TAB_STATE) {
         this.tabState = state;
+        this.favoriteLoading = true;
         if (state === TAB_STATE.FAVORITE_MODE) {
             await this.getFavorite();
             await this.getFavoriteCount();
+            this.favoriteLoading = false;
         }
     }
 
@@ -469,113 +305,6 @@ export class AppService {
             }
             return itemB.inputTime - itemA.inputTime;
         });
-    }
-
-    // 清理上下文信息
-    public async cleanAskContextHandle() {
-        if (handleIsTauri()) {
-            const confirmed = await confirm('与Chat GTP聊天时，有上下文它可以更好的理解你的问题，确认要清理上下文吗？', 'GPT-GUI');
-            if (confirmed) {
-                this.askContext = [];
-            }
-        } else {
-            this.modalService.create(`与Chat GTP聊天时，有上下文它可以更好的理解你的问题，确认要清理上下文吗？`, {
-                confirm: () => {
-                    this.askContext = [];
-                },
-                cancel: () => {
-
-                }
-            });
-        }
-    }
-
-    // 获取上下文token相关信息
-
-    public updateContext(question: string, answer: string) {
-
-        const questionToken = ChatGptTokensUtil.tokenLen(question);
-        const answerToken = ChatGptTokensUtil.tokenLen(answer);
-        const itemToken = questionToken + answerToken;
-
-        this.askContext.push({
-            id: this.getUniqueIdUtil.get(),
-            list: [
-                {
-                    role: 'user',
-                    content: question,
-                    token: questionToken
-                },
-                {
-                    role: 'assistant',
-                    content: answer,
-                    token: answerToken
-                }
-            ],
-            updateTime: new Date().getTime(),
-            token: itemToken
-        });
-
-        this.computedTotalToken();
-
-    }
-
-    // 自动删除上下文
-    autoRemoveToken = (arr: AskContextList, questionTokenNum: number) => {
-        const maxToken = 3500 - questionTokenNum;
-        let total = 0;
-        let newArr = [];
-
-        for (let i = 0; i < arr.length; i++) {
-            total += arr[i].token!;
-        }
-
-        if (total < maxToken) {
-            return arr;
-        }
-
-        for (let i = 0; i < arr.length; i++) {
-            const token = arr[i].token!;
-            if (total > maxToken) {
-                total -= token;
-            } else {
-                newArr.push(arr[i]);
-            }
-
-        }
-        return newArr;
-    }
-
-    computedTotalToken() {
-        this.askContextTotalContext = 0;
-        for (let i = 0; i < this.askContext.length; i++) {
-            this.askContextTotalContext += this.askContext[i].token!;
-        }
-    }
-
-    public generateRequestContext(questionContent: string) {
-
-        // 如果启用了token
-        if (this.enableAskContext) {
-            const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
-            this.askContext = this.autoRemoveToken(this.askContext, questionTokenNum);
-            this.computedTotalToken();
-        }
-
-        const context: { role: string, content: string }[] = [];
-        this.askContext.map((item: any) => {
-            item.list.map((chatItem: any) => {
-                context.push({role: chatItem.role, content: chatItem.content});
-            })
-        });
-
-        context.push({
-            content: questionContent,
-            role: 'user',
-        });
-
-        return context;
-
     }
 
     // 发送
@@ -613,7 +342,7 @@ export class AppService {
                 address,
                 questionContent: this.searchKey,
                 appKey: this.appKey,
-                askContext: this.generateRequestContext(this.searchKey)
+                askContext: await this.contextService.generateRequestContext(this.searchKey)
             }
         });
     }
