@@ -10,6 +10,8 @@
 ## 计划更新
 
 -   [ ] markdown table表格下载，支持下载为excel及复制成csv
+-   [ ] 联网支持，允许GPT联网搜索
+-   [ ] 知识收藏分类（类似Xmind脑图）
 -   [ ] 桌面版支持免费用户额度
 -   [ ] mac 版窗口菜单支持
 -   [x] setting界面开放
@@ -27,7 +29,7 @@
 
 ## 在线体验 
 * PC https://maydisease.github.io/chat-gpt-gui (请使用现代浏览器打开)
-* mobile 请扫码
+* Mobile访问请扫码:
 
 ![mobile-qr-code](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-qr-code.png)
 
