@@ -73,4 +73,4 @@
 #### Mobile 模式下的主界面
 ![light-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/light-main.png)
 
-
+* 了解更多界面体验，请访问在线体验地址或下载桌面应用。
