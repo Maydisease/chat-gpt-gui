@@ -46,6 +46,7 @@
 
 #### Mac Desktop Mobile 模式下的主界面
 ![dark-main](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-main.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMaydisease%2Fchat-gpt-gui.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FMaydisease%2Fchat-gpt-gui?ref=badge_shield)
 
 #### Mobile 模式下的问题交互界面
 * 支持markdown标准语法返回
@@ -77,3 +78,7 @@
 ![light-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/light-main.png)
 
 * 了解更多界面体验，请访问在线体验地址或下载桌面应用。
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMaydisease%2Fchat-gpt-gui.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FMaydisease%2Fchat-gpt-gui?ref=badge_large)
