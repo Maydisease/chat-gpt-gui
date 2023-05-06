@@ -122,9 +122,11 @@ export class HistoryService {
         this.isOpen = false;
     }
 
+    public async getCount() {
+        return this.historyModel.getCount();
+    }
+
     public confirm() {
         this.isOpen = false;
-
-
     }
 }

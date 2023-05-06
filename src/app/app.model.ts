@@ -56,7 +56,7 @@ export class FavoriteModel {
         })
     }
 
-    public getListCount(): Promise<number> {
+    public getCount(): Promise<number> {
         return new Promise((resolve) => {
             this.favoriteDB.transaction('rw', this.table, async () => {
                 const count = await this.table.count();

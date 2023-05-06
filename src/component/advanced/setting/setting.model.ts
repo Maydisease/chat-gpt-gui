@@ -29,41 +29,6 @@ export class SettingModel {
         })
     }
 
-    // public async add(item: SettingItem) {
-    //     return new Promise(async (resolve) => {
-    //         this.db.transaction('rw', this.table, async () => {
-    //             const id = await this.table.add(item);
-    //             resolve(id);
-    //         });
-    //     })
-    // }
-
-    // public delete(id: number) {
-    //     return new Promise(async (resolve) => {
-    //         this.db.transaction('rw', this.table, async () => {
-    //             await this.table.where('id').equals(id).delete();
-    //             resolve(id);
-    //         });
-    //     })
-    // }
-
-    // public getList(): Promise<AskContextItem[]> {
-    //     return new Promise((resolve) => {
-    //         this.db.transaction('rw', this.table, async () => {
-    //             resolve(await this.table.toArray());
-    //         });
-    //     })
-    // }
-    //
-    // public getListCount(): Promise<number> {
-    //     return new Promise((resolve) => {
-    //         this.db.transaction('rw', this.table, async () => {
-    //             const count = await this.table.count();
-    //             resolve(count);
-    //         });
-    //     })
-    // }
-    //
     public count() {
         return new Promise(async (resolve) => {
             const count = await this.table.count();

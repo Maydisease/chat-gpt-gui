@@ -1,3 +1,4 @@
-<div class="button" [ngClass]="type">
+<div class="button"
+     [ngClass]="{'default': type === 'default','danger': type === 'danger','primary': type === 'primary','large': size === 'large','small': size === 'small','medium': size === 'medium', disabled: disabled}">
   <ng-content></ng-content>
 </div>

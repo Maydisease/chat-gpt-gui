@@ -208,9 +208,8 @@ export class AppService {
   }
 
   public async getFavoriteCount() {
-    setTimeout(async () => {
-      this.favoriteCount = await this.favoriteModel.getListCount();
-    }, 200)
+    this.favoriteCount = await this.favoriteModel.getCount();
+    return this.favoriteCount;
   }
 
   public async deleteFavorite(id: number | undefined) {

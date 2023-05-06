@@ -1,5 +1,9 @@
 :host {
 
+  &.disabled {
+    pointer-events: none;
+  }
+
   .button {
     user-select: none;
     cursor: pointer;
@@ -9,6 +13,20 @@
     box-sizing: border-box;
     border-radius: 5px;
     display: inline-block;
+
+    // 'large' | 'small' | 'default'
+    &.large {
+      padding: 3px 12px;
+    }
+
+    &.default.disabled,
+    &.danger.disabled,
+    &.primary.disabled {
+      pointer-events: none;
+      background: var(--widget-button-default-bg-disabled-color);
+      border: 1px solid var(--widget-button-default-border-disabled-color);
+      color: var(--widget-button-default-font-disabled-color);
+    }
 
     &.default {
       background: var(--widget-button-default-bg-color);

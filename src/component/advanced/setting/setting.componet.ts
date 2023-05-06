@@ -20,24 +20,20 @@ export class SettingComponent implements OnInit {
         public settingService: SettingService,
         public modalService: ModalService
     ) {
+        this.settingService.initConfig();
+        this.settingService.getCount();
     }
 
-    ngOnInit() {
-        // this.modalService.create('xxx111')
+    public async ngOnInit() {
+
+    }
+
+    public get IS_CAN_CLEAR_ALL() {
+        return this.settingService.contextDataCount > 0 || this.settingService.historyDataCount > 0 || this.settingService.favoriteDataCount > 0;
     }
 
     public close() {
         this.settingService.close();
-    }
-
-    async secretKeyChangeHandle(event: KeyboardEvent) {
-        const element = event.target as HTMLTextAreaElement;
-        element.value = element.value.trim();
-        this.configService.CONFIG.BASE_SECRET_KEY = element.value;
-        clearTimeout(this.timer);
-        this.timer = setTimeout(async () => {
-            await this.settingService.update();
-        }, 500)
     }
 
 

@@ -22,7 +22,13 @@ export class SettingService {
 
     public isLoading = false;
 
-    public CONFIG_BACKUP: SettingConfigItem | { [key: string]: any } = {}
+    public timer: any;
+
+    public CONFIG_BACKUP: SettingConfigItem | { [key: string]: any } = {};
+
+    public favoriteDataCount = 0;
+    public contextDataCount = 0;
+    public historyDataCount = 0;
 
     public ref: OverlayRef | undefined;
 
@@ -33,7 +39,6 @@ export class SettingService {
         public settingModel: SettingModel,
         private injector: Injector
     ) {
-        this.initConfig();
     }
 
     public async initConfig() {
@@ -46,6 +51,14 @@ export class SettingService {
             await this.loadSetting();
         }
         this.isLoading = false;
+        await this.getCount();
+
+    }
+
+    public async getCount() {
+        this.favoriteDataCount = await this.injectAppService().getFavoriteCount();
+        this.historyDataCount = await this.injectHistoryService().getCount();
+        this.contextDataCount = await this.injectContextService().getCount();
     }
 
     public async loadSetting() {
@@ -105,11 +118,30 @@ export class SettingService {
             await this.clearTypeAll();
             await this.settingClear();
         }
-
-        console.log(10001)
-
+        await this.getCount();
         this.toastService.create('处理成功~')
 
+    }
+
+    public secretKeySave(event?: FocusEvent) {
+
+        if (event) {
+            const element = event.target as HTMLTextAreaElement;
+            element.value = element.value.trim();
+            this.configService.CONFIG.BASE_SECRET_KEY = element.value;
+        }
+
+        clearTimeout(this.timer);
+        this.timer = setTimeout(async () => {
+            await this.update();
+        }, 500)
+    }
+
+    async secretKeyChangeHandle(event: KeyboardEvent) {
+        const element = event.target as HTMLTextAreaElement;
+        element.value = element.value.trim();
+        this.configService.CONFIG.BASE_SECRET_KEY = element.value;
+        this.secretKeySave();
     }
 
     async contextEnableChangeHandle(value: boolean) {
@@ -122,11 +154,11 @@ export class SettingService {
         await this.update();
     }
 
-    public injectContextService(): ContextService{
+    public injectContextService(): ContextService {
         return this.injector.get(ContextService);
     }
 
-    public injectAppService(): AppService{
+    public injectAppService(): AppService {
         return this.injector.get(AppService);
     }
 

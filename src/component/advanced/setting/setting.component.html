@@ -16,8 +16,12 @@
         ChatGTP 官网申请下来的密钥，访问api需要密钥。
       </div>
       <div class="widget">
-        <textarea [value]="configService.CONFIG.BASE_SECRET_KEY" (keyup)="secretKeyChangeHandle($event)"
-                  placeholder="请在这里输入秘钥 密钥格式 sk-*"></textarea>
+        <textarea
+            [value]="configService.CONFIG.BASE_SECRET_KEY"
+            (blur)="settingService.secretKeySave($event)"
+            (keyup)="settingService.secretKeyChangeHandle($event)"
+            placeholder="请在这里输入秘钥 密钥格式 sk-*"
+        ></textarea>
       </div>
     </div>
 
@@ -43,12 +47,13 @@
 
     <div class="item">
       <label class="mb-6">本地存储</label>
-      <div class="key">清理快捷记录(history)</div>
+      <div class="key">清理快捷记录 (history)<i>{{settingService.historyDataCount}}</i></div>
       <div class="tips">
         清理上次咨询的问题记录(在问答输入框内 ↑/↓ 历史的内容)
       </div>
       <div class="widget mb-12">
         <u-button
+            [disabled]="settingService.historyDataCount === 0"
             [type]="'default'"
             [pop]="'确定要清理快捷记录吗？'"
             (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.HISTORY)"
@@ -56,12 +61,13 @@
         </u-button>
       </div>
 
-      <div class="key">清理上下文(context)</div>
+      <div class="key">清理上下文(context)<i>{{settingService.contextDataCount}}</i></div>
       <div class="tips">
         清理所有上次咨询的快捷记录(在问答输入框内 ↑/↓ 历史的内容)
       </div>
       <div class="widget mb-12">
         <u-button
+            [disabled]="settingService.contextDataCount === 0"
             [type]="'default'"
             [pop]="'确定要清理上下文吗？'"
             (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.CONTEXT)"
@@ -69,12 +75,13 @@
         </u-button>
       </div>
 
-      <div class="key">清理收藏（favorite）</div>
+      <div class="key">清理收藏(favorite)<i>{{settingService.favoriteDataCount}}</i></div>
       <div class="tips">
         清理所有收藏过的问题记录
       </div>
       <div class="widget mb-12">
         <u-button
+            [disabled]="settingService.favoriteDataCount === 0"
             [type]="'default'"
             [pop]="'确定要清理收藏吗？'"
             (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.FAVORITE)"
@@ -88,6 +95,7 @@
       </div>
       <div class="widget mb-12">
         <u-button
+            [disabled]="!IS_CAN_CLEAR_ALL"
             [type]="'danger'"
             [pop]="'确定要清理所有记录吗？'"
             (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.ALL)">清理

@@ -242,6 +242,10 @@ export class ContextService {
         await this.contextModel.delete(id);
     }
 
+    public async getCount() {
+        return this.contextModel.getCount();
+    }
+
     public async clearAll() {
         await this.contextModel.clear();
         this.askContextList = await this.getList();

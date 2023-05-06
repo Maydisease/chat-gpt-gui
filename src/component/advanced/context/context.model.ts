@@ -46,7 +46,7 @@ export class ContextModel {
         })
     }
 
-    public getListCount(): Promise<number> {
+    public getCount(): Promise<number> {
         return new Promise((resolve) => {
             this.contextDB.transaction('rw', this.table, async () => {
                 const count = await this.table.count();

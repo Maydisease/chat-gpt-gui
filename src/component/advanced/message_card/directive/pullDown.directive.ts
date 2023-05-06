@@ -34,7 +34,6 @@ export class PullDownDirective {
   }
 
   public scrollHandle = (event: Event) => {
-    console.log(666);
     const targetElement = event.target as HTMLElement;
 
     if (this.prevScrollTop !== undefined && this.prevScrollTop > targetElement.scrollTop) {

@@ -91,16 +91,36 @@
       }
     }
 
-    h2 {
+    .navbar {
       width: 100%;
-      height: 60px;
-      padding: 0 15px;
-      box-sizing: border-box;
-      line-height: 60px;
-      font-size: 16px;
+      height: 50px;
+      line-height: 50px;
+      font-size: 20px;
       font-weight: bold;
-      text-align: center;
-      color: var(--font-secondary-color)
+      padding: 0 20px;
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      z-index: 2;
+      user-select: none;
+      box-sizing: border-box;
+      background: var(--background-color);
+
+      .btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        cursor: pointer;
+        border-radius: 5px;
+        justify-items: center;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+
+        &:hover {
+          background: var(--background-color);
+        }
+      }
     }
 
     .list {
@@ -313,7 +333,6 @@
         color: var(--font-secondary-color);
         border-radius: 0 0 5px 5px;
         background: var(--background-color);
-        border-top: 1px solid var(--border-color);
 
         .space {
           flex: 1;

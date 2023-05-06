@@ -24,6 +24,11 @@
     <select (change)="promptSelectHandle($event)">
       <option [value]="item.title" *ngFor="let item of promptListClone">{{item.title}}</option>
     </select>
-    <button (click)="appService.isPromptMode = false">离开</button>
+    <u-button
+        class="ml-6"
+        [type]="'default'"
+        [size]="'large'"
+        (click)="appService.isPromptMode = false"
+    >离开</u-button>
   </div>
 </div>

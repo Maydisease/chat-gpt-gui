@@ -29,6 +29,7 @@ body {
   display: contents;
 }
 
+.cdk-overlay-backdrop,
 .cdk-global-overlay-wrapper {
   z-index: auto !important;
 }

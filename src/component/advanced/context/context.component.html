@@ -1,6 +1,11 @@
 <div class="mask" (click)="close()"></div>
 <div class="container">
-  <h2>管理Context</h2>
+  <div class="navbar">
+    <div class="btn" (click)="close()">
+      <close-icon></close-icon>
+    </div>
+    <span class="ml-12">上下文</span>
+  </div>
   <div
       class="list"
       checkboxList
@@ -58,13 +63,12 @@
       <span>token: <i class="total">{{tokenTotal}} </i> - <i class="selected">{{selectedToken}}</i> = <i
           class="result">{{tokenTotal - selectedToken}}</i></span>
       <span class="space"></span>
-      <!--      <input class="num"/>-->
-      <span
-          class="btn"
+      <u-button
+          [size]="'large'"
           (click)="selectedAll()"
-          [class.disabled]="contextService.askContextList.length === 0"
-      >{{checkboxListRef.isSelectedAll ? '反 选' : '全 选'}}</span>
-      <span class="btn" (click)="close()">退出</span>
+          [disabled]="contextService.askContextList.length === 0 || !configService.CONFIG.CONTEXT_ENABLE"
+      >{{checkboxListRef.isSelectedAll ? '反 选' : '全 选'}}</u-button>
+      <u-button [size]="'large'" class="ml-6" [type]="'default'" (click)="close()">退出</u-button>
     </div>
     <div
         class="action delete"
