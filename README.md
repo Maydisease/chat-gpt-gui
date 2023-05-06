@@ -1,3 +1,8 @@
+<center>
+
+![xxx](https://img.shields.io/badge/license-MIT-green)
+</center>
+
 ## 一个跨平台的 Chat GPT GUI
 * 项目架构：Tauri + Angular，高效桌面和 Web 应用。
 * 精细UI：多主题支持，Github风格指南。
