@@ -1,6 +1,9 @@
 <center>
 
-![xxx](https://img.shields.io/badge/license-MIT-green)
+![license](https://img.shields.io/badge/license-MIT-green)
+![CI](https://img.shields.io/badge/build-passing-brightgreen)
+![size](https://img.shields.io/badge/size-10%20MB-blue)
+![release-version](https://img.shields.io/badge/release-v1.4.0-blue)
 </center>
 
 ## 一个跨平台的 Chat GPT GUI
