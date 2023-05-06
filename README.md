@@ -46,6 +46,17 @@
 #### Mac Desktop Mobile 模式下的主界面
 ![dark-main](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-main.png)
 
+#### Mobile 模式下的问题交互界面
+* 支持markdown标准语法返回
+* 支持代码高亮
+
+![dark-mobile-chat](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-mobile-chat.png)
+
+#### 提示词（prompt）
+* 支持搜索提示词及快速定位到指定提示词处
+
+![light-mobile-prompt.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/light-mobile-prompt.png)
+
 #### PC 模式下的主界面
 * 亮色  
 
@@ -63,16 +74,5 @@
 
 #### Mobile 模式下的主界面
 ![light-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/light-main.png)
-
-#### Mobile 模式下的问题交互界面
-* 支持markdown标准语法返回
-* 支持代码高亮  
-
-![dark-mobile-chat](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-mobile-chat.png)
-
-#### 提示词（prompt）
-* 支持搜索提示词及快速定位到指定提示词处  
-
-![light-mobile-prompt.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/light-mobile-prompt.png)
 
 
