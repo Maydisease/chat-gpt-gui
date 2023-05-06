@@ -1,10 +1,10 @@
 ## 一个跨平台的 Chat GPT GUI
-* 项目架构：基于tauri 及 angular
-* 精细的UI：支持多dark、light主题，整体风格遵循Github官网的风格指南
-* 多端支持：支持 Mac 桌面应用，PC及移动应用（网页），支持使用手机浏览器访问
-* 体积够小：整个应用是有10MB左右
-* 自动升级：支持应用自动升级，每次启动应用会检测是否有最新版本，用户选择性升级
-* 免搭梯子：桌面版应用免去搭梯子访问，可以在地铁上闲下来的时间随时访问移动端访问发起询问
+* 项目架构：基于 Tauri 和 Angular 构建的，旨在提供高效的桌面和 Web 应用体验。
+* 精细的 UI：应用支持多种 dark 和 light 主题，整体风格遵循 Github 官网的风格指南，为用户带来更加舒适和友好的界面体验。
+* 多端支持：应用支持 Mac 桌面应用，PC 和移动端 Web 应用，同时支持使用手机浏览器访问，用户可随时随地访问。
+* 体积小巧：整个应用只有约 10MB 左右，无需担心占用过多的存储空间。
+* 自动升级：应用支持自动升级，每次启动应用会检测是否有最新版本，用户可以选择性升级，让用户始终使用最新的版本。
+* 免搭梯子：桌面版应用无需搭梯子即可访问，用户可以在地铁上闲暇时间访问应用，移动端应用也可以随时发起访问。
 
 ---
 
@@ -33,6 +33,9 @@
 * Mobile访问请扫码:
 
 ![mobile-qr-code](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-qr-code.png)
+
+## 问题返回
+* 作者会真诚地面对大家的提问和意见，因为只有听取大家的反馈，才能推动我们不断改进和创新。
 
 
 ![mobile-a-dark-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-a-dark-main.png)
