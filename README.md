@@ -37,9 +37,7 @@
 ## 问题返回
 * 作者会真诚地面对大家的提问和意见，因为只有听取大家的反馈，才能推动我们不断改进和创新。
 
-
-![mobile-a-dark-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-a-dark-main.png)
-![mobile-a-light-main.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-a-light-main.png)
+---
 
 ## 界面预览
 
