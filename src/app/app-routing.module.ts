@@ -40,7 +40,7 @@ import { SettingComponent } from "../component/advanced/setting/setting.componet
 import { UButtonComponent } from "../component/unit/button/button.component";
 import { PopComponent } from "../component/unit/pop/pop.component";
 import { PopDirective } from "../component/unit/pop/pop.directive";
-import { AsDirective } from 'src/directive/as.directive';
+import { AsDirective} from "../directive/as.directive";
 
 const routes: Routes = [
   { path: '', component: LayoutComponent, resolve: [InitTaskResolveService] },

@@ -1,8 +1,7 @@
 import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 import { AppService, STREAM_STATE } from "../../../../app/app.service";
-import { scrollSmoothTo } from "../../../../utils/scrollToView.util";
 import { PlatformUtilService } from "../../../../utils/platform.util";
-import { AsDirective } from 'src/directive/as.directive';
+import { AsDirective} from "../../../../directive/as.directive";
 
 @Directive({ selector: '[pull-down]' })
 export class PullDownDirective {

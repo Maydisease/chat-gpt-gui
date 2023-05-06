@@ -4,7 +4,7 @@ import { MESSAGE_CARD_USE_TYPE } from "../../../component/advanced/message_card/
 import { ContextService } from "../../../component/advanced/context/context.service";
 import { PlatformUtilService } from "../../../utils/platform.util";
 import { ConfigService } from "../../../config/config.service";
-import { SettingService } from 'src/component/advanced/setting/setting.service';
+import { SettingService} from "../../../component/advanced/setting/setting.service";
 
 @Component({
   selector: 'app-pc',
