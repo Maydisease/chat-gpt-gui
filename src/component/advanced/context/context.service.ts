@@ -3,10 +3,12 @@ import {Overlay, OverlayRef, ScrollStrategy, ScrollStrategyOptions,} from "@angu
 import {ComponentPortal} from "@angular/cdk/portal";
 import {ContextComponent} from "./context.component";
 import {AskContextItem, AskContextItemList, ContextModel} from "./context.model";
-import {ChatGptTokensUtil} from "../../utils/chatGptTokens.util";
-import {handleIsTauri} from "../../main";
+import {ChatGptTokensUtil} from "../../../utils/chatGptTokens.util";
+import {handleIsTauri} from "../../../main";
 import {confirm} from "@tauri-apps/api/dialog";
-import {ModalService} from "../unit/modal/modal.service";
+import {ModalService} from "../../unit/modal/modal.service";
+import {SettingService} from "../setting/setting.service";
+import {ConfigService} from "../../../config/config.service";
 
 export interface ContextContextBase {
     message?: string;
@@ -30,8 +32,6 @@ export class ContextService {
     public list = new Map<number, OverlayRef>();
     public count = 0;
 
-    public enableAskContext: boolean = false;
-
     public askContextList: AskContextItemList = [];
 
     public askContextTotalContext = 0;
@@ -41,6 +41,8 @@ export class ContextService {
         private overlay: Overlay,
         private readonly scrollStrategyOptions: ScrollStrategyOptions,
         public contextModel: ContextModel,
+        public settingService: SettingService,
+        public configService: ConfigService,
     ) {
         this.scrollStrategy = scrollStrategyOptions.block();
         this.initAskContext();
@@ -115,23 +117,19 @@ export class ContextService {
         if (handleIsTauri()) {
             const confirmed = await confirm('确定切换上下文状态吗？开启上下文后Chat GTP将会更好的结合你上次的问题与答案，聊天体验将会变得更好，但同时也更加耗费Tokens。', 'GPT-GUI');
             if (confirmed) {
-                if (this.enableAskContext) {
-                    this.enableAskContext = false;
-                    localStorage.setItem('ENABLE-ASK-CONTEXT', '0')
+                if (this.configService.CONFIG.CONTEXT_ENABLE) {
+                    await this.settingService.contextEnableChangeHandle(false)
                 } else {
-                    this.enableAskContext = true;
-                    localStorage.setItem('ENABLE-ASK-CONTEXT', '1')
+                    await this.settingService.contextEnableChangeHandle(true)
                 }
             }
         } else {
             this.modalService.create(`确定切换上下文状态吗？开启上下文后Chat GTP将会更好的结合你上次的问题与答案，聊天体验将会变得更好，但同时也更加耗费Tokens。`, {
-                confirm: () => {
-                    if (this.enableAskContext) {
-                        this.enableAskContext = false;
-                        localStorage.setItem('ENABLE-ASK-CONTEXT', '0')
+                confirm: async () => {
+                    if (this.configService.CONFIG.CONTEXT_ENABLE) {
+                        await this.settingService.contextEnableChangeHandle(false)
                     } else {
-                        this.enableAskContext = true;
-                        localStorage.setItem('ENABLE-ASK-CONTEXT', '1')
+                        await this.settingService.contextEnableChangeHandle(true)
                     }
                 },
                 cancel: () => {
@@ -143,13 +141,13 @@ export class ContextService {
     }
 
     public async initAskContext() {
-        this.enableAskContext = localStorage.getItem('ENABLE-ASK-CONTEXT') === '1' || false;
         this.askContextList = await this.getList();
         await this.computedTotalToken();
     }
 
-    async autoRemoveToken(arr: AskContextItemList, questionTokenNum: number) {
-        const maxToken = 3500 - questionTokenNum;
+    async autoCutContext(arr: AskContextItemList, questionTokenNum: number) {
+        arr = JSON.parse(JSON.stringify(arr));
+        const maxToken = 3000 - questionTokenNum;
         let total = 0;
 
         for (let i = 0; i < arr.length; i++) {
@@ -175,9 +173,15 @@ export class ContextService {
         const context: { role: string, content: string }[] = [];
 
         // 如果开启了上下文
-        if (this.enableAskContext) {
-            const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
-            this.askContextList = await this.autoRemoveToken(await this.getList(), questionTokenNum);
+        if (this.configService.CONFIG.CONTEXT_ENABLE) {
+
+            // 如果开启了上下文裁剪的话
+            this.askContextList = await this.getList();
+            if (this.configService.CONFIG.CONTEXT_ENABLE_AUTO_CUT) {
+                const questionTokenNum = ChatGptTokensUtil.tokenLen(questionContent);
+                this.askContextList = await this.autoCutContext(this.askContextList, questionTokenNum);
+            }
+
             await this.computedTotalToken();
             this.askContextList.map((item: any) => {
                 item.list.map((chatItem: any) => {
@@ -236,6 +240,12 @@ export class ContextService {
 
     public async delete(id: number) {
         await this.contextModel.delete(id);
+    }
+
+    public async clearAll() {
+        await this.contextModel.clear();
+        this.askContextList = await this.getList();
+        await this.computedTotalToken();
     }
 
 }

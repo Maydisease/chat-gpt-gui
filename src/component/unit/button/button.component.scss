@@ -1,0 +1,67 @@
+:host {
+
+  .button {
+    user-select: none;
+    cursor: pointer;
+    padding: 1px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border-radius: 5px;
+    display: inline-block;
+
+    &.default {
+      background: var(--widget-button-default-bg-color);
+      color: var(--widget-button-default-font-color);
+      border: 1px solid var(--widget-button-default-border-color);
+
+      &:hover {
+        background: var(--widget-button-default-bg-hover-color);
+        color: var(--widget-button-default-font-hover-color);
+        border: 1px solid var(--widget-button-default-border-active-color);
+      }
+
+      &:active {
+        background: var(--widget-button-default-bg-active-color);
+        color: var(--widget-button-default-font-active-color);
+        border: 1px solid var(--widget-button-default-border-active-color);
+      }
+    }
+
+    &.danger {
+      background: var(--widget-button-danger-bg-color);
+      color: var(--widget-button-danger-font-color);
+      border: 1px solid var(--widget-button-danger-border-color);
+
+      &:hover {
+        background: var(--widget-button-danger-bg-hover-color);
+        color: var(--widget-button-danger-font-hover-color);
+        border: 1px solid var(--widget-button-danger-border-active-color);
+      }
+
+      &:active {
+        background: var(--widget-button-danger-bg-active-color);
+        color: var(--widget-button-danger-font-active-color);
+        border: 1px solid var(--widget-button-danger-border-active-color);
+      }
+    }
+
+    &.primary {
+      background: var(--widget-button-primary-bg-color);
+      color: var(--widget-button-primary-font-color);
+      border: 1px solid var(--widget-button-primary-border-color);
+
+      &:hover {
+        background: var(--widget-button-primary-bg-hover-color);
+        color: var(--widget-button-primary-font-hover-color);
+        border: 1px solid var(--widget-button-primary-border-hover-color);
+      }
+
+      &:active {
+        background: var(--widget-button-primary-bg-active-color);
+        color: var(--widget-button-primary-font-active-color);
+        border: 1px solid var(--widget-button-primary-border-active-color);
+      }
+    }
+  }
+}

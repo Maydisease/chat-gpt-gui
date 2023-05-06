@@ -8,15 +8,15 @@
       (checkboxChange)="checkboxChangeHandle($event)">
     <div class="wrap">
       <div class="no-data" [hidden]="HIDE_NO_DATA">
-        <ng-container *ngIf="contextService.enableAskContext && contextService.askContextList.length===0">暂无上下文～
+        <ng-container *ngIf="configService.CONFIG.CONTEXT_ENABLE && contextService.askContextList.length===0">暂无上下文～
         </ng-container>
-        <ng-container *ngIf="!contextService.enableAskContext">未开启上下文，要开启吗？
+        <ng-container *ngIf="!configService.CONFIG.CONTEXT_ENABLE">未开启上下文，要开启吗？
           <div class="btn" (click)="contextService.switchAskContextEnableStateHandle()">开启</div>
         </ng-container>
       </div>
 
       <div
-          [hidden]="!contextService.enableAskContext"
+          [hidden]="!configService.CONFIG.CONTEXT_ENABLE"
           class="context-group"
           checkboxClickHandle
           #checkboxClickHandleRef="checkboxClickHandleRef"
@@ -36,7 +36,7 @@
         <div class="main">
           <div class="main-info">
             <span>#{{item.id}}</span>
-            <span>date: {{item.updateTime |  dateFormat: 'HH:mm:ss'}}</span>
+            <span>date: {{item.updateTime |  dateFormat: 'happy'}}</span>
           </div>
           <div class="item" [attr.index]="i" *ngFor="let chatItem of item.list; let i = index">
             <div class="content">

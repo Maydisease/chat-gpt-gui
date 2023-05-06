@@ -1,0 +1,112 @@
+<div class="loading" *ngIf="settingService.isLoading">
+  <text-loading></text-loading>
+</div>
+<div class="setting" *ngIf="!settingService.isLoading">
+  <div class="navbar">
+    <div class="btn" (click)="close()">
+      <close-icon></close-icon>
+    </div>
+    <span class="ml-12">首选项</span>
+  </div>
+  <div class="form">
+    <div class="item">
+      <label class="mb-6">基础配置</label>
+      <div class="key">密钥</div>
+      <div class="tips">
+        ChatGTP 官网申请下来的密钥，访问api需要密钥。
+      </div>
+      <div class="widget">
+        <textarea [value]="configService.CONFIG.BASE_SECRET_KEY" (keyup)="secretKeyChangeHandle($event)"
+                  placeholder="请在这里输入秘钥 密钥格式 sk-*"></textarea>
+      </div>
+    </div>
+
+    <div class="item">
+      <label>上下文(context)</label>
+      <div class="key">开启上下文</div>
+      <div class="tips">
+        开始后，将可与与ChatGPT进行多轮对话，它将会记住你上次的聊天内容，并获得你们聊天的上下文，回复会更加精准。
+      </div>
+      <div class="widget mb-12">
+        <switch [defaultActiveState]="configService.CONFIG.CONTEXT_ENABLE === 1"
+                (change)="settingService.contextEnableChangeHandle($event)"></switch>
+      </div>
+      <div class="key">自动裁剪上下文</div>
+      <div class="tips">
+        启上下文与ChatGPT对话时，因ChatGPT-3.5最大会话长度限制会导致消息发送失败，开启自动裁剪将会静默自动估算上下文长度，清理最远的聊天上下文，直到符合最大会话长度。
+      </div>
+      <div class="widget">
+        <switch [defaultActiveState]="configService.CONFIG.CONTEXT_ENABLE_AUTO_CUT === 1"
+                (change)="settingService.contextEnableAutoCutChangeHandle($event)"></switch>
+      </div>
+    </div>
+
+    <div class="item">
+      <label class="mb-6">本地存储</label>
+      <div class="key">清理快捷记录(history)</div>
+      <div class="tips">
+        清理上次咨询的问题记录(在问答输入框内 ↑/↓ 历史的内容)
+      </div>
+      <div class="widget mb-12">
+        <u-button
+            [type]="'default'"
+            [pop]="'确定要清理快捷记录吗？'"
+            (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.HISTORY)"
+        >清理
+        </u-button>
+      </div>
+
+      <div class="key">清理上下文(context)</div>
+      <div class="tips">
+        清理所有上次咨询的快捷记录(在问答输入框内 ↑/↓ 历史的内容)
+      </div>
+      <div class="widget mb-12">
+        <u-button
+            [type]="'default'"
+            [pop]="'确定要清理上下文吗？'"
+            (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.CONTEXT)"
+        >清理
+        </u-button>
+      </div>
+
+      <div class="key">清理收藏（favorite）</div>
+      <div class="tips">
+        清理所有收藏过的问题记录
+      </div>
+      <div class="widget mb-12">
+        <u-button
+            [type]="'default'"
+            [pop]="'确定要清理收藏吗？'"
+            (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.FAVORITE)"
+        >清理
+        </u-button>
+      </div>
+
+      <div class="key">清理所有记录</div>
+      <div class="tips">
+        清理本地存储，包含history、context、favorite等相关信息，请谨慎操作，清理后将不可以恢复！
+      </div>
+      <div class="widget mb-12">
+        <u-button
+            [type]="'danger'"
+            [pop]="'确定要清理所有记录吗？'"
+            (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.ALL)">清理
+        </u-button>
+      </div>
+
+      <div class="key">重置应用</div>
+      <div class="tips">
+        重置后，包含history、context、favorite等相关信息，配置及密钥都会重置，请谨慎操作，重置后将不可以恢复！
+      </div>
+      <div class="widget">
+        <u-button
+            [type]="'danger'"
+            [pop]="'确定要重置应用吗？'"
+            (popConfirmEvent)="settingService.clearHandle(CLEAR_TYPE.RESET)">重置
+        </u-button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

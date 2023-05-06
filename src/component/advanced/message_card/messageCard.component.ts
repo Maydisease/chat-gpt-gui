@@ -6,9 +6,9 @@ import {
     ViewChild,
     ViewContainerRef, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone
 } from '@angular/core';
-import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../app/app.service";
-import {AskFavoriteList} from "../../app/app.model";
-import {PlatformUtilService} from "../../utils/platform.util";
+import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../../app/app.service";
+import {AskFavoriteList} from "../../../app/app.model";
+import {PlatformUtilService} from "../../../utils/platform.util";
 import {ContextService} from "../context/context.service";
 import {MessageCardService} from "./messageCard.service";
 
@@ -62,11 +62,6 @@ export class MessageCardComponent implements OnInit, DoCheck, AfterViewInit {
     }
 
     public ngDoCheck() {
-    }
-
-    public getDataNumber(i: number) {
-        const len = this.dataList.length;
-        return this.platformUtilService.isPC ? len - i : i + 1;
     }
 
     public againSend(keyword: string | undefined, autoSend = false) {

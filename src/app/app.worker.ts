@@ -145,6 +145,7 @@ addEventListener('message', async ({data}) => {
                 handleReadableStream(reader, {
                     // chunk完成事件
                     doneEvent() {
+                        console.log('mdChunk:', mdChunk)
                         postMessage({
                             eventName: 'responseChunkEnd',
                             message: {key, sn, answerMarkdown: mdChunk, questionContent}

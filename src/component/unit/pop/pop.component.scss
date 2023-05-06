@@ -1,0 +1,87 @@
+:host {
+  display: contents;
+
+  .pop {
+    max-width: 180px;
+    position: fixed;
+
+    .wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-radius: 10px;
+      padding: 8px 12px;
+      box-shadow: 0 10px 20px RGBA(0, 0, 0, .2);
+      border: 1px solid #FFFFFF;
+      background: var(--secondary-background-color);
+
+      &.is-dark {
+        box-shadow: 0 10px 20px RGBA(0, 0, 0, .5);
+        background: var(--widget-button-default-bg-color);
+        border: 1px solid var(--widget-button-default-border-color);
+      }
+
+      .content {
+        flex: 1;
+        height: 0;
+        color: var(--font-color);
+        font-size: 14px;
+      }
+
+      .action {
+        text-align: right;
+        width: 100%;
+        margin-top: 10px;
+
+        span {
+          display: inline-block;
+          font-size: 14px;
+          margin-left: 8px;
+          font-weight: bold;
+          user-select: none;
+          cursor: pointer;
+
+          &.link {
+            color: var(--link-button-font-color);
+          }
+        }
+      }
+
+      &::before {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        bottom: -12px;
+        left: 18px;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 12px solid RGBA(255, 255, 255, 1);
+        transform: rotate(0);
+      }
+
+      &.is-dark::before {
+        border-top: 11px solid var(--widget-button-default-border-color);
+      }
+
+      &::after {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        bottom: -11px;
+        left: 20px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 11px solid var(--secondary-background-color);
+        transform: rotate(0);
+      }
+
+      &.is-dark::after {
+        border-top: 11px solid var(--widget-button-default-bg-color);
+      }
+    }
+  }
+}

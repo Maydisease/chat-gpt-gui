@@ -1,5 +1,6 @@
 import Dexie, {Table} from "dexie";
 import {Injectable} from "@angular/core";
+import {ChatGPTDatabases} from "../../../databases";
 
 export interface AskContextItem {
     id?: number;
@@ -14,25 +15,15 @@ export interface AskContextItem {
 
 export type AskContextItemList = AskContextItem[];
 
-export class ContextDatabase extends Dexie {
-    public context!: Table<AskContextItem, number>; // id is number in this case
-
-    public constructor() {
-        super("CHAT_GPT_DATABASES");
-        this.version(4).stores({
-            context: "++id,key,selected,value"
-        });
-    }
-}
-
 @Injectable({providedIn: 'root'})
 export class ContextModel {
-    public contextDB = new ContextDatabase();
+    public contextDB = new ChatGPTDatabases();
+    public table = this.contextDB.TABLE_CONTEXT;
 
     public async add(item: AskContextItem) {
         return new Promise(async (resolve) => {
-            this.contextDB.transaction('rw', this.contextDB.context, async () => {
-                const id = await this.contextDB.context.add(item);
+            this.contextDB.transaction('rw', this.table, async () => {
+                const id = await this.table.add(item);
                 resolve(id);
             });
         })
@@ -40,8 +31,8 @@ export class ContextModel {
 
     public delete(id: number) {
         return new Promise(async (resolve) => {
-            this.contextDB.transaction('rw', this.contextDB.context, async () => {
-                await this.contextDB.context.where('id').equals(id).delete();
+            this.contextDB.transaction('rw', this.table, async () => {
+                await this.table.where('id').equals(id).delete();
                 resolve(id);
             });
         })
@@ -49,20 +40,16 @@ export class ContextModel {
 
     public getList(): Promise<AskContextItem[]> {
         return new Promise((resolve) => {
-            this.contextDB.transaction('rw', this.contextDB.context, async () => {
-                const list: AskContextItem[] = [];
-                await this.contextDB.context.each((item) => {
-                    list.push(item);
-                });
-                resolve(list);
+            this.contextDB.transaction('rw', this.table, async () => {
+                resolve(await this.table.toArray());
             });
         })
     }
 
     public getListCount(): Promise<number> {
         return new Promise((resolve) => {
-            this.contextDB.transaction('rw', this.contextDB.context, async () => {
-                const count = await this.contextDB.context.count();
+            this.contextDB.transaction('rw', this.table, async () => {
+                const count = await this.table.count();
                 resolve(count);
             });
         })
@@ -70,21 +57,21 @@ export class ContextModel {
 
     public find(where: { [key: string]: any }) {
         return new Promise(async (resolve) => {
-            const count = await this.contextDB.context.where(where).count();
+            const count = await this.table.where(where).count();
             resolve(count);
         })
     }
 
     public update(id: number, payload: Partial<AskContextItem>) {
         return new Promise(async (resolve) => {
-            await this.contextDB.context.update(id, payload)
+            await this.table.update(id, payload)
             resolve(true);
         })
     }
 
     public clear() {
         return new Promise(async (resolve) => {
-            await this.contextDB.context.clear();
+            await this.table.clear();
             resolve(true);
         })
     }

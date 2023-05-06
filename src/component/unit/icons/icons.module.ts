@@ -15,8 +15,11 @@ import {ReloadIconComponent} from "./reloadIcon.component";
 import {ProfileComponent} from "./profileIcon.component";
 import {StopIconComponent} from "./stopIcon.component";
 import {SendIconComponent} from "./sendIcon.component";
+import {CommonModule} from "@angular/common";
+import {ArrowDownComponent} from "./arrowDownIcon.component";
 
 const iconsList = [
+    ArrowDownComponent,
     StopIconComponent,
     ProfileComponent,
     CommitIconComponent,
@@ -35,7 +38,9 @@ const iconsList = [
 ];
 
 @NgModule({
-    imports: [],
+    imports: [
+        CommonModule
+    ],
     exports: iconsList,
     declarations: iconsList,
     providers: [],

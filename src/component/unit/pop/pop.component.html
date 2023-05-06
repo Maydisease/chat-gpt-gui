@@ -1,0 +1,9 @@
+<div class="pop" #popElementRef>
+  <div class="wrap" [class.is-dark]="platformUtilService.isDarkMode">
+    <div class="content">{{this.context.$props.msg}}</div>
+    <div class="action">
+      <span class="btn" (click)="cancel()">取消</span>
+      <span class="btn link" (click)="confirm()">确认</span>
+    </div>
+  </div>
+</div>

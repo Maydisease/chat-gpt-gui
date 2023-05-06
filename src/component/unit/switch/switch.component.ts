@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, SimpleChanges} from '@angular/core';
 
 @Component({
     selector: 'switch',
@@ -11,7 +11,7 @@ export class SwitchComponent implements OnInit {
     @Input('defaultActiveState') defaultActiveState = false;
     @Output('change') change = new EventEmitter();
 
-    public active = false;
+    public active = this.defaultActiveState;
 
     constructor() {
         this.defaultActiveState = this.active;
@@ -23,5 +23,14 @@ export class SwitchComponent implements OnInit {
     handle() {
         this.active = !this.active;
         this.change.emit(this.active);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('defaultActiveState' in changes) {
+            const newValue = changes['defaultActiveState'].currentValue;
+            if (newValue !== this.active) {
+                this.active = newValue;
+            }
+        }
     }
 }

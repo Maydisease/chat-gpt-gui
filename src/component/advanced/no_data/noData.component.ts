@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../app/app.service";
-import {PlatformUtilService} from "../../utils/platform.util";
+import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../../app/app.service";
+import {PlatformUtilService} from "../../../utils/platform.util";
 import {ContextService} from "../context/context.service";
 
 @Component({

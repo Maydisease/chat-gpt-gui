@@ -1,11 +1,11 @@
 import {ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 import promptConfig from './prompt.config.json';
-import {md5} from "../../libs/md5";
-import {scrollSmoothTo} from "../../utils/scrollToView.util";
+import {md5} from "../../../libs/md5";
+import {scrollSmoothTo} from "../../../utils/scrollToView.util";
 import Mark from 'mark.js';
-import {AppService} from "../../app/app.service";
+import {AppService} from "../../../app/app.service";
 import {PromptService} from "./prompt.service";
-import {PlatformUtilService} from "../../utils/platform.util";
+import {PlatformUtilService} from "../../../utils/platform.util";
 import {debounce, interval} from "rxjs";
 
 type PromptList = { title: string, content: string, selected?: boolean, disabled?: boolean }[]

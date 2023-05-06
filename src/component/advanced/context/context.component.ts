@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {AppService, AskContextList} from "../../app/app.service";
-import {ChatGptTokensUtil} from "../../utils/chatGptTokens.util";
-import {CheckboxListDirective} from "../unit/checkbox/checkboxList.directive";
+import {AppService, AskContextList} from "../../../app/app.service";
+import {ChatGptTokensUtil} from "../../../utils/chatGptTokens.util";
+import {CheckboxListDirective} from "../../unit/checkbox/checkboxList.directive";
 import {ContextContextBase, ContextService} from "./context.service";
+import {ConfigService} from "../../../config/config.service";
 
 @Component({
     templateUrl: './context.component.html',
@@ -16,7 +17,8 @@ export class ContextComponent implements OnInit {
     constructor(
         public appService: AppService,
         public contextService: ContextService,
-        @Inject('context') public context: ContextContextBase
+        @Inject('context') public context: ContextContextBase,
+        public configService: ConfigService,
     ) {
     }
 
@@ -62,8 +64,8 @@ export class ContextComponent implements OnInit {
     }
 
     public get HIDE_NO_DATA() {
-        const {enableAskContext, askContextList} = this.contextService;
-        return enableAskContext && askContextList.length > 0;
+        const {askContextList} = this.contextService;
+        return this.configService.CONFIG.CONTEXT_ENABLE && askContextList.length > 0;
     }
 
     async removeContextHandle() {

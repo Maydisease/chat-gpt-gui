@@ -8,7 +8,7 @@
           placeholder="这里可以搜索提示词"
       />
       <div class="clean" [hidden]="promptService.searchKeyword === ''" (click)="cleanSearchKeyword()">
-        <close-icon></close-icon>
+        <close-icon [type]="'fill'"></close-icon>
       </div>
     </div>
   </div>

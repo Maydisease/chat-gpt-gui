@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Directive, ElementRef, NgZone, OnDestroy, Renderer2} from '@angular/core';
-import {AppService} from "../../../app/app.service";
+import {AppService} from "../../../../app/app.service";
 
 @Directive({selector: '[new-temp]'})
 export class NewTempDirective implements OnDestroy {

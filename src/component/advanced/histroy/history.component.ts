@@ -4,9 +4,9 @@ import {
     ASK_KEYBOARD_EVENT_NAME,
     HISTORY_KEYBOARD_EVENT_NAME,
     SendActionService
-} from "../../services/sendAction.service";
-import {AppService} from "../../app/app.service";
-import {PlatformUtilService} from "../../utils/platform.util";
+} from "../../../services/sendAction.service";
+import {AppService} from "../../../app/app.service";
+import {PlatformUtilService} from "../../../utils/platform.util";
 
 @Component({
     selector: 'history',

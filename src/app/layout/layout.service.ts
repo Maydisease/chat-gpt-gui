@@ -14,10 +14,6 @@ export class LayoutService {
     ) {
     }
 
-    public settingPanelDisplayHandle() {
-        this.appService.isOpenSettingPanel = !this.appService.isOpenSettingPanel;
-    }
-
     public searchKeyBlur() {
         setTimeout(() => {
             this.searchWidgetIsFocus = false;

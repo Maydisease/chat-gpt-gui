@@ -3,6 +3,7 @@ input, textarea, select {
   padding: 0 5px;
   box-sizing: border-box;
   outline: none;
+  resize: none;
   background: var(--widget-background-color);
   border: 1px solid var(--widget-border-color);
   color: var(--widget-font-color);
@@ -15,4 +16,10 @@ input, textarea, select {
   &::placeholder {
     color: var(--widget-placeholder-font-color);
   }
+}
+
+textarea {
+  min-height: 60px;
+  padding: 8px;
+  font-size: 14px;
 }

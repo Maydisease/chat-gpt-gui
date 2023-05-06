@@ -3,11 +3,11 @@ import {
     HISTORY_KEYBOARD_EVENT_NAME,
     HISTORY_KEYBOARD_SELECT_VALUE,
     SendActionService
-} from "../../services/sendAction.service";
-import {GetUniqueIdUtil} from "../../utils/getUniqueId.util";
-import {scrollSmoothTo} from "../../utils/scrollToView.util";
+} from "../../../services/sendAction.service";
+import {GetUniqueIdUtil} from "../../../utils/getUniqueId.util";
+import {scrollSmoothTo} from "../../../utils/scrollToView.util";
 import {HistoryListItemList, historyModel} from "./history.model";
-import {PlatformUtilService} from "../../utils/platform.util";
+import {PlatformUtilService} from "../../../utils/platform.util";
 
 @Injectable({providedIn: 'root'})
 export class HistoryService {
@@ -49,26 +49,21 @@ export class HistoryService {
 
         if (!this.isOpen) {
             this.isOpen = true;
-
-            if (findIndex > -1) {
-                await this.historyModel.update(historyList[findIndex].id!, {selected: false});
-            }
-
-            await this.historyModel.update(historyList[0].id!, {selected: true});
-            this.historyList = await this.historyModel.getList();
+            this.historyList = historyList;
+            this.selectedValue = this.historyList[findIndex].value;
             return;
         }
 
         let moveIndex = historyList.length - 1;
 
         if (findIndex > -1) {
-            await this.historyModel.update(historyList[findIndex].id!, {selected: false});
+            await this.historyModel.update(historyList[findIndex].id!, {selected: 0});
             moveIndex = type === HISTORY_KEYBOARD_SELECT_VALUE.PREV ? findIndex - 1 : findIndex + 1;
             const defaultIndex = type === HISTORY_KEYBOARD_SELECT_VALUE.PREV ? historyList.length - 1 : 0;
             moveIndex = historyList[moveIndex] ? moveIndex : defaultIndex;
         }
 
-        await this.historyModel.update(historyList[moveIndex].id!, {selected: true});
+        await this.historyModel.update(historyList[moveIndex].id!, {selected: 1});
         this.selectedValue = historyList[moveIndex].value;
         this.historyList = await this.historyModel.getList();
         this.moveAnime();
@@ -85,9 +80,9 @@ export class HistoryService {
         }, 0)
     }
 
-    public async update(value: string) {
+    public async add(value: string) {
 
-        const isExist = await this.historyModel.find({value});
+        const isExist = await this.historyModel.has({value});
 
         if (isExist) {
             return;
@@ -101,14 +96,19 @@ export class HistoryService {
             }
         }
 
+        const findItem = await this.historyModel.find({selected: 1});
+        if (findItem) {
+            await this.historyModel.update(findItem.id!, {selected: 0});
+        }
         await this.historyModel.add({
-            selected: false,
+            selected: 1,
             key: this.getUniqueIdUtil.get(),
             value,
             updateTime: new Date().getTime(),
         });
 
         this.historyList = await this.historyModel.getList();
+        this.selectedValue = value;
 
     }
 
@@ -120,5 +120,11 @@ export class HistoryService {
         await this.historyModel.clear();
         this.historyList = await this.historyModel.getList();
         this.isOpen = false;
+    }
+
+    public confirm() {
+        this.isOpen = false;
+
+
     }
 }

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AppService} from "../../app/app.service";
+import {AppService} from "../../../app/app.service";
 
 @Injectable({providedIn: 'root'})
 export class MessageCardService {
