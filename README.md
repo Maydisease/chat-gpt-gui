@@ -34,8 +34,11 @@
 
 ![mobile-qr-code](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/mobile-qr-code.png)
 
-## 问题返回
+## 问题反馈
 * 作者会真诚地面对大家的提问和意见，因为只有听取大家的反馈，才能推动我们不断改进和创新。
+* 反馈地址 https://github.com/Maydisease/chat-gpt-gui/issues 
+* 如果您想参与共同研发，请联系我的微信。  
+![wechat](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/wechat.jpg)
 
 ---
 
