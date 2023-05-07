@@ -88,5 +88,17 @@ export class SendActionDirective {
         this.sendActionService.askKeyboardEvent.emit({
             eventName: ASK_KEYBOARD_EVENT_NAME.VALUE_CHANGE,
         });
+
+        // if (this.platformUtilService.isBrowserMobile) {
+        //
+        //     if(this.element?.getBoundingClientRect().top! > window.visualViewport!.height){
+        //         window.scrollTo(0, 99999999);
+        //         this.element?.scrollIntoView({behavior: "smooth"});
+        //     }
+        //
+        //     console.log(3330, window, this.element?.getBoundingClientRect().top)
+        //
+        //
+        // }
     }
 }

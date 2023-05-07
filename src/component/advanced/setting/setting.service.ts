@@ -39,6 +39,7 @@ export class SettingService {
         public settingModel: SettingModel,
         private injector: Injector
     ) {
+        this.initConfig();
     }
 
     public async initConfig() {
