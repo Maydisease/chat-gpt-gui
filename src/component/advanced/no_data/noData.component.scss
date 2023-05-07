@@ -134,7 +134,7 @@
             flex-direction: column;
             justify-content: center;
             color: var(--font-secondary-color);
-            border: 1px dashed var(--font-secondary-color);
+            border: 1px dashed var(--border-color);
 
             &:focus {
               border: 1px solid var(--widget-focus-border-color);

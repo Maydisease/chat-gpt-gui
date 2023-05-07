@@ -74,7 +74,9 @@ export class MobileComponent implements OnInit, OnDestroy {
   }
 
   public get IS_MESSAGE_APPEND_STATE() {
-    return this.appService.newTempDataAppEndState === (STREAM_STATE.APPENDING || STREAM_STATE.PENDING);
+    // console.log('this.appService.newTempDataAppEndState:', this.appService.newTempDataAppEndState)
+    // console.log('IS_MESSAGE_APPEND_STATE:', this.appService.newTempDataAppEndState === (STREAM_STATE.APPENDING || STREAM_STATE.PENDING))
+    return this.appService.newTempDataAppEndState === STREAM_STATE.APPENDING || this.appService.newTempDataAppEndState === STREAM_STATE.PENDING;
   }
 
 }

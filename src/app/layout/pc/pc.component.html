@@ -32,6 +32,7 @@
                     <message-card [hidden]="SHOW_NO_DATA" [dataList]="appService.askList"></message-card>
                 </div>
                 <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+                    <span *ngIf="!appService.favoriteList.length">暂无任何收藏～</span>
                     <message-card *ngIf="appService.favoriteList.length" [type]="MESSAGE_CARD_USE_TYPE.FAVORITE" [dataList]="appService.favoriteList"></message-card>
                 </div>
             </div>
@@ -40,11 +41,8 @@
             <div class="item switch" [class.active]="configService.CONFIG.CONTEXT_ENABLE" (click)="contextService.switchAskContextEnableStateHandle()">
                 Context
             </div>
-            <div class="item btn icon">
-                Token≈ {{contextService.askContextTotalContext}}
-            </div>
             <div class="item btn icon" (click)="contextService.create()">
-                <profile-icon></profile-icon>
+                Token≈ {{contextService.askContextTotalContext}}
             </div>
             <div class="item action" (click)="appService.isPromptMode = true">
                 Prompt

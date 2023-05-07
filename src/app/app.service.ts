@@ -96,6 +96,8 @@ export class AppService {
 
       // 请求准备开始
       if (data.eventName === 'requestStart') {
+        console.log(1010291)
+        this.newTempDataAppEndState = STREAM_STATE.PENDING;
         await this.historyService.add(data.message.questionContent);
         this.clearSearchKey();
         this.askSendResultEvent.emit();
