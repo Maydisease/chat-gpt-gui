@@ -9,6 +9,7 @@ import {confirm} from "@tauri-apps/api/dialog";
 import {ModalService} from "../../unit/modal/modal.service";
 import {SettingService} from "../setting/setting.service";
 import {ConfigService} from "../../../config/config.service";
+import {TrackEventService} from "../../../services/trackEvent.service";
 
 export interface ContextContextBase {
     message?: string;
@@ -43,6 +44,7 @@ export class ContextService {
         public contextModel: ContextModel,
         public settingService: SettingService,
         public configService: ConfigService,
+        public trackEventService: TrackEventService,
     ) {
         this.scrollStrategy = scrollStrategyOptions.block();
         this.initAskContext();
@@ -56,6 +58,9 @@ export class ContextService {
 
     // 创建
     public create(config: Config = {}): [number, OverlayRef] {
+
+        this.trackEventService.send('openContextPage');
+
         this.count++;
         const overlayRef = this.overlay.create({
             ...{
@@ -113,6 +118,8 @@ export class ContextService {
     }
 
     public async switchAskContextEnableStateHandle() {
+
+        this.trackEventService.send('switchAskContextEnableStateHandle')
 
         if (handleIsTauri()) {
             const confirmed = await confirm('确定切换上下文状态吗？开启上下文后Chat GTP将会更好的结合你上次的问题与答案，聊天体验将会变得更好，但同时也更加耗费Tokens。', 'GPT-GUI');

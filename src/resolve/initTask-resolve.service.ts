@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Resolve, Router, NavigationEnd} from "@angular/router";
+import {Resolve, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {MarkdownService} from "../services/markdown.service";
 
@@ -20,5 +20,4 @@ export class InitTaskResolveService implements Resolve<any> {
             })
         })
     }
-
 }

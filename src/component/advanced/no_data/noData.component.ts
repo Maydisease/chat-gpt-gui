@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../../app/app.service";
 import {PlatformUtilService} from "../../../utils/platform.util";
 import {ContextService} from "../context/context.service";
+import {TrackEventService} from "../../../services/trackEvent.service";
 
 @Component({
     selector: 'app-no-data',
@@ -17,6 +18,7 @@ export class NoDataComponent implements OnInit {
         public contextService: ContextService,
         public appService: AppService,
         public platformUtilService: PlatformUtilService,
+        public trackEventService: TrackEventService,
     ) {
     }
 
@@ -25,15 +27,17 @@ export class NoDataComponent implements OnInit {
     }
 
     public repairContextToAskChat() {
+        this.trackEventService.send('repairContextToAskChat');
         const askContextList = JSON.parse(JSON.stringify(this.contextService.askContextList));
-        for(let i=0; i< askContextList.length; i++){
+        for (let i = 0; i < askContextList.length; i++) {
             const item = askContextList[i];
             const [questionItem, answerItem] = item.list;
             this.appService.updateAskList(`${item.id!}`, answerItem.content, questionItem.content, HISTORY_LIST_ITEM_STATE.FINISH, STREAM_STATE.DONE, item.updateTime);
         }
     }
 
-    tryPromptDemo(){
+    tryPromptDemo() {
         this.appService.searchKey = this.promptDemoText;
+        this.trackEventService.send('tryPromptDemo');
     }
 }

@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   align-content: center;
+  user-select: none;
 
   // pc
   @media screen and (min-width: 800px) {
@@ -34,7 +35,7 @@
       @keyframes action-sheet-anime {
         0% {
           opacity: .5;
-          transform: scale(1.5);
+          transform: scale(1.1);
         }
         100% {
           opacity: 1;
@@ -93,8 +94,8 @@
 
     .navbar {
       width: 100%;
-      height: 50px;
-      line-height: 50px;
+      height: 40px;
+      line-height: 40px;
       font-size: 20px;
       font-weight: bold;
       padding: 0 20px;
@@ -183,15 +184,52 @@
           cursor: pointer;
           margin-left: 10px;
           margin-right: 10px;
-          margin-bottom: 10px;
+          padding-bottom: 20px;
           border-radius: 5px;
+          position: relative;
+
+          &:last-child {
+            padding-bottom: 0;
+          }
+
+          .token {
+            width: 50px;
+            text-align: right;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+            padding-right: 15px;
+            box-sizing: border-box;
+            font-size: 10px;
+          }
+
+          &:before {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            content: "";
+            position: absolute;
+            left: 42px;
+            top: 0;
+            background: var(--border-color);
+          }
+
+          &:after {
+            width: 1px;
+            height: 100%;
+            left: 46px;
+            top: 0;
+            content: '';
+            position: absolute;
+            background: var(--border-color);
+          }
 
           &[hidden] {
             display: none;
           }
 
           &.active {
-            background: var(--item-selected-bg-color);
           }
 
           .action {
@@ -207,19 +245,23 @@
           .main {
             flex: 1;
             border-radius: 5px;
-            padding: 10px 0;
-            background: var(--item-selected-bg-color);
+            padding: 0 0;
 
             .main-info {
               width: 100%;
-              padding-left: 20px;
+              padding-left: 10px;
               padding-right: 20px;
+              margin-bottom: 5px;
               box-sizing: border-box;
+              vertical-align: top;
+              height: initial;
+              display: flex;
 
               span {
                 font-size: 12px;
                 margin-right: 10px;
                 opacity: 0.5;
+                align-items: start;
                 color: var(--font-secondary-color);
               }
             }
@@ -232,9 +274,13 @@
               background: RGBA(0, 0, 0, 0);
 
               &[index='0'] {
-                margin-bottom: 4px;
-                padding-bottom: 4px;
-                border-bottom: 1px dotted var(--font-secondary-color);
+                font-weight: bold;
+                margin-bottom: 3px;
+                color: var(--font-color);
+              }
+
+              &[index='1'] {
+                color: var(--font-secondary-color);
               }
 
               label {
@@ -245,8 +291,6 @@
                 flex: 1;
                 font-size: 12px;
                 border-radius: 5px;
-                padding: 8px 0 8px 8px;
-                color: var(--font-secondary-color);
                 box-sizing: border-box;
 
                 .info {
@@ -257,7 +301,6 @@
 
                   span {
                     margin-right: 10px;
-                    color: var(--button-background-color);
 
                     &.space {
                       flex: 1;

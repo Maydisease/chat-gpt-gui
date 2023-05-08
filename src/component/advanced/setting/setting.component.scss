@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--background-color);
+  background: var(--secondary-background-color);
 
   .loading {
     width: 100%;
@@ -20,7 +20,7 @@
       @keyframes action-sheet-anime {
         0% {
           opacity: .5;
-          transform: scale(1.5);
+          transform: scale(1.1);
         }
         100% {
           opacity: 1;
@@ -34,19 +34,13 @@
   .setting {
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
     display: flex;
-    overflow-x: hidden;
-    overflow-y: auto;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
 
     .navbar {
       width: 100%;
-      height: 50px;
-      line-height: 50px;
+      height: 40px;
+      line-height: 40px;
       font-size: 20px;
       font-weight: bold;
       padding: 0 20px;
@@ -56,7 +50,7 @@
       z-index: 2;
       user-select: none;
       box-sizing: border-box;
-      background: var(--secondary-background-color);
+      background: var(--background-color);
 
       .btn {
         width: 28px;
@@ -76,80 +70,90 @@
     }
 
     .form {
-      max-width: 800px;
       flex: 1;
       height: 0;
-      overflow-y: auto;
+
+      padding: 40px 20px 20px 20px;
       overflow-x: hidden;
-      padding: 40px 20px;
+      overflow-y: auto;
+      display: flex;
       box-sizing: border-box;
       flex-direction: column;
+      justify-items: center;
+      align-items: center;
 
-      .item {
-        margin-bottom: 30px;
-        padding: 25px 20px 25px 20px;
-        box-sizing: border-box;
-        position: relative;
-        border-radius: 5px;
-        border: 1px dashed var(--border-color);
+      .wrap {
+        max-width: 800px;
 
-        label {
-          padding: 0 10px;
+        .item {
+          margin-bottom: 30px;
+          padding: 25px 20px 25px 20px;
           box-sizing: border-box;
-          line-height: 21px;
-          font-size: 16px;
-          font-weight: bold;
-          display: inline-block;
-          user-select: none;
-          color: var(--font-color);
-          position: absolute;
-          top: -10px;
-          left: 20px;
-          background: var(--background-color);
-        }
+          position: relative;
+          border-radius: 5px;
+          border: 1px dashed var(--border-color);
 
-        .key {
-          box-sizing: border-box;
-          line-height: 21px;
-          font-size: 14px;
-          font-weight: bold;
-          user-select: none;
-          color: var(--font-color);
-
-          i {
-            height: 14px;
-            line-height: 14px;
-            min-width: 8px;
-            text-align: center;
-            background: var(--button-background-color);
-            padding: 0 3px;
-            border-radius: 3px;
-            color: #FFFFFF;
-            margin-left: 2px;
-            font-size: 10px;
-            display: inline-block;
-            font-weight: normal;
-          }
-        }
-
-        .tips {
-          width: 100%;
-          font-size: 14px;
-          margin-bottom: 6px;
-          user-select: none;
-          color: var(--font-secondary-color);
-        }
-
-        .widget {
-          width: 100%;
-
-          textarea {
-            width: 100%;
+          label {
+            padding: 0 10px;
             box-sizing: border-box;
-            word-break: break-all;
+            line-height: 21px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+            user-select: none;
+            color: var(--font-color);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--background-color);
+          }
+
+          .key {
+            box-sizing: border-box;
+            line-height: 21px;
+            font-size: 14px;
+            font-weight: bold;
+            user-select: none;
+            color: var(--font-color);
+
+            i {
+              height: 14px;
+              line-height: 14px;
+              min-width: 8px;
+              text-align: center;
+              background: var(--button-background-color);
+              padding: 0 3px;
+              border-radius: 3px;
+              color: #FFFFFF;
+              margin-left: 2px;
+              font-size: 10px;
+              display: inline-block;
+              font-weight: normal;
+            }
+          }
+
+          .tips {
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 6px;
+            user-select: none;
+            color: var(--font-secondary-color);
+          }
+
+          .widget {
+            width: 100%;
+
+            textarea {
+              width: 100%;
+              box-sizing: border-box;
+              word-break: break-all;
+            }
           }
         }
       }
+
+
     }
+
   }
 }

@@ -54,6 +54,13 @@ export class HistoryService {
             return;
         }
 
+        // 防止高频次冲突
+        if (this.lock) {
+            return;
+        }
+
+        this.lock = true;
+
         let moveIndex = historyList.length - 1;
 
         if (findIndex > -1) {
@@ -66,6 +73,7 @@ export class HistoryService {
         await this.historyModel.update(historyList[moveIndex].id!, {selected: 1});
         this.selectedValue = historyList[moveIndex].value;
         this.historyList = await this.historyModel.getList();
+        this.lock = false;
         this.moveAnime();
     }
 
@@ -109,10 +117,6 @@ export class HistoryService {
 
         this.historyList = await this.historyModel.getList();
         this.selectedValue = value;
-
-    }
-
-    autoClean() {
 
     }
 

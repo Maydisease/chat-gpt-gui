@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.7",
+    "@aptabase/tauri": "^0.2.0",
     "@tauri-apps/api": "^1.2.0",
     "@types/jsdom": "^21.1.1",
     "@types/mark.js": "^8.11.8",

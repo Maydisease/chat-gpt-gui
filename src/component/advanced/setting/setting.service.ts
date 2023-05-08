@@ -8,6 +8,9 @@ import {AppService} from "../../../app/app.service";
 import {ContextService} from "../context/context.service";
 import {ToastService} from "../../unit/toast/toast.service";
 import {ConfigService} from "../../../config/config.service";
+import {PlatformUtilService} from "../../../utils/platform.util";
+import {handleIsTauri} from "../../../main";
+import {invoke} from "@tauri-apps/api/tauri";
 
 export enum CLEAR_TYPE {
     HISTORY,
@@ -37,7 +40,8 @@ export class SettingService {
         public toastService: ToastService,
         public dynamicLoad: DynamicLoadService,
         public settingModel: SettingModel,
-        private injector: Injector
+        private injector: Injector,
+        public platformUtilService: PlatformUtilService,
     ) {
         this.initConfig();
     }
@@ -68,6 +72,9 @@ export class SettingService {
             this.configService.CONFIG.BASE_SECRET_KEY = response.BASE_SECRET_KEY;
             this.configService.CONFIG.CONTEXT_ENABLE = response.CONTEXT_ENABLE;
             this.configService.CONFIG.CONTEXT_ENABLE_AUTO_CUT = response.CONTEXT_ENABLE_AUTO_CUT;
+            if (this.platformUtilService.isTauri) {
+                this.configService.CONFIG.USER_ID = await invoke("get_machine_uid", {});
+            }
         }
     }
 

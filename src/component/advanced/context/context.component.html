@@ -28,7 +28,7 @@
           [class.active]="checkboxRef.key === item.id && checkboxRef.selected"
           *ngFor="let item of contextService.askContextList; let i = index"
       >
-
+        <div class="token">{{item.token}}</div>
         <div class="action">
           <checkbox
               #checkboxRef
@@ -40,16 +40,10 @@
         </div>
         <div class="main">
           <div class="main-info">
-            <span>#{{item.id}}</span>
-            <span>date: {{item.updateTime |  dateFormat: 'happy'}}</span>
+            <span>{{item.updateTime |  dateFormat: 'happy'}}</span>
           </div>
           <div class="item" [attr.index]="i" *ngFor="let chatItem of item.list; let i = index">
             <div class="content">
-              <div class="info">
-                <span class="role"><i class="label">role:</i>{{chatItem.role}}</span>
-                <span class="space"></span>
-                <span class="token"><i class="label">token:</i>{{chatItem.token}}</span>
-              </div>
               {{chatItem.content | substring: 100}}
             </div>
           </div>
