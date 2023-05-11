@@ -37,7 +37,6 @@ fn md_2_html(window: Window, markdown: &str) -> String {
 }
 
 fn main() {
-
     tauri::Builder::default()
         .plugin(tauri_plugin_aptabase::Builder::new("A-EU-0266735642").build()) // 👈 this is where you enter your App Key
         .invoke_handler(tauri::generate_handler![
@@ -68,6 +67,11 @@ fn get_machine_uid() -> String {
 }
 
 #[tauri::command]
-fn http_encrypt(body: &str) -> String {
-    tools_mod::tools::http_encrypt(body)
+fn http_encrypt(body: &str, handle: tauri::AppHandle) -> String {
+    let resource_path = handle
+        .path_resolver()
+        .resolve_resource("lib/libtools.dylib")
+        .expect("failed to resolve resource");
+    let path_str = resource_path.as_path().to_str().unwrap();
+    tools_mod::tools::http_encrypt(body, path_str)
 }
