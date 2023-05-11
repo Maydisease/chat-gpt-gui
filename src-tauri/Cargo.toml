@@ -24,6 +24,7 @@ pulldown-cmark = "0.1.2"
 window-vibrancy = "0.3.2"
 tauri-plugin-aptabase = "0.2"
 md5 = "0.7.0"
+libloading = "0.8"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

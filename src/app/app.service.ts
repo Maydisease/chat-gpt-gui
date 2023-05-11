@@ -11,6 +11,9 @@ import {HistoryService} from "../component/advanced/histroy/history.service";
 import {ContextService} from "../component/advanced/context/context.service";
 import {ConfigService} from "../config/config.service";
 import {TrackEventService} from "../services/trackEvent.service";
+import {HttpCryptoService} from "../services/httpEncrypt.service";
+import {SettingService} from "../component/advanced/setting/setting.service";
+import {environment} from "../environments/environment";
 
 
 export enum TAB_STATE {
@@ -73,6 +76,7 @@ export class AppService {
     public searchKey = '';
     public isOpenHistorySearchListPanel = false;
     public searchWidgetRef: ElementRef<HTMLInputElement> | undefined;
+    public pcSearchWidgetRef: ElementRef<HTMLInputElement> | undefined;
     public historyElementRef: ElementRef<HTMLElement> | undefined;
     public autosizeRef: CdkTextareaAutosize | undefined;
     public askList: AskFavoriteList = [];
@@ -87,6 +91,8 @@ export class AppService {
         public contextService: ContextService,
         public configService: ConfigService,
         public trackEventService: TrackEventService,
+        public httpCryptoService: HttpCryptoService,
+        public settingService: SettingService,
     ) {
         this.initShortcutKeyBind();
         this.initFavorite();
@@ -110,6 +116,7 @@ export class AppService {
             if (data.eventName === 'responseChunkStart') {
                 this.newTempDataAppEndState = STREAM_STATE.APPENDING;
                 this.askSendResultEvent.emit();
+                await this.settingService.getUserInfo();
             }
 
             // response::chunk结束
@@ -142,13 +149,14 @@ export class AppService {
     public initShortcutKeyBind() {
         Mousetrap.bind('command+f', () => {
             this.searchWidgetRef?.nativeElement.focus();
+            this.pcSearchWidgetRef?.nativeElement.focus();
         });
     }
 
     // 验证是否有配置密钥，如若没有将弹出tauri提供的原生弹窗
     public async checkConfigAppKey() {
         let ok = true;
-        if (!this.configService.CONFIG.BASE_SECRET_KEY) {
+        if (!this.configService.CONFIG.BASE_SECRET_KEY && this.configService.CONFIG.PERSONAL_ENABLE) {
             if (handleIsTauri()) {
                 await message(`未配置GPT密钥，请先配置GPT密钥`, {type: 'warning', title: 'GPT-GUI'});
                 // this.isOpenSettingPanel = true;
@@ -301,8 +309,8 @@ export class AppService {
         }
 
         this.isPromptMode = false;
-        // const address = 'http://localhost:6200/q/2';
-        const address = 'https://chatgpt.kka.pw/q/2';
+        const address = `${environment.BASE_HOST}/q/2`;
+        // const address = 'https://chatgpt.kka.pw/q/2';
         const timestamp = new Date().getTime();
         const id = `ASK-${timestamp}`;
         // 生成上下文
@@ -311,14 +319,22 @@ export class AppService {
 
         this.trackEventService.send('send');
 
+        const appKey = this.configService.CONFIG.BASE_SECRET_KEY;
+        const askContext = await this.contextService.generateRequestContext(this.searchKey);
+        const encryptBody = await this.httpCryptoService.encrypt({
+            userType: this.configService.CONFIG.PERSONAL_ENABLE == 1 ? 0 : 1,
+            content: undefined,
+            appKey: this.configService.CONFIG.PERSONAL_ENABLE == 1 ? appKey : undefined,
+            context: askContext
+        });
+
         this.worker.postMessage({
             eventName: 'request',
             message: {
                 key: id,
                 address,
                 questionContent: this.searchKey,
-                appKey: this.configService.CONFIG.BASE_SECRET_KEY,
-                askContext: await this.contextService.generateRequestContext(this.searchKey)
+                body: encryptBody
             }
         });
     }

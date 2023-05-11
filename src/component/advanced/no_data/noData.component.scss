@@ -112,6 +112,16 @@
           .v {
             color: var(--font-secondary-color);
           }
+
+          .u {
+            cursor: pointer;
+            color: var(--link-button-font-color);
+            margin-left: 5px;
+            &.active{
+              cursor: default;
+              color: var(--button-background-color);
+            }
+          }
         }
 
         .demo-container {

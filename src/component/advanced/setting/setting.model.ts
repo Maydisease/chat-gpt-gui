@@ -9,9 +9,12 @@ export interface SettingConfigItem {
     id?: number;
     BASE_SECRET_KEY: string;
     CONTEXT_ENABLE: 0 | 1;
+    FREE_ENABLE: 0 | 1;
+    PERSONAL_ENABLE: 0 | 1;
     CONTEXT_ENABLE_AUTO_CUT: 0 | 1;
     USER_ID: string;
     IS_PRODUCTION: 0 | 1
+
     [key: string]: any;
 }
 
@@ -48,6 +51,7 @@ export class SettingModel {
             }
         })
     }
+
     public clear() {
         return new Promise(async (resolve) => {
             await this.table.clear();

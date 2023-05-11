@@ -1,52 +1,69 @@
 <div class="window pc">
 
-    <div class="sidebar">
-        <textarea send-action placeholder="↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送" (sendActionCallback)="appService.send()" [(ngModel)]="appService.searchKey" (ngModelChange)="(appService.tabState === TAB_STATE.FAVORITE_MODE) ? appService.tabState = TAB_STATE.ASK_MODE : null">
+  <div class="sidebar">
+        <textarea #pcSearchWidgetRef send-action placeholder="↑ ↓ 历史 / ⌘ + F 聚焦 / ⌘ + Enter 发送"
+                  (sendActionCallback)="appService.send()" [(ngModel)]="appService.searchKey"
+                  (ngModelChange)="(appService.tabState === TAB_STATE.FAVORITE_MODE) ? appService.tabState = TAB_STATE.ASK_MODE : null">
     </textarea>
-        <div class="tool-bar">
+    <div class="tool-bar">
             <span class="icon setting" (click)="settingService.open()">
               <gear-icon></gear-icon>
             </span>
-            <span class="space"></span>
-            <span class="send" (click)="appService.send()">发送</span>
-        </div>
-        <div class="history-container">
-            <history *ngIf="platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
-        </div>
+      <span class="space"></span>
+      <span class="send" (click)="appService.send()">发送</span>
     </div>
-    <div class="chat" layout-splitter>
-        <div class="prompt-container" *ngIf="appService.isPromptMode">
-            <app-prompt [isPC]="true"></app-prompt>
-        </div>
-        <div *ngIf="!appService.isPromptMode" class="main">
-            <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
-            <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
-            <div class="action-bar">
-                <div class="action-btn favorite" [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE" (click)="appService.tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)">
-                    <favorite-icon></favorite-icon>
-                </div>
-            </div>
-            <div class="container">
-                <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
-                    <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
-                    <message-card [hidden]="SHOW_NO_DATA" [dataList]="appService.askList"></message-card>
-                </div>
-                <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
-                    <span *ngIf="!appService.favoriteList.length">暂无任何收藏～</span>
-                    <message-card *ngIf="appService.favoriteList.length" [type]="MESSAGE_CARD_USE_TYPE.FAVORITE" [dataList]="appService.favoriteList"></message-card>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="!appService.isPromptMode" class="state-bar">
-            <div class="item switch" [class.active]="configService.CONFIG.CONTEXT_ENABLE" (click)="contextService.switchAskContextEnableStateHandle()">
-                Context
-            </div>
-            <div class="item btn icon" (click)="contextService.create()">
-                Token≈ {{contextService.askContextTotalContext}}
-            </div>
-            <div class="item action" (click)="appService.isPromptMode = true">
-                Prompt
-            </div>
-        </div>
+    <div class="history-container">
+      <history *ngIf="platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>
     </div>
+  </div>
+  <div class="chat" layout-splitter>
+    <div class="prompt-container" *ngIf="appService.isPromptMode">
+      <app-prompt [isPC]="true"></app-prompt>
+    </div>
+    <div *ngIf="!appService.isPromptMode" class="main">
+      <h1 [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">对话</h1>
+      <h1 [hidden]="appService.tabState === TAB_STATE.ASK_MODE">收藏</h1>
+      <div class="action-bar">
+        <div class="action-btn favorite" [class.active]="appService.tabState === TAB_STATE.FAVORITE_MODE"
+             (click)="appService.tabStateChange(appService.tabState === TAB_STATE.FAVORITE_MODE ? TAB_STATE.ASK_MODE : TAB_STATE.FAVORITE_MODE)">
+          <favorite-icon></favorite-icon>
+        </div>
+      </div>
+      <div class="container">
+        <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
+          <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
+          <message-card [hidden]="SHOW_NO_DATA" [dataList]="appService.askList"></message-card>
+        </div>
+        <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
+          <span *ngIf="!appService.favoriteList.length">暂无任何收藏～</span>
+          <message-card *ngIf="appService.favoriteList.length" [type]="MESSAGE_CARD_USE_TYPE.FAVORITE"
+                        [dataList]="appService.favoriteList"></message-card>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!appService.isPromptMode" class="state-bar">
+      <div class="item used-state" *ngIf="configService.CONFIG.FREE_ENABLE">
+        <ng-container *ngIf="!settingService.isLoading">
+              <span *ngIf="!settingService.IS_USED_COUNT_EXHAUSTED">
+                free: {{settingService.todayQuota}}/{{settingService.userInfo.maxCount}}
+              </span>
+          <span class="exhausted"
+                *ngIf="settingService.IS_USED_COUNT_EXHAUSTED && settingService.userInfo.maxCount !== 0">今日限额</span>
+        </ng-container>
+        <ng-container *ngIf="settingService.isLoading">
+          <text-loading></text-loading>
+        </ng-container>
+      </div>
+      <div class="item switch" [class.active]="configService.CONFIG.CONTEXT_ENABLE"
+           (click)="contextService.switchAskContextEnableStateHandle()">
+        Context
+      </div>
+      <div class="item btn icon" (click)="contextService.create()">
+        Token≈ {{contextService.askContextTotalContext}}
+      </div>
+      <div class="item action" (click)="appService.isPromptMode = true">
+        Prompt
+      </div>
+    </div>
+  </div>
 </div>

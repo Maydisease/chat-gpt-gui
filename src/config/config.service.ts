@@ -8,6 +8,8 @@ export class ConfigService {
     public CONFIG: SettingConfigItem = {
         BASE_SECRET_KEY: '',
         CONTEXT_ENABLE: 1,
+        FREE_ENABLE: 0,
+        PERSONAL_ENABLE: 1,
         CONTEXT_ENABLE_AUTO_CUT: 1,
         USER_ID: '',
         IS_PRODUCTION: environment.production ? 1 : 0

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CLEAR_TYPE, SettingService} from "./setting.service";
 import {ModalService} from "../../unit/modal/modal.service";
 import {ConfigService} from "../../../config/config.service";
+import {PlatformUtilService} from "../../../utils/platform.util";
 
 @Component({
     selector: 'setting',
@@ -18,7 +19,8 @@ export class SettingComponent implements OnInit {
     constructor(
         public configService: ConfigService,
         public settingService: SettingService,
-        public modalService: ModalService
+        public modalService: ModalService,
+        public platformUtilService: PlatformUtilService
     ) {
         this.settingService.initConfig();
         this.settingService.getCount();
@@ -34,6 +36,11 @@ export class SettingComponent implements OnInit {
 
     public close() {
         this.settingService.close();
+    }
+
+    public get getUsedRote() {
+        const rote = parseFloat((this.settingService.todayQuota / this.settingService.userInfo.maxCount).toFixed(2));
+        return (100 - (rote * 100)) * -1;
     }
 
 

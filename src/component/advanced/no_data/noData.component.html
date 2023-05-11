@@ -18,6 +18,20 @@
           <i class="v">合理用提示词（prompt）将会让AI更精确理解你的问题</i>
         </span>
     </div>
+    <div class="item" *ngIf="platformUtilService.isTauri && !configService.CONFIG.FREE_ENABLE">
+        <span class="label">
+          <i class="i"><bulb-icon></bulb-icon></i>
+          <i class="v">每日有免费额度可以尝试使用</i>
+          <i class="u" (click)="settingService.open()">使用</i>
+        </span>
+    </div>
+    <div class="item" *ngIf="platformUtilService.isTauri && configService.CONFIG.FREE_ENABLE">
+        <span class="label">
+          <i class="i"><bulb-icon></bulb-icon></i>
+          <i class="v">当前使用的免费额度</i>
+          <i class="u active">[使用中]</i>
+        </span>
+    </div>
     <div class="item">
       <div class="demo-container">
         <div [ngStyle]="{background: 'none'}" class="prompt-demo">

@@ -1,75 +1,90 @@
-<div as #messageCardsRef="asRef" class="message-cards" [class.pc-mode]="platformUtilService.isPC" [class.favorite-mode]="type === MESSAGE_CARD_USE_TYPE.FAVORITE">
+<div as #messageCardsRef="asRef" class="message-cards" [class.pc-mode]="platformUtilService.isPC"
+     [class.favorite-mode]="type === MESSAGE_CARD_USE_TYPE.FAVORITE">
 
-    <div class="card" *ngFor="let item of dataList; trackBy: trackByMethod; let i = index;">
-        <div class="item">
-            <div class="tip-bar">
-                <span class="text sn">#{{i + 1}}</span>
-                <span class="text date">{{item.updateTime | dateFormat: 'happy'}}</span>
-                <span class="space"></span>
-                <span class="icon favorite" *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK" (click)="appService.favoriteHandle(item)">
+  <div class="card" *ngFor="let item of dataList; trackBy: trackByMethod; let i = index;">
+    <div class="item">
+      <div class="tip-bar">
+        <span class="text sn">#{{i + 1}}</span>
+        <span class="text date">{{item.updateTime | dateFormat: 'happy'}}</span>
+        <span class="space"></span>
+        <span class="icon favorite" *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK"
+              (click)="appService.favoriteHandle(item)">
           <favorite-icon *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FINISH"></favorite-icon>
         </span>
-                <span class="icon delete" *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE" (click)="appService.deleteFavorite(item.id)">
+        <span class="icon delete" *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE"
+              (click)="appService.deleteFavorite(item.id)">
           <delete-icon></delete-icon>
         </span>
-            </div>
-            <div class="question">
-                <span>{{item.questionContent}}</span>
-                <i (click)="againSend(item.questionContent)" *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK && item.state === HISTORY_LIST_ITEM_STATE.FINISH">
+      </div>
+      <div class="question">
+        <span>{{item.questionContent}}</span>
+        <i (click)="againSend(item.questionContent)"
+           *ngIf="type === MESSAGE_CARD_USE_TYPE.ASK && item.state === HISTORY_LIST_ITEM_STATE.FINISH">
           <roll-back-icon></roll-back-icon>
         </i>
-                <i [cdkCopyToClipboard]="item.questionContent!" *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE">
+        <i [cdkCopyToClipboard]="item.questionContent!" *ngIf="type === MESSAGE_CARD_USE_TYPE.FAVORITE">
           <copy-icon></copy-icon>
         </i>
-                <i (click)="againSend(item.questionContent, true)" *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FAIL">
+        <i (click)="againSend(item.questionContent, true)" *ngIf="item.state === HISTORY_LIST_ITEM_STATE.FAIL">
           <reload-icon></reload-icon>
         </i>
-            </div>
-            <div class="content" [class.state-fail]="item.state === HISTORY_LIST_ITEM_STATE.FAIL" [class.state-pending]="item.state === HISTORY_LIST_ITEM_STATE.PENDING">
-                <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
-                <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">
-                    {{item.answerMarkdown}}
+      </div>
+      <div class="content" [class.state-fail]="item.state === HISTORY_LIST_ITEM_STATE.FAIL"
+           [class.state-pending]="item.state === HISTORY_LIST_ITEM_STATE.PENDING">
+        <div class="pending" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.PENDING">PENDING</div>
+        <div class="fail" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FAIL">
+          {{item.answerMarkdown}}
 
-                    <div class="tips">
-                        <div class="context-clean" *ngIf="item.errorCode === 'context_length_exceeded'">
-                            对话上下文超长，请修剪上下文 <i (click)="contextService.create()">[管理上下文]</i>
-                        </div>
-                    </div>
-                </div>
-                <div class="finish answer wrap markdown-body" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH" [innerHTML]="item.answerMarkdown | md2html">
-                </div>
+          <div class="tips">
+            <div class="context-clean" *ngIf="item.errorCode === 'invalid_api_key'">
+              无效的密钥，请检查你的密钥是否正确
             </div>
+            <div class="context-clean" *ngIf="item.errorCode === 'context_length_exceeded'">
+              对话上下文超长，请修剪上下文 <i (click)="contextService.create()">[管理上下文]</i>
+            </div>
+            <div class="context-clean" *ngIf="item.errorCode === 'TODAY_QUOTA_EXCEEDED'">
+              今日的额度已经用完，请明天再来使用
+            </div>
+            <div class="context-clean" *ngIf="item.errorCode === 'USER_LOCKED'">
+              对不起，你已经被管理员锁定，如有问题请联系管理员
+            </div>
+          </div>
         </div>
+        <div class="finish answer wrap markdown-body" [hidden]="item.state !== HISTORY_LIST_ITEM_STATE.FINISH"
+             [innerHTML]="item.answerMarkdown | md2html">
+        </div>
+      </div>
     </div>
-    <!--临时 dom! [S]-->
-    <div class="card temp" *ngIf="SHOW_TEMP_CARD">
-        <div class="item">
-            <div class="tip-bar">
-                <span class="text sn">#NEW</span>
-                <span class="text date"><text-loading></text-loading></span>
-                <span class="text stop" (click)="messageCardService.stop()">
-            <close-icon  [type]="'fill'"></close-icon>
+  </div>
+  <!--临时 dom! [S]-->
+  <div class="card temp" *ngIf="SHOW_TEMP_CARD">
+    <div class="item">
+      <div class="tip-bar">
+        <span class="text sn">#NEW</span>
+        <span class="text date"><text-loading></text-loading></span>
+        <span class="text stop" (click)="messageCardService.stop()">
+            <close-icon [type]="'fill'"></close-icon>
         </span>
-                <span class="space"></span>
-                <span class="icon favorite">
+        <span class="space"></span>
+        <span class="icon favorite">
           <favorite-icon></favorite-icon>
         </span>
-            </div>
-            <div class="question">
-                {{appService.newTempDataQuestionContent}}
-                <i>
+      </div>
+      <div class="question">
+        {{appService.newTempDataQuestionContent}}
+        <i>
           <roll-back-icon></roll-back-icon>
         </i>
-            </div>
-            <div class="content">
-                <div class="pending" [hidden]="HIDE_PENDING_STATE">PENDING
-                </div>
-                <div class="card-new-temp-container finish answer wrap markdown-body" [hidden]="HIDE_FINISH_STATE">
-                    <new-temp-render-container></new-temp-render-container>
-                </div>
-            </div>
+      </div>
+      <div class="content">
+        <div class="pending" [hidden]="HIDE_PENDING_STATE">PENDING
         </div>
+        <div class="card-new-temp-container finish answer wrap markdown-body" [hidden]="HIDE_FINISH_STATE">
+          <new-temp-render-container></new-temp-render-container>
+        </div>
+      </div>
     </div>
-    <!--临时 dom! [E]-->
-    <div class="pull-down-element" [pull-down]="messageCardsRef"></div>
+  </div>
+  <!--临时 dom! [E]-->
+  <div class="pull-down-element" [pull-down]="messageCardsRef"></div>
 </div>

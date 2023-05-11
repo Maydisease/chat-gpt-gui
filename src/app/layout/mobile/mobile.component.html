@@ -35,12 +35,26 @@
       (outsideClick)="historyService.close()"
   >
     <div class="state-bar" *ngIf="appService.tabState === TAB_STATE.ASK_MODE">
+
       <div class="wrap" [class.write-pull-state]="IS_MESSAGE_APPEND_STATE">
         <div class="pull" [hidden]="!IS_MESSAGE_APPEND_STATE">
-          <span>{{this.appService.newTempDataAppEndState === STREAM_STATE.PENDING ? '等待响应中' : '生成内容中'}}</span>
-          <text-loading></text-loading>
+          <span
+              class="text">{{this.appService.newTempDataAppEndState === STREAM_STATE.PENDING ? '等待响应中' : '生成内容中'}}</span>
+          <text-loading class="loading"></text-loading>
         </div>
         <div class="state" [hidden]="IS_MESSAGE_APPEND_STATE">
+          <div class="item used-state" *ngIf="configService.CONFIG.FREE_ENABLE">
+            <ng-container *ngIf="!settingService.isLoading">
+              <span *ngIf="!settingService.IS_USED_COUNT_EXHAUSTED">
+                free: {{settingService.todayQuota}}/{{settingService.userInfo.maxCount}}
+              </span>
+              <span class="exhausted"
+                    *ngIf="settingService.IS_USED_COUNT_EXHAUSTED && settingService.userInfo.maxCount !== 0">今日限额</span>
+            </ng-container>
+            <ng-container *ngIf="settingService.isLoading">
+              <text-loading></text-loading>
+            </ng-container>
+          </div>
           <div class="item switch" [class.active]="configService.CONFIG.CONTEXT_ENABLE"
                (click)="contextService.switchAskContextEnableStateHandle()">Context
           </div>
@@ -51,6 +65,14 @@
         </div>
 
       </div>
+      <span
+          *ngIf="this.appService.newTempDataAppEndState === STREAM_STATE.APPENDING"
+          class="auto-pull-state disabled"
+          [class.disabled]="!messageCardService.autoPull"
+          (click)="scrollToBottomHandle()"
+      >
+        <arrow-down-icon></arrow-down-icon>
+      </span>
     </div>
     <div class="container">
       <history *ngIf="!platformUtilService.isPC" (selectedEvent)="historySelectedEventHandle($event)"></history>

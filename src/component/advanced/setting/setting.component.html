@@ -10,20 +10,75 @@
   </div>
   <div class="form">
     <div class="wrap">
+
       <div class="item">
         <label class="mb-6">基础配置</label>
-        <div class="key">密钥</div>
-        <div class="tips">
-          ChatGTP 官网申请下来的密钥，访问api需要密钥。
-        </div>
-        <div class="widget">
-        <textarea
-            [value]="configService.CONFIG.BASE_SECRET_KEY"
-            (blur)="settingService.secretKeySave($event)"
-            (keyup)="settingService.secretKeyChangeHandle($event)"
-            placeholder="请在这里输入秘钥 密钥格式 sk-*"
-        ></textarea>
-        </div>
+
+        <ng-container *ngIf="platformUtilService.isTauri">
+          <div class="group" [class.diminished]="configService.CONFIG.FREE_ENABLE === 0">
+            <div class="key">启用免费版</div>
+            <div class="tips">
+              切换至免费版，每日限额，满足日常基础需求
+            </div>
+            <div class="widget mb-12">
+              <switch
+                  [defaultActiveState]="configService.CONFIG.FREE_ENABLE === 1"
+                  (change)="settingService.freeEnableChangeHandle($event)"
+              ></switch>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="configService.CONFIG.FREE_ENABLE === 1 && platformUtilService.isTauri">
+          <div class="free-used-count">
+            <div class="info">
+              <span class="name">今日额度</span>
+              <span class="count">
+              <i>{{settingService.todayQuota}}</i>/{{settingService.userInfo.maxCount}}
+            </span>
+              <span class="space"></span>
+              <span class="used-state">
+              <i class="normal" *ngIf="!settingService.IS_USED_COUNT_EXHAUSTED">正常</i>
+              <i class="exhausted" *ngIf="settingService.IS_USED_COUNT_EXHAUSTED">耗尽</i>
+            </span>
+            </div>
+            <div class="progress-bar">
+            <span class="value" [class.exhausted]="settingService.IS_USED_COUNT_EXHAUSTED"
+                  [ngStyle]="{transform: 'translateX('+getUsedRote+'%)'}"></span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="platformUtilService.isTauri">
+          <div class="group" [class.diminished]="configService.CONFIG.PERSONAL_ENABLE === 0">
+            <div class="key">启用个人版</div>
+            <div class="tips">
+              切换至个人版本，提供自己的密钥来与Chat GPT交互
+            </div>
+            <div class="widget mb-12">
+              <switch
+                  [defaultActiveState]="configService.CONFIG.PERSONAL_ENABLE === 1"
+                  (change)="settingService.personalEnableChangeHandle($event)"
+              ></switch>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="configService.CONFIG.FREE_ENABLE === 0">
+          <div class="key">密钥</div>
+          <div class="tips">
+            ChatGTP 官网申请下来的密钥，访问api需要密钥。
+          </div>
+          <div class="widget">
+            <textarea
+                [value]="configService.CONFIG.BASE_SECRET_KEY"
+                (blur)="settingService.secretKeySave($event)"
+                (keyup)="settingService.secretKeyChangeHandle($event)"
+                placeholder="请在这里输入秘钥 密钥格式 sk-*"
+            ></textarea>
+          </div>
+        </ng-container>
+
       </div>
 
       <div class="item">

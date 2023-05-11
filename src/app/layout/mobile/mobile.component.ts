@@ -13,6 +13,7 @@ import {HistoryService} from "../../../component/advanced/histroy/history.servic
 import {SettingService} from "../../../component/advanced/setting/setting.service";
 import {ConfigService} from "../../../config/config.service";
 import {TrackEventService} from "../../../services/trackEvent.service";
+import {MessageCardService} from "../../../component/advanced/message_card/messageCard.service";
 
 @Component({
     selector: 'app-mobile',
@@ -44,6 +45,7 @@ export class MobileComponent implements OnInit, OnDestroy {
         public historyService: HistoryService,
         public configService: ConfigService,
         public trackEventService: TrackEventService,
+        public messageCardService: MessageCardService
     ) {
         this.askKeyboardEventSubscription = this.sendAction.askKeyboardEvent.subscribe((event) => {
             if (event.eventName === ASK_KEYBOARD_EVENT_NAME.SEND) {
@@ -84,6 +86,11 @@ export class MobileComponent implements OnInit, OnDestroy {
         // console.log('this.appService.newTempDataAppEndState:', this.appService.newTempDataAppEndState)
         // console.log('IS_MESSAGE_APPEND_STATE:', this.appService.newTempDataAppEndState === (STREAM_STATE.APPENDING || STREAM_STATE.PENDING))
         return this.appService.newTempDataAppEndState === STREAM_STATE.APPENDING || this.appService.newTempDataAppEndState === STREAM_STATE.PENDING;
+    }
+
+    public scrollToBottomHandle() {
+        this.messageCardService.autoPull = true;
+        this.messageCardService.scrollToBottomEvent.emit();
     }
 
 }

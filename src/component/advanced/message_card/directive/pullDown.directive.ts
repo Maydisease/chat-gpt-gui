@@ -2,6 +2,7 @@ import {Directive, ElementRef, Input, Renderer2} from '@angular/core';
 import {AppService, STREAM_STATE} from "../../../../app/app.service";
 import {PlatformUtilService} from "../../../../utils/platform.util";
 import {AsDirective} from "../../../../directive/as.directive";
+import {MessageCardService} from "../messageCard.service";
 
 @Directive({selector: '[pull-down]'})
 export class PullDownDirective {
@@ -16,7 +17,6 @@ export class PullDownDirective {
         this.stopPullEvent();
 
         this.timer = setInterval(() => {
-
             if (this.lock) {
                 return;
             }
@@ -40,12 +40,15 @@ export class PullDownDirective {
         if (targetElement.scrollHeight - targetElement.clientHeight <= targetElement.scrollTop) {
             if (this.lock) {
                 this.lock = false;
+                this.messageCardService.autoPull = true;
             }
         }
 
         // 当用户手动向上滚动时，暂停自动追踪滚动
+
         if (this.prevScrollTop !== undefined && this.prevScrollTop > targetElement.scrollTop) {
             this.lock = true;
+            this.messageCardService.autoPull = false;
         }
 
         this.prevScrollTop = targetElement.scrollTop;
@@ -60,15 +63,20 @@ export class PullDownDirective {
     }
 
     constructor(
+        public messageCardService: MessageCardService,
         public el: ElementRef,
         public appService: AppService,
         public platformUtilService: PlatformUtilService,
         public r2: Renderer2
     ) {
         this.appService.askSendResultEvent.subscribe(() => {
+            this.messageCardService.autoPull = true;
             const element = this.el.nativeElement as HTMLDivElement;
             this.listenScrollContainer(this.container.element);
             this.createPullAction(element, this.container.element);
+        });
+        this.messageCardService.scrollToBottomEvent.subscribe(() => {
+            this.lock = false;
         })
     }
 }

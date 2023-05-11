@@ -21,11 +21,13 @@ const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: 
             let jsonObject: any = {};
             try {
                 jsonObject = JSON.parse(chunkString);
-                //context_length_exceeded
-                if (jsonObject.error && jsonObject.error.message) {
-                    resolve([true, {msg: jsonObject.error.message, code: jsonObject.error.code}])
+                console.log('jsonObject::', jsonObject)
+                if (jsonObject.error && jsonObject.error.code) {
+                    resolve([true, {
+                        msg: jsonObject.error.message || jsonObject.error.type,
+                        code: jsonObject.error.code
+                    }])
                     return;
-
                 }
             } catch (err: any) {
                 resolve([true, {code: '', msg: err.toString()}])
@@ -50,7 +52,6 @@ const handleReadableStream = (reader: ReadableStreamDefaultReader<Uint8Array>, e
             requestController = controller;
 
             const push = async () => {
-                // "done" is a Boolean and value a "Uint8Array"
                 const readerReadPromise = reader.read();
 
                 readerReadPromise.catch((err) => {
@@ -60,7 +61,7 @@ const handleReadableStream = (reader: ReadableStreamDefaultReader<Uint8Array>, e
                 })
 
                 const {done, value} = await readerReadPromise;
-                // If there is no more data to read
+
                 if (done) {
                     event.doneEvent();
                     controller.close();
@@ -92,7 +93,7 @@ addEventListener('message', async ({data}) => {
 
     if (data.eventName === 'request') {
 
-        const {address, appKey, askContext, key, questionContent} = data.message;
+        const {address, key, questionContent, body} = data.message;
 
         postMessage({
             eventName: 'requestStart',
@@ -103,17 +104,18 @@ addEventListener('message', async ({data}) => {
 
         fetch(address, {
             method: 'POST',
-            body: JSON.stringify({
-                content: undefined,
-                appKey: appKey,
-                context: askContext,
-            }),
+            // body: JSON.stringify({
+            //     content: undefined,
+            //     appKey: appKey,
+            //     context: askContext,
+            // }),
+            body,
             headers: {
-                'accept': 'text/event-stream',
                 'content-type': 'application/json'
             },
         })
             .then((response) => {
+                console.log('response:::', response)
                 return {body: response.body, response};
             })
             .then(async ({body, response}) => {

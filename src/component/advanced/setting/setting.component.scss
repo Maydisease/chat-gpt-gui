@@ -43,7 +43,7 @@
       line-height: 40px;
       font-size: 20px;
       font-weight: bold;
-      padding: 0 20px;
+      padding: 0 0 0 10px;
       display: flex;
       justify-items: center;
       align-items: center;
@@ -73,7 +73,7 @@
       flex: 1;
       height: 0;
 
-      padding: 40px 20px 20px 20px;
+      padding: 20px 20px 20px 20px;
       overflow-x: hidden;
       overflow-y: auto;
       display: flex;
@@ -85,13 +85,138 @@
       .wrap {
         max-width: 800px;
 
+        .tabs {
+          width: 100%;
+          height: 48px;
+          display: flex;
+          justify-items: center;
+          align-items: center;
+          box-sizing: border-box;
+          border-bottom: 1px solid var(--border-color);
+
+          .tab {
+            height: 30px;
+            line-height: 30px;
+            display: inline-block;
+            margin-right: 8px;
+            padding: 0 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: relative;
+
+            &:hover {
+              background: var(--color-action-list-item-default-hover-bg);
+            }
+
+            &::before {
+              width: 100%;
+              height: 0;
+              border-bottom: 1px solid RGBA(255, 255, 255, 0);
+              content: '';
+              bottom: -9px;
+              left: 0;
+              position: absolute;
+            }
+
+            &.active::before {
+              border-bottom: 1px solid var(--color-primer-active);
+            }
+          }
+        }
+
         .item {
-          margin-bottom: 30px;
+          margin-top: 30px;
           padding: 25px 20px 25px 20px;
           box-sizing: border-box;
           position: relative;
           border-radius: 5px;
+          transition: all, .3s;
           border: 1px dashed var(--border-color);
+
+          .group {
+            &.diminished {
+              overflow: hidden;
+              opacity: 0.5;
+              position: relative;
+
+              .key {
+                color: var(--font-secondary-color);
+              }
+            }
+          }
+
+          .free-used-count {
+            width: 100%;
+            margin-bottom: 20px;
+
+            .info {
+              margin-bottom: 3px;
+              font-size: 14px;
+              display: flex;
+              justify-items: center;
+              align-items: center;
+
+              .used-state {
+                i {
+                  height: 14px;
+                  line-height: 14px;
+                  width: 26px;
+                  font-weight: normal;
+                  font-size: 12px;
+                  margin-left: 5px;
+                  border-radius: 3px;
+                  display: inline-block;
+                  color: var(--button-background-color);
+                  border: 1px solid var(--button-background-color);
+
+                  &.exhausted {
+                    color: var(--border-color);
+                    border: 1px solid var(--border-color);
+                  }
+                }
+              }
+
+              .space {
+                flex: 1;
+              }
+
+              .count {
+                margin-left: 5px;
+                font-weight: bold;
+
+                i {
+                  color: var(--button-background-color);
+                }
+              }
+            }
+
+
+            .progress-bar {
+              width: 100%;
+              height: 10px;
+              overflow: hidden;
+              border-radius: 3px;
+              position: relative;
+              vertical-align: top;
+              font-size: 0;
+              background: var(--border-color);
+
+              span.value {
+                width: 100%;
+                height: 100%;
+                font-size: 0;
+                transform: translateX(-100%);
+                border-radius: 3px;
+                display: inline-block;
+                background: var(--button-background-color);
+                transition: all, .3s;
+
+                &.exhausted {
+                  background: var(--border-color)
+                }
+              }
+            }
+          }
 
           label {
             padding: 0 10px;

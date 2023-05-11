@@ -3,6 +3,8 @@ import {AppService, HISTORY_LIST_ITEM_STATE, STREAM_STATE} from "../../../app/ap
 import {PlatformUtilService} from "../../../utils/platform.util";
 import {ContextService} from "../context/context.service";
 import {TrackEventService} from "../../../services/trackEvent.service";
+import {ConfigService} from "../../../config/config.service";
+import {SettingService} from "../setting/setting.service";
 
 @Component({
     selector: 'app-no-data',
@@ -19,6 +21,8 @@ export class NoDataComponent implements OnInit {
         public appService: AppService,
         public platformUtilService: PlatformUtilService,
         public trackEventService: TrackEventService,
+        public configService: ConfigService,
+        public settingService: SettingService
     ) {
     }
 
