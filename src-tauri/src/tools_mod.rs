@@ -8,14 +8,16 @@ pub mod tools {
         let mut new_result;
 
         unsafe {
-            // let mut lib_path = PathBuf::from(env::current_dir().unwrap());
-            // lib_path.push("lib/libtools.dylib");
-            println!("lib_path::: {:?}", lib_path);
+            println!("lib_path:X1::: {:?}", lib_path);
             let lib = libloading::Library::new(lib_path).unwrap();
+            println!("lib_path:X2::: {:?}", lib);
             let http_encrypt: libloading::Symbol<unsafe extern "C" fn(str: &str) -> String> =
                 lib.get(b"http_encrypt").unwrap();
+            println!("lib_path:X3::: {:?}", http_encrypt);
             let result = http_encrypt(&body.to_string());
+            println!("lib_path:X4::: {:?}", result);
             new_result = result;
+            println!("lib_path:X5::: {:?}", new_result);
         }
 
         new_result
