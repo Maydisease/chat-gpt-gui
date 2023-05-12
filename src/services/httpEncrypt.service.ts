@@ -15,9 +15,11 @@ export class HttpCryptoService {
         let newBody: { [key: string]: any } = {};
 
         if (this.platformUtilService.isTauri) {
+            console.time('invoke:http_encrypt')
             newBody = {
                 encrypt: await invoke("http_encrypt", {body: JSON.stringify(body)})
             };
+            console.timeEnd('invoke:http_encrypt')
         } else {
             newBody = body;
         }

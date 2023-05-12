@@ -42,8 +42,7 @@
                 "icons/icon.ico"
             ],
             "resources": [
-                "lib/libtools.dylib",
-                "lib/core"
+                "lib/http_encrypt"
             ],
             "identifier": "com.GPT-GUI.dev",
             "targets": "all"

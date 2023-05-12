@@ -3,7 +3,7 @@
 
 use std::env;
 use std::path::PathBuf;
-mod tools_mod;
+use std::time::Instant;
 extern crate machine_uid;
 use std::process::Command;
 use std::time::Duration;
@@ -51,31 +51,31 @@ fn get_machine_uid() -> String {
 fn http_encrypt(body: &str, handle: tauri::AppHandle) -> String {
     use std::process::Command;
 
+    let start = Instant::now();
+    let mut encrypt_result = String::from("");
+
     let bin_path = handle
         .path_resolver()
-        .resolve_resource("lib/core")
+        .resolve_resource("lib/http_encrypt")
         .expect("failed to resolve resource");
     let bin_path_str = bin_path.as_path().to_str().unwrap();
 
     let output = Command::new(bin_path_str)
-        .args(&["--message", "Hello", "--type", "2"])
+        .args(&["--message", body, "--type", "1"])
         .output()
         .expect("failed to execute process");
 
     if output.status.success() {
         let result = String::from_utf8(output.stdout).unwrap();
-        println!("{}", result);
+        encrypt_result.push_str(&result);
     } else {
         let error = String::from_utf8(output.stderr).unwrap();
         eprintln!("{}", error);
     }
+    let end = Instant::now();
+    let elapsed = end - start; // 计算时间差
 
-    // println!("{}", String::from_utf8_lossy(&output.stdout));
+    println!("http_encrypt used time: {:?}", elapsed);
 
-    let resource_path = handle
-        .path_resolver()
-        .resolve_resource("lib/libtools.dylib")
-        .expect("failed to resolve resource");
-    let path_str = resource_path.as_path().to_str().unwrap();
-    tools_mod::tools::http_encrypt(body, path_str)
+    encrypt_result
 }

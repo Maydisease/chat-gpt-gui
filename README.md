@@ -75,7 +75,7 @@
 ![dark-pc-chat.png](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-pc-chat.png)
 
 #### 亮色模式下的设定界面
-![dark-light-setting](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-light-setting.png)
+![dark-light-setting](https://raw.githubusercontent.com/Maydisease/chat-gpt-gui/main/src/assets/images/dark-light-setting.jpg)
 
 
 #### 暗色模式下的设定界面
