@@ -49,6 +49,29 @@ fn get_machine_uid() -> String {
 
 #[tauri::command]
 fn http_encrypt(body: &str, handle: tauri::AppHandle) -> String {
+    use std::process::Command;
+
+    let bin_path = handle
+        .path_resolver()
+        .resolve_resource("lib/core")
+        .expect("failed to resolve resource");
+    let bin_path_str = bin_path.as_path().to_str().unwrap();
+
+    let output = Command::new(bin_path_str)
+        .args(&["--message", "Hello", "--type", "2"])
+        .output()
+        .expect("failed to execute process");
+
+    if output.status.success() {
+        let result = String::from_utf8(output.stdout).unwrap();
+        println!("{}", result);
+    } else {
+        let error = String::from_utf8(output.stderr).unwrap();
+        eprintln!("{}", error);
+    }
+
+    // println!("{}", String::from_utf8_lossy(&output.stdout));
+
     let resource_path = handle
         .path_resolver()
         .resolve_resource("lib/libtools.dylib")

@@ -1,77 +1,76 @@
 {
-  "build": {
-    "beforeDevCommand": "yarn start --port 1420",
-    "beforeBuildCommand": "yarn build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist/tauri-app",
-    "withGlobalTauri": false
-  },
-  "package": {
-    "productName": "CHAT-GPT-GUI",
-    "version": "1.4.6"
-  },
-  "tauri": {
-    "allowlist": {
-      "fs": {
-        "scope": [
-          "$RESOURCE/*"
-        ]
-      },
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "dialog": {
-        "all": true,
-        "open": true,
-        "save": true
-      },
-      "window": {
-        "all": true,
-        "setTitle": true
-      }
+    "build": {
+        "beforeDevCommand": "yarn start --port 1420",
+        "beforeBuildCommand": "yarn build",
+        "devPath": "http://localhost:1420",
+        "distDir": "../dist/tauri-app",
+        "withGlobalTauri": false
     },
-    "bundle": {
-      "active": true,
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "resources": [
-        "lib/libtools.dylib"
-      ],
-      "identifier": "com.GPT-GUI.dev",
-      "targets": "all"
+    "package": {
+        "productName": "CHAT-GPT-GUI",
+        "version": "1.4.6"
     },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": true,
-      "endpoints": [
-        "https://maydisease.github.io/chat-gpt-gui/updater.json"
-      ],
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "GPT-GUI",
-        "width": 450,
-        "minWidth": 450,
-        "height": 800,
-        "minHeight": 800,
-        "hiddenTitle": true,
-        "visible": false,
-        "transparent": true
-      }
-    ],
-    "macOSPrivateApi": true
-  }
+    "tauri": {
+        "allowlist": {
+            "fs": {
+                "scope": [
+                    "$RESOURCE/*"
+                ]
+            },
+            "all": false,
+            "shell": {
+                "all": false,
+                "open": true
+            },
+            "dialog": {
+                "all": true,
+                "open": true,
+                "save": true
+            },
+            "window": {
+                "all": true,
+                "setTitle": true
+            }
+        },
+        "bundle": {
+            "active": true,
+            "icon": [
+                "icons/32x32.png",
+                "icons/128x128.png",
+                "icons/128x128@2x.png",
+                "icons/icon.icns",
+                "icons/icon.ico"
+            ],
+            "resources": [
+                "lib/libtools.dylib",
+                "lib/core"
+            ],
+            "identifier": "com.GPT-GUI.dev",
+            "targets": "all"
+        },
+        "security": {
+            "csp": null
+        },
+        "updater": {
+            "active": true,
+            "endpoints": [
+                "https://maydisease.github.io/chat-gpt-gui/updater.json"
+            ],
+            "dialog": true,
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMxNTA5RURFMjlFMzNCQjEKUldTeE8rTXAzcDVRd1c4RjBGRkp4ZGxPMkZsOTl5aUhjRG1SVmVPTlowaFlhU1lyNjdVd1BHQk0K"
+        },
+        "windows": [{
+            "fullscreen": false,
+            "resizable": true,
+            "title": "GPT-GUI",
+            "width": 450,
+            "minWidth": 450,
+            "height": 800,
+            "minHeight": 800,
+            "hiddenTitle": true,
+            "visible": false,
+            "transparent": true
+        }],
+        "macOSPrivateApi": true
+    }
 }

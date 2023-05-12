@@ -14,10 +14,11 @@ pub mod tools {
             let http_encrypt: libloading::Symbol<unsafe extern "C" fn(str: &str) -> String> =
                 lib.get(b"http_encrypt").unwrap();
             println!("lib_path:X3::: {:?}", http_encrypt);
+            println!("lib_path:X4::: {:?}", &body.to_string());
             let result = http_encrypt(&body.to_string());
-            println!("lib_path:X4::: {:?}", result);
+            println!("lib_path:X5::: {:?}", result);
             new_result = result;
-            println!("lib_path:X5::: {:?}", new_result);
+            println!("lib_path:X6::: {:?}", new_result);
         }
 
         new_result
