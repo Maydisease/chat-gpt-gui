@@ -1,18 +1,13 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use machine_uid;
 use std::env;
-use std::path::PathBuf;
-use std::time::Instant;
-extern crate machine_uid;
 use std::process::Command;
-use std::time::Duration;
-use tauri::async_runtime::spawn;
-use tauri::Context;
+use std::time::Instant;
+use tauri::Manager;
 use tauri::Window;
-use tauri::{AppHandle, Manager};
-use tauri_plugin_aptabase::EventTracker;
-use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 
 #[tauri::command]
 fn init_process(window: Window) {
@@ -28,7 +23,7 @@ fn main() {
             http_encrypt
         ])
         .setup(|app| {
-            let mut window = app.get_window("main").unwrap();
+            let window = app.get_window("main").unwrap();
 
             #[cfg(target_os = "macos")]
             apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
@@ -49,11 +44,8 @@ fn get_machine_uid() -> String {
 
 #[tauri::command]
 fn http_encrypt(body: &str, handle: tauri::AppHandle) -> String {
-    use std::process::Command;
-
     let start = Instant::now();
     let mut encrypt_result = String::from("");
-
     let bin_path = handle
         .path_resolver()
         .resolve_resource("lib/http_encrypt")
