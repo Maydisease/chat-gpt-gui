@@ -33,6 +33,14 @@
         <div class="wrap ask" [hidden]="appService.tabState === TAB_STATE.FAVORITE_MODE">
           <app-no-data *ngIf="SHOW_NO_DATA"></app-no-data>
           <message-card [hidden]="SHOW_NO_DATA" [dataList]="appService.askList"></message-card>
+          <span
+              *ngIf="this.appService.newTempDataAppEndState === STREAM_STATE.APPENDING"
+              class="auto-pull-state disabled"
+              [class.disabled]="!messageCardService.autoPull"
+              (click)="messageCardService.scrollToBottomHandle()"
+          >
+            <arrow-down-icon></arrow-down-icon>
+          </span>
         </div>
         <div class="wrap favorite" [hidden]="appService.tabState === TAB_STATE.ASK_MODE">
           <span *ngIf="!appService.favoriteList.length">暂无任何收藏～</span>

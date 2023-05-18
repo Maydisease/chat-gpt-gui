@@ -18,4 +18,9 @@ export class MessageCardService {
             eventName: 'requestStop'
         })
     }
+
+    public scrollToBottomHandle() {
+        this.autoPull = true;
+        this.scrollToBottomEvent.emit();
+    }
 }

@@ -5,6 +5,7 @@ import {ContextService} from "../../../component/advanced/context/context.servic
 import {PlatformUtilService} from "../../../utils/platform.util";
 import {ConfigService} from "../../../config/config.service";
 import {SettingService} from "../../../component/advanced/setting/setting.service";
+import {MessageCardService} from "../../../component/advanced/message_card/messageCard.service";
 
 @Component({
     selector: 'app-pc',
@@ -17,6 +18,9 @@ export class LayoutForPcComponent implements OnInit {
     @ViewChild('pcSearchWidgetRef', {static: true}) pcSearchWidgetRef: ElementRef<HTMLInputElement> | undefined;
 
     public MESSAGE_CARD_USE_TYPE = MESSAGE_CARD_USE_TYPE;
+
+    public STREAM_STATE = STREAM_STATE;
+
     public TAB_STATE = TAB_STATE;
 
     constructor(
@@ -25,6 +29,7 @@ export class LayoutForPcComponent implements OnInit {
         public appService: AppService,
         public configService: ConfigService,
         public settingService: SettingService,
+        public messageCardService: MessageCardService
     ) {
 
     }

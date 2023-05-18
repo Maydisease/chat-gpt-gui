@@ -69,7 +69,7 @@
           *ngIf="this.appService.newTempDataAppEndState === STREAM_STATE.APPENDING"
           class="auto-pull-state disabled"
           [class.disabled]="!messageCardService.autoPull"
-          (click)="scrollToBottomHandle()"
+          (click)="messageCardService.scrollToBottomHandle()"
       >
         <arrow-down-icon></arrow-down-icon>
       </span>
