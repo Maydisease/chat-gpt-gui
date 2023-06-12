@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "CHAT-GPT-GUI",
-        "version": "1.4.7"
+        "version": "1.4.8"
     },
     "tauri": {
         "allowlist": {
@@ -42,7 +42,8 @@
                 "icons/icon.ico"
             ],
             "resources": [
-                "lib/http_encrypt"
+                "lib/http_encrypt",
+                "lib/http_encrypt.exe"
             ],
             "identifier": "com.GPT-GUI.dev",
             "targets": "all"
@@ -64,8 +65,8 @@
             "title": "GPT-GUI",
             "width": 450,
             "minWidth": 450,
-            "height": 800,
-            "minHeight": 800,
+            "height": 700,
+            "minHeight": 700,
             "hiddenTitle": true,
             "visible": false,
             "transparent": true

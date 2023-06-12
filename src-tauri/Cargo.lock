@@ -263,6 +263,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-aptabase",
+ "winapi",
  "window-vibrancy",
 ]
 
