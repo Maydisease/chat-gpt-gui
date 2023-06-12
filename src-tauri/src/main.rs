@@ -4,11 +4,14 @@
 #[cfg(windows)]
 extern crate winapi;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
 use machine_uid;
 use std::env;
 use std::path::Path;
 use std::process::Command;
-use std::os::windows::process::CommandExt;
+
 use std::time::Instant;
 use tauri::Manager;
 use tauri::Window;
