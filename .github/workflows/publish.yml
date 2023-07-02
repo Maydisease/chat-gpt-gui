@@ -48,7 +48,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1. 支持免费版与个人版的切换，免费版每日有限额额度使用的功能 2.修复PC下无法使用command + f 聚焦编辑框的问题'
+          releaseBody: '1. 支持更多的消息错误友好提示捕捉.'
           releaseDraft: false
           prerelease: false
   generate-github-page:

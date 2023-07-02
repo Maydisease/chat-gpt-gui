@@ -36,6 +36,7 @@
     "dexie": "^3.2.3",
     "fetch": "^1.1.0",
     "highlight.js": "^11.7.0",
+    "konva": "^9.2.0",
     "mark.js": "^8.11.1",
     "mousetrap": "^1.6.5",
     "node-fetch": "2",

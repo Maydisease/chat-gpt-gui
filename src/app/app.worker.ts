@@ -21,15 +21,15 @@ const handleError = (reader: ReadableStreamDefaultReader<Uint8Array>, response: 
             let jsonObject: any = {};
             try {
                 jsonObject = JSON.parse(chunkString);
-                console.log('jsonObject::', jsonObject)
-                if (jsonObject.error && jsonObject.error.code) {
+                if (jsonObject.error) {
                     resolve([true, {
                         msg: jsonObject.error.message || jsonObject.error.type,
-                        code: jsonObject.error.code
+                        code: jsonObject?.error.code || jsonObject.error.type,
                     }])
                     return;
                 }
             } catch (err: any) {
+                console.log('err', err.toString())
                 resolve([true, {code: '', msg: err.toString()}])
                 return;
             }
