@@ -154,7 +154,7 @@ export class ContextService {
 
     async autoCutContext(arr: AskContextItemList, questionTokenNum: number) {
         arr = JSON.parse(JSON.stringify(arr));
-        const maxToken = 3000 - questionTokenNum;
+        const maxToken = 15000 - questionTokenNum;
         let total = 0;
 
         for (let i = 0; i < arr.length; i++) {
