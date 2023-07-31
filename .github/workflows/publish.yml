@@ -48,7 +48,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1. 支持新的 gpt-3.5-turbo-16k 模型，现在允许更大的上下文长度，context单次会话长度 从 4000Token 增长至 16000Token'
+          releaseBody: '1. 优化一个细节，使用时更加节省token'
           releaseDraft: false
           prerelease: false
   generate-github-page:
