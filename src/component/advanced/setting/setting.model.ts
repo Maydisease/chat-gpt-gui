@@ -9,6 +9,7 @@ export interface SettingConfigItem {
     id?: number;
     BASE_SECRET_KEY: string;
     CONTEXT_ENABLE: 0 | 1;
+    CHAT_MODEL: 0 | 1;
     FREE_ENABLE: 0 | 1;
     PERSONAL_ENABLE: 0 | 1;
     CONTEXT_ENABLE_AUTO_CUT: 0 | 1;

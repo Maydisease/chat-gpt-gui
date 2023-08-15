@@ -104,11 +104,6 @@ addEventListener('message', async ({data}) => {
 
         fetch(address, {
             method: 'POST',
-            // body: JSON.stringify({
-            //     content: undefined,
-            //     appKey: appKey,
-            //     context: askContext,
-            // }),
             body,
             headers: {
                 'content-type': 'application/json'

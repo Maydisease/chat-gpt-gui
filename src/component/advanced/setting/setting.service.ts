@@ -220,6 +220,11 @@ export class SettingService {
         await this.update();
     }
 
+    async chatModelChangeHandle(value: boolean) {
+        this.configService.CONFIG.CHAT_MODEL = value ? 1 : 0;
+        await this.update();
+    }
+
     async contextEnableAutoCutChangeHandle(value: boolean) {
         this.configService.CONFIG.CONTEXT_ENABLE_AUTO_CUT = value ? 1 : 0;
         await this.update();

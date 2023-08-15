@@ -48,7 +48,7 @@ jobs:
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: 'App v__VERSION__'
-          releaseBody: '1. 优化一个细节，使用时更加节省token'
+          releaseBody: '1. 支持新模型'
           releaseDraft: false
           prerelease: false
   generate-github-page:

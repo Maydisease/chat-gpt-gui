@@ -10,6 +10,7 @@ export class ConfigService {
         CONTEXT_ENABLE: 1,
         FREE_ENABLE: 0,
         PERSONAL_ENABLE: 1,
+        CHAT_MODEL: 0,
         CONTEXT_ENABLE_AUTO_CUT: 1,
         USER_ID: '',
         IS_PRODUCTION: environment.production ? 1 : 0

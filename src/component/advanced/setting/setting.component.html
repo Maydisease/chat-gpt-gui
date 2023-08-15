@@ -79,6 +79,17 @@
           </div>
         </ng-container>
 
+        <ng-container *ngIf="configService.CONFIG.FREE_ENABLE === 0">
+          <div class="key" [style.margin-top]="'5px'">模型切换<i>{{configService.CONFIG.CHAT_MODEL ? 'GPT-4' : 'GPT-3.5'}}</i></div>
+          <div class="tips">
+            使用的会话模型，目前支持GPT-4与GPT-3.5
+          </div>
+          <div class="widget">
+            <switch [defaultActiveState]="configService.CONFIG.CHAT_MODEL === 1"
+                    (change)="settingService.chatModelChangeHandle($event)"></switch>
+          </div>
+        </ng-container>
+
       </div>
 
       <div class="item">

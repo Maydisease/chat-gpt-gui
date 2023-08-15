@@ -267,7 +267,6 @@ export class AppService {
         };
         if ((await this.favoriteModel.favoriteDB.TABLE_FAVORITE.where({questionContent: item.questionContent}).count()) !== 0) {
             this.toastService.create('该问题已经收藏过了.')
-
             return;
         }
         await this.favoriteModel.add(data);
@@ -319,13 +318,16 @@ export class AppService {
 
         this.trackEventService.send('send');
 
+        console.log('this.configService.CONFIG.CHAT_MODEL:', this.configService.CONFIG.CHAT_MODEL)
+
         const appKey = this.configService.CONFIG.BASE_SECRET_KEY;
         const askContext = await this.contextService.generateRequestContext(this.searchKey);
         const encryptBody = await this.httpCryptoService.encrypt({
             userType: this.configService.CONFIG.PERSONAL_ENABLE == 1 ? 0 : 1,
             content: undefined,
             appKey: this.configService.CONFIG.PERSONAL_ENABLE == 1 ? appKey : undefined,
-            context: askContext
+            context: askContext,
+            model: this.configService.CONFIG.CHAT_MODEL
         });
 
         this.worker.postMessage({
